@@ -1,0 +1,154 @@
+<!-- FILE: certificates.html  (NEW) — weekly certificates + print -->
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Weekly Certificates | Young Tech Architect</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <style>
+    @media print{
+      .topbar,.footer,.noPrint{display:none !important;}
+      body{background:#fff !important; color:#000 !important;}
+      .card{box-shadow:none !important; border:1px solid #ddd !important;}
+      .cert{break-inside: avoid;}
+      .cert__title{color:#000 !important;}
+      .cert__seal{border-color:#000 !important;}
+      .muted{color:#333 !important;}
+      a{color:#000; text-decoration:underline;}
+    }
+    .cert{
+      position:relative;
+      padding:22px;
+      border-radius: 22px;
+      border: 2px solid rgba(255,255,255,.16);
+      background: linear-gradient(135deg, rgba(124,156,255,.16), rgba(69,230,178,.10));
+      overflow:hidden;
+    }
+    .cert:before{
+      content:"";
+      position:absolute; inset:-60px;
+      background: radial-gradient(circle at 30% 20%, rgba(255,214,107,.22), transparent 55%),
+                  radial-gradient(circle at 80% 10%, rgba(255,107,139,.18), transparent 50%);
+      transform: rotate(-6deg);
+      pointer-events:none;
+    }
+    .cert__inner{position:relative}
+    .cert__title{font-size: 28px; font-weight: 950; margin:0}
+    .cert__seal{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:84px; height:84px;
+      border-radius: 999px;
+      border: 2px dashed rgba(255,255,255,.30);
+      background: rgba(0,0,0,.12);
+      font-size: 32px;
+    }
+    .certGrid{display:grid; grid-template-columns: 1fr auto; gap:16px; align-items:start}
+    @media (max-width: 800px){ .certGrid{grid-template-columns:1fr} }
+    .certMeta{display:flex; gap:10px; flex-wrap:wrap; margin-top:8px}
+    .certLine{height:1px; background: rgba(255,255,255,.18); margin:16px 0}
+    .certFoot{display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center}
+    .sig{padding-top:10px; border-top:1px solid rgba(255,255,255,.20); min-width: 240px}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar__inner">
+      <a class="brand" href="./index.html">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__text">
+          <span class="brand__title">Young Tech Architect</span>
+          <span class="brand__subtitle">Weekly Certificates</span>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Primary">
+        <a class="nav__link" href="./index.html">Home</a>
+        <a class="nav__link" href="./profiles.html">Profiles</a>
+        <a class="nav__link" href="./month1.html">Month 1</a>
+        <a class="nav__link" href="./month2.html">Month 2</a>
+        <a class="nav__link" href="./month3.html">Month 3</a>
+        <a class="nav__link is-active" href="./certificates.html">Certificates</a>
+        <a class="nav__link" href="./print.html">Print</a>
+        <a class="nav__link" href="./dashboard.html">Parent Dashboard</a>
+      </nav>
+
+      <div class="topbar__actions noPrint">
+        <button class="btn btn--soft" id="kidModeToggle" type="button" aria-pressed="false">Kid Mode: Off</button>
+        <button class="btn btn--primary" id="printBtn" type="button">Print / Save PDF</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap stack">
+    <section class="card stack">
+      <h1 class="h1">Weekly Certificates</h1>
+      <p class="muted">
+        Pick a week to generate a certificate. If a week isn’t fully completed, you can still print it as a “progress certificate”.
+      </p>
+
+      <div class="pillrow">
+        <span class="pill pill--static"><span class="pill__k">Active profile</span><span class="pill__v" id="pName">—</span></span>
+        <span class="pill pill--static"><span class="pill__k">Start date</span><span class="pill__v" id="pStart">—</span></span>
+        <a class="pill" href="./profiles.html"><span class="pill__k">Change</span><span class="pill__v">profile</span></a>
+      </div>
+
+      <div class="controlsRow">
+        <div class="search">
+          <label class="small muted" for="weekSelect">Choose week</label>
+          <select id="weekSelect" class="input"></select>
+        </div>
+        <div class="ctaRow noPrint">
+          <button class="btn" id="genBtn" type="button">Generate certificate</button>
+          <button class="btn btn--soft" id="genAllBtn" type="button">Generate all weeks</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="certMount" class="stack"></section>
+  </main>
+
+  <footer class="footer wrap noPrint">
+    <span class="muted small">Tip: set a start date for nice week date ranges.</span>
+  </footer>
+
+  <script src="./app.js"></script>
+  <script>
+    YTA.initKidModeUI();
+
+    const active = YTA.getActiveProfile();
+    document.getElementById("pName").textContent = active ? active.name : "No profile";
+    document.getElementById("pStart").textContent = active?.startDate ? YTA.fmtDate(active.startDate) : "Not set";
+
+    const weekSelect = document.getElementById("weekSelect");
+    for(let w=1; w<=12; w++){
+      const label = YTA.weekLabel(w);
+      const opt = document.createElement("option");
+      opt.value = String(w);
+      opt.textContent = label;
+      weekSelect.appendChild(opt);
+    }
+
+    function generateOne(w){
+      const mount = document.getElementById("certMount");
+      mount.innerHTML = YTA.renderCertificateHTML({ week: w });
+    }
+
+    function generateAll(){
+      const mount = document.getElementById("certMount");
+      mount.innerHTML = Array.from({length:12}, (_,i)=>YTA.renderCertificateHTML({ week: i+1 })).join("");
+    }
+
+    document.getElementById("genBtn").addEventListener("click", () => generateOne(Number(weekSelect.value)));
+    document.getElementById("genAllBtn").addEventListener("click", () => generateAll());
+    document.getElementById("printBtn").addEventListener("click", () => window.print());
+
+    // default: show current/next relevant week
+    const w = YTA.suggestWeek();
+    weekSelect.value = String(w);
+    generateOne(w);
+  </script>
+</body>
+</html>
