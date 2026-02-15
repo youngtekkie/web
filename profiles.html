@@ -1,0 +1,167 @@
+<!-- FILE: profiles.html  (NEW) — multi-child profiles + choose start date -->
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Profiles | Young Tech Architect</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar__inner">
+      <a class="brand" href="./index.html">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__text">
+          <span class="brand__title">Young Tech Architect</span>
+          <span class="brand__subtitle">Profiles</span>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Primary">
+        <a class="nav__link" href="./index.html">Home</a>
+        <a class="nav__link is-active" href="./profiles.html">Profiles</a>
+        <a class="nav__link" href="./month1.html">Month 1</a>
+        <a class="nav__link" href="./month2.html">Month 2</a>
+        <a class="nav__link" href="./month3.html">Month 3</a>
+        <a class="nav__link" href="./certificates.html">Certificates</a>
+        <a class="nav__link" href="./print.html">Print</a>
+        <a class="nav__link" href="./dashboard.html">Parent Dashboard</a>
+      </nav>
+
+      <div class="topbar__actions">
+        <button class="btn btn--soft" id="kidModeToggle" type="button" aria-pressed="false">Kid Mode: Off</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap stack">
+    <section class="card stack">
+      <h1 class="h1">Child Profiles</h1>
+      <p class="muted">Create one profile per child. Each profile has its own ticks, streak and start date.</p>
+
+      <div class="grid2">
+        <div class="card card--soft stack">
+          <h2 class="h2">Create a new profile</h2>
+          <label class="small muted" for="childName">Child name</label>
+          <input id="childName" class="input" placeholder="e.g., Alex" />
+
+          <label class="small muted" for="startDate">Start date (pick a Monday if you can)</label>
+          <input id="startDate" class="input" type="date" />
+
+          <div class="ctaRow">
+            <button class="btn btn--primary" id="createProfileBtn" type="button">Create profile</button>
+            <button class="btn btn--soft" id="setTodayMonBtn" type="button">Set start date to next Monday</button>
+          </div>
+
+          <div class="quote small">
+            Start date helps the dashboard show real week ranges (Mon–Sat). If you skip it, the plan still works.
+          </div>
+        </div>
+
+        <div class="card card--soft stack">
+          <h2 class="h2">Active profile</h2>
+          <div class="pillrow">
+            <span class="pill pill--static"><span class="pill__k">Name</span><span class="pill__v" id="activeName">—</span></span>
+            <span class="pill pill--static"><span class="pill__k">Start date</span><span class="pill__v" id="activeDate">—</span></span>
+          </div>
+          <div class="ctaRow">
+            <a class="btn" href="./month1.html">Go to Month 1</a>
+            <a class="btn" href="./certificates.html">Certificates</a>
+            <a class="btn" href="./dashboard.html">Dashboard</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card stack">
+      <h2 class="h2">All profiles</h2>
+      <div id="profilesList" class="monthRows"></div>
+    </section>
+  </main>
+
+  <footer class="footer wrap">
+    <span class="muted small">All data stays on this device (local storage).</span>
+  </footer>
+
+  <script src="./app.js"></script>
+  <script>
+    YTA.initKidModeUI();
+
+    const childName = document.getElementById("childName");
+    const startDate = document.getElementById("startDate");
+    const createBtn = document.getElementById("createProfileBtn");
+    const profilesList = document.getElementById("profilesList");
+
+    function render(){
+      const active = YTA.getActiveProfile();
+      document.getElementById("activeName").textContent = active ? active.name : "No profile";
+      document.getElementById("activeDate").textContent = active?.startDate ? YTA.fmtDate(active.startDate) : "Not set";
+
+      const profiles = YTA.getProfiles();
+      if(profiles.length === 0){
+        profilesList.innerHTML = `<div class="muted">No profiles yet. Create one above.</div>`;
+        return;
+      }
+
+      profilesList.innerHTML = profiles.map(p => {
+        const isActive = active && active.id === p.id;
+        const prog = YTA.computeOverallProgress(p.id);
+        const streak = YTA.computeStreak(p.id);
+        return `
+          <div class="row">
+            <div>
+              <div class="row__title">${p.name} ${isActive ? "• ✅ Active" : ""}</div>
+              <div class="row__meta">Start: ${p.startDate ? YTA.fmtDate(p.startDate) : "Not set"} • Progress: ${prog.completeDays}/${prog.totalDays} • Streak: ${streak}🔥</div>
+            </div>
+            <div class="ctaRow">
+              <button class="btn btn--soft" data-act="set" data-id="${p.id}">Set Active</button>
+              <button class="btn" data-act="editdate" data-id="${p.id}">Edit Start Date</button>
+              <button class="btn btn--danger" data-act="delete" data-id="${p.id}">Delete</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      profilesList.querySelectorAll("button[data-act]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const act = btn.getAttribute("data-act");
+          const id = btn.getAttribute("data-id");
+          if(act === "set"){
+            YTA.setActiveProfile(id);
+            render();
+          } else if(act === "editdate"){
+            const cur = YTA.getProfileById(id)?.startDate || "";
+            const nd = prompt("Enter start date as YYYY-MM-DD", cur);
+            if(!nd) return;
+            YTA.updateProfile(id, { startDate: nd });
+            render();
+          } else if(act === "delete"){
+            YTA.deleteProfile(id);
+            render();
+          }
+        });
+      });
+    }
+
+    createBtn.addEventListener("click", () => {
+      const name = (childName.value || "").trim();
+      const sd = (startDate.value || "").trim();
+      if(!name){
+        alert("Please enter a child name.");
+        return;
+      }
+      YTA.createProfile({ name, startDate: sd || "" });
+      childName.value = "";
+      startDate.value = "";
+      render();
+    });
+
+    document.getElementById("setTodayMonBtn").addEventListener("click", () => {
+      startDate.value = YTA.nextMondayISO();
+    });
+
+    render();
+  </script>
+</body>
+</html>
