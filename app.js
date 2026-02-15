@@ -2,6 +2,7 @@
 
 const YTA = (() => {
   let __inited = false;
+  let __kidBound = false;
   // ---------- storage keys ----------
   const PROFILES_KEY = "yta_profiles_v2";
   const ACTIVE_PROFILE_KEY = "yta_active_profile_v2";
@@ -126,9 +127,21 @@ const YTA = (() => {
     document.body.classList.toggle("kidmode", getKidMode());
     const btn = document.getElementById("kidModeToggle");
     if (!btn) return;
+
+    // prevent duplicate listeners if pages call this more than once
+    if (btn.dataset.ytaBound === "1") {
+      // still ensure label is correct
+      const onNow = getKidMode();
+      btn.setAttribute("aria-pressed", onNow ? "true" : "false");
+      btn.textContent = `Kid Mode: ${onNow ? "On" : "Off"}`;
+      return;
+    }
+    btn.dataset.ytaBound = "1";
+
     const on = getKidMode();
     btn.setAttribute("aria-pressed", on ? "true" : "false");
     btn.textContent = `Kid Mode: ${on ? "On" : "Off"}`;
+
     btn.addEventListener("click", () => {
       const now = !getKidMode();
       setKidMode(now);
@@ -136,6 +149,7 @@ const YTA = (() => {
       btn.textContent = `Kid Mode: ${now ? "On" : "Off"}`;
     });
   }
+
 
   // ---------- curriculum ----------
   function mkDay(num, week, month, dow, mainKey, mainTopic, buildTask, logicTask, typingTask, notes = "") {
@@ -1008,5 +1022,5 @@ const YTA = (() => {
 
 // AUTO_INIT_YTA: ensure core init runs even on pages without inline bootstrapping
 document.addEventListener('DOMContentLoaded', () => {
-  try { YTA.init(); } catch (e) { /* no-op */ }
+  try { YTA.init(); YTA.initKidModeUI(); } catch (e) { /* no-op */ }
 });
