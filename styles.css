@@ -5,32 +5,28 @@
    - Plus a Google-font-like stack without loading external assets
    If you want, you can later add: Inter / Plus Jakarta Sans / Nunito Sans via <link>.
 */
+/* FILE: styles.css  — UPDATED: adds .hero grid + select styling (append or replace whole file) */
 :root{
   --bg1:#0b1020;
   --bg2:#0b132a;
-  --card:#101a33;
-  --card2:#0f1a36;
   --text:#eef5ff;
   --muted:#b9c7e6;
   --line:rgba(255,255,255,.10);
   --shadow: 0 14px 40px rgba(0,0,0,.35);
 
-  /* Kid-friendly palette (bright but not neon) */
-  --primary:#7c9cff;     /* soft blue */
-  --primary2:#45e6b2;    /* mint */
-  --warning:#ffd66b;     /* sunshine */
-  --danger:#ff6b8b;      /* soft red/pink */
+  --primary:#7c9cff;
+  --primary2:#45e6b2;
+  --warning:#ffd66b;
+  --danger:#ff6b8b;
   --good:#45e6b2;
 
   --radius:18px;
   --radius2:24px;
 
-  /* sizing */
   --textSize: 16px;
   --h1: 28px;
   --h2: 20px;
 
-  /* kid mode scale */
   --kidScale: 1;
 }
 
@@ -88,7 +84,6 @@ a:hover{text-decoration:underline}
   background: rgba(124,156,255,.18);
   border-color: rgba(124,156,255,.45);
 }
-
 .topbar__actions{display:flex; gap:10px; align-items:center}
 
 .card{
@@ -106,6 +101,9 @@ a:hover{text-decoration:underline}
 .h2{font-size: calc(var(--h2) * var(--kidScale)); margin:0; line-height:1.2}
 .muted{color:var(--muted)}
 .small{font-size:.9em}
+
+.hero__grid{display:grid; grid-template-columns:1.2fr .8fr; gap:14px; align-items:stretch}
+@media (max-width: 900px){ .hero__grid{grid-template-columns:1fr} }
 
 .pillrow{display:flex; gap:10px; flex-wrap:wrap}
 .pill{
@@ -201,6 +199,7 @@ a:hover{text-decoration:underline}
   display:flex; gap:12px; justify-content:space-between; align-items:flex-end; flex-wrap:wrap;
 }
 .search{flex:1; min-width: 260px}
+
 .input{
   width:100%;
   padding: 12px 12px;
@@ -212,6 +211,17 @@ a:hover{text-decoration:underline}
   font-weight:700;
 }
 .input::placeholder{color: rgba(238,245,255,.45)}
+select.input{
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(238,245,255,.75) 50%),
+    linear-gradient(135deg, rgba(238,245,255,.75) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 55%,
+    calc(100% - 12px) 55%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
 
 .dayCard{
   padding: 14px;
@@ -233,7 +243,6 @@ a:hover{text-decoration:underline}
   color: var(--muted);
   font-weight:900;
 }
-
 .kidTag--done{
   background: rgba(69,230,178,.14);
   border-color: rgba(69,230,178,.45);
@@ -277,13 +286,8 @@ a:hover{text-decoration:underline}
 }
 
 .dayDetails{margin-top:10px}
-details summary{
-  cursor:pointer;
-  font-weight:900;
-  color: var(--warning);
-}
+details summary{cursor:pointer; font-weight:900; color:var(--warning)}
 
-/* Parent dashboard lists */
 .monthRows{display:flex; flex-direction:column; gap:10px}
 .row{
   display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;
@@ -295,16 +299,13 @@ details summary{
 .row__title{font-weight:950}
 .row__meta{color:var(--muted); font-weight:700}
 .row__right{min-width: 220px}
-.row .bar{margin-top:8px}
 
 .footer{
   display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;
   padding: 18px 16px;
 }
 
-/* Kid Mode: bigger and bouncier, but still clean */
-body.kidmode{
-  --kidScale: 1.14;
-}
+/* Kid Mode */
+body.kidmode{ --kidScale: 1.14; }
 body.kidmode .nav__link{padding: 12px 14px}
 body.kidmode .btn{border-radius: 16px}
