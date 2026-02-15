@@ -1,0 +1,73 @@
+<!-- FILE: print.html  (Print-friendly) -->
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Print Plan | Young Tech Architect</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <style>
+    /* extra print rules */
+    @media print{
+      .topbar, .footer, .noPrint { display:none !important; }
+      body { background:#fff !important; }
+      .card { box-shadow:none !important; border:1px solid #ddd !important; }
+      .dayCard { break-inside: avoid; }
+      a { color:#000; text-decoration:underline; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar__inner">
+      <a class="brand" href="./index.html">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__text">
+          <span class="brand__title">Young Tech Architect</span>
+          <span class="brand__subtitle">Print Plan</span>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Primary">
+        <a class="nav__link" href="./index.html">Home</a>
+        <a class="nav__link" href="./month1.html">Month 1</a>
+        <a class="nav__link" href="./month2.html">Month 2</a>
+        <a class="nav__link" href="./month3.html">Month 3</a>
+        <a class="nav__link is-active" href="./print.html">Print</a>
+        <a class="nav__link" href="./dashboard.html">Parent Dashboard</a>
+      </nav>
+
+      <div class="topbar__actions noPrint">
+        <button class="btn btn--primary" type="button" onclick="window.print()">Print / Save as PDF</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap stack">
+    <section class="card stack">
+      <h1 class="h1">Printable 90-Day Plan</h1>
+      <p class="muted">
+        Tip: in your browser print settings choose “Save as PDF” if you want a clean file.
+      </p>
+
+      <div class="pillrow">
+        <span class="pill pill--static"><span class="pill__k">Scratch</span><span class="pill__v">Days 1–24</span></span>
+        <span class="pill pill--static"><span class="pill__k">Roblox Studio</span><span class="pill__v">Days 25–48</span></span>
+        <span class="pill pill--static"><span class="pill__k">Python</span><span class="pill__v">Days 49–72</span></span>
+      </div>
+    </section>
+
+    <section id="printList" class="stack"></section>
+  </main>
+
+  <footer class="footer wrap noPrint">
+    <span class="muted small">Print view hides Kid Mode and checkboxes.</span>
+  </footer>
+
+  <script src="./app.js"></script>
+  <script>
+    // Print page: render all days in a compact layout, no checkboxes
+    YTA.renderPrintPage({ mountId: "printList" });
+  </script>
+</body>
+</html>
