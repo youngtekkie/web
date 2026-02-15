@@ -1,4 +1,4 @@
-<!-- FILE: month3.html  (Month 3 / Python) -->
+<!-- FILE: month3.html — NAV UPDATED similarly -->
 <!doctype html>
 <html lang="en-GB">
 <head>
@@ -20,9 +20,11 @@
 
       <nav class="nav" aria-label="Primary">
         <a class="nav__link" href="./index.html">Home</a>
+        <a class="nav__link" href="./profiles.html">Profiles</a>
         <a class="nav__link" href="./month1.html">Month 1</a>
         <a class="nav__link" href="./month2.html">Month 2</a>
         <a class="nav__link is-active" href="./month3.html">Month 3</a>
+        <a class="nav__link" href="./certificates.html">Certificates</a>
         <a class="nav__link" href="./print.html">Print</a>
         <a class="nav__link" href="./dashboard.html">Parent Dashboard</a>
       </nav>
@@ -38,7 +40,7 @@
       <div class="headRow">
         <div class="stack">
           <h1 class="h1">Month 3: Python Programmer Mode</h1>
-          <p class="muted">Days 49–72 • Build quizzes, guessing games, and a capstone text adventure.</p>
+          <p class="muted">Days 49–72 • Quizzes, guessing games, and a capstone text adventure.</p>
           <div class="pillrow">
             <a class="pill" href="https://replit.com" target="_blank" rel="noreferrer"><span class="pill__k">Replit</span><span class="pill__v">Python</span></a>
             <a class="pill" href="https://www.khanacademy.org" target="_blank" rel="noreferrer"><span class="pill__k">Khan Academy</span><span class="pill__v">Logic</span></a>
@@ -77,8 +79,8 @@
   </main>
 
   <footer class="footer wrap">
-    <span class="muted small">Tip: writing clean code is a skill — add comments and test edge cases.</span>
-    <button class="btn btn--danger btn--tiny" id="resetAll" type="button">Reset ticks</button>
+    <span class="muted small">Tip: test edge cases and comment your code.</span>
+    <button class="btn btn--danger btn--tiny" id="resetAll" type="button">Reset active child ticks</button>
   </footer>
 
   <script src="./app.js"></script>
@@ -95,8 +97,7 @@
       expandBtnId: "expandAll",
       collapseBtnId: "collapseAll"
     });
-
-    document.getElementById("resetAll").addEventListener("click", () => YTA.resetAll());
+    document.getElementById("resetAll").addEventListener("click", () => YTA.resetActiveChildTicks());
   </script>
 </body>
 </html>
