@@ -5,7 +5,7 @@ const YTA = (() => {
   const PROFILES_KEY = "yta_profiles_v2";
   const ACTIVE_PROFILE_KEY = "yta_active_profile_v2";
   const KIDMODE_KEY = "yta_kidmode_v2";
-  const UI_KEY = "yta_ui_v1";
+  const UI_KEY = "yta_ui_v1"; // reserved for future use
   const stateKey = (profileId) => `yta_state_${profileId}_v2`;
 
   // ---------- platform links ----------
@@ -24,7 +24,7 @@ const YTA = (() => {
       .replaceAll("<","&lt;")
       .replaceAll(">","&gt;")
       .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
+      .replaceAll("'","&#39;");
   }
 
   function cryptoId(){
@@ -48,40 +48,40 @@ const YTA = (() => {
     return d.toISOString().slice(0,10);
   }
 
-  // ---------- mobile nav (hamburger) ----------
-  function loadUI(){
-    return JSON.parse(localStorage.getItem(UI_KEY) || "{}");
-  }
-  function saveUI(ui){
-    localStorage.setItem(UI_KEY, JSON.stringify(ui));
-  }
-
+  // ---------- mobile nav (hamburger + close) ----------
   function initMobileNav(){
-    const navBtn = document.querySelector('[data-yt="navbtn"]');
+    const navBtns = Array.from(document.querySelectorAll('[data-yt="navbtn"]'));
     const drawer = document.querySelector('[data-yt="drawer"]');
     const backdrop = document.querySelector('[data-yt="backdrop"]');
 
-    if(!navBtn || !drawer || !backdrop) return;
+    if(navBtns.length === 0 || !drawer || !backdrop) return;
+
+    function setExpanded(val){
+      navBtns.forEach(b => b.setAttribute("aria-expanded", val ? "true" : "false"));
+    }
 
     function open(){
       drawer.classList.add("is-open");
       backdrop.classList.add("is-open");
-      navBtn.setAttribute("aria-expanded", "true");
+      setExpanded(true);
       document.body.classList.add("noScroll");
     }
+
     function close(){
       drawer.classList.remove("is-open");
       backdrop.classList.remove("is-open");
-      navBtn.setAttribute("aria-expanded", "false");
+      setExpanded(false);
       document.body.classList.remove("noScroll");
     }
 
-    navBtn.addEventListener("click", () => {
+    function toggle(){
       const isOpen = drawer.classList.contains("is-open");
       isOpen ? close() : open();
-    });
+    }
 
+    navBtns.forEach(btn => btn.addEventListener("click", toggle));
     backdrop.addEventListener("click", close);
+
     drawer.querySelectorAll("a").forEach(a => a.addEventListener("click", close));
 
     document.addEventListener("keydown", (e) => {
@@ -206,22 +206,17 @@ const YTA = (() => {
   ];
 
   function buildCurriculum(track){
-    // Track adjustments: keep the same structure, adjust tasks + expectations.
-    // Foundation (Y3–4): simpler wording, more guided, shorter typing targets.
-    // Builder (Y5–6): more independence, added “challenge” notes.
     const isFoundation = track === "foundation";
 
     return baseDays.map(d => {
       const nd = { ...d };
 
       if(isFoundation){
-        // Simplify topics slightly
         nd.mainTopic = nd.mainTopic
           .replace("Lua variables", "Lua basics (variables)")
           .replace("Refactoring", "Clean-up day")
           .replace("Leaderboard", "High score board");
 
-        // Main tasks: more guided / smaller scope
         nd.buildTask = nd.buildTask
           .replace("Build base game loop", "Make the game work (1 simple loop)")
           .replace("Handle bad input (letters, blanks)", "If input is wrong, show a friendly message")
@@ -229,23 +224,19 @@ const YTA = (() => {
           .replace("Project: Economy + power-ups", "Project: Coins + 1 power-up")
           .replace("Project: Text adventure (chapter 1)", "Project: Text adventure (short chapter 1)");
 
-        // Logic: shorter, friendlier
         nd.logicTask = nd.logicTask
           .replace("Multi-step", "Short multi-step")
           .replace("Reasoning puzzles", "Reasoning puzzles (short)")
           .replace("Brain teasers", "Brain teasers (easy/medium)");
 
-        // Typing: reduce targets and make it about consistency
         nd.typingTask = nd.typingTask
           .replace("target 35 wpm", "steady practice")
           .replace("target 40 wpm", "steady practice")
           .replace("target 45–50 wpm", "steady practice");
 
-        // Notes: more reassurance + “copy then customise”
         nd.notes = (nd.notes ? nd.notes + " • " : "") +
           "Foundation tip: copy it, then customise 1 thing.";
       } else {
-        // Builder: add “stretch” moments
         const stretch =
           d.num % 6 === 0 ? "Builder bonus: add 1 extra feature." :
           d.dow === "Fri" ? "Builder bonus: write 2 bugs you fixed." :
@@ -267,7 +258,7 @@ const YTA = (() => {
   function trackFromYearGroup(yearGroup){
     const yg = Number(yearGroup);
     if(yg === 3 || yg === 4) return "foundation";
-    return "builder"; // default for 5–6 (and fallback)
+    return "builder";
   }
 
   // ---------- profiles ----------
@@ -295,7 +286,6 @@ const YTA = (() => {
     localStorage.setItem(stateKey(id), JSON.stringify({}));
   }
 
-  // Migration: older profile versions -> add yearGroup/track if missing
   function migrateProfilesIfNeeded(){
     ensureDefaultProfile();
     const profiles = loadProfiles();
@@ -310,7 +300,6 @@ const YTA = (() => {
         p.track = trackFromYearGroup(p.yearGroup);
         changed = true;
       }
-      // keep track aligned unless user overrides later
       const should = trackFromYearGroup(p.yearGroup);
       if(p.track !== should && (p.track !== "foundation" && p.track !== "builder")){
         p.track = should;
@@ -362,7 +351,7 @@ const YTA = (() => {
 
     profiles.push({
       id,
-      name: name.trim(),
+      name: (name || "").trim(),
       yearGroup: yg,
       track,
       startDate: (startDate || "").trim(),
@@ -380,7 +369,6 @@ const YTA = (() => {
 
     const next = { ...profiles[idx], ...patch };
 
-    // if yearGroup changes, track follows it
     if(patch.yearGroup != null){
       next.track = trackFromYearGroup(patch.yearGroup);
     }
@@ -508,7 +496,6 @@ const YTA = (() => {
     const start = getStartDate(profileId);
 
     if(!start){
-      // fallback: last-consecutive completed from end of list
       let i = days.length - 1;
       while(i >= 0 && !dayIsComplete(days[i].num, profileId)) i--;
       if(i < 0) return 0;
@@ -541,6 +528,7 @@ const YTA = (() => {
   // ---------- rendering: day cards ----------
   function linkFor(key){
     const p = platforms[key];
+    if(!p) return esc(key);
     return `<a href="${p.url}" target="_blank" rel="noreferrer">${esc(p.name)}</a>`;
   }
 
@@ -558,13 +546,14 @@ const YTA = (() => {
     const done = dayIsComplete(d.num, profileId);
     const statusClass = done ? "kidTag kidTag--done" : "kidTag";
     const detailsOpen = expandedDefault ? " open" : "";
+    const mainName = platforms[d.mainKey]?.name || d.mainKey;
 
     return `
       <article class="dayCard" id="day-${d.num}">
         <div class="dayCard__top">
           <div class="stack gap8">
             <h3 class="dayTitle">Day ${d.num} — ${esc(d.dow)}</h3>
-            <div class="dayMeta">Week ${d.week} • Month ${d.month} • Main: ${esc(platforms[d.mainKey].name)}</div>
+            <div class="dayMeta">Week ${d.week} • Month ${d.month} • Main: ${esc(mainName)}</div>
             ${d.notes ? `<div class="dayMeta">${esc(d.notes)}</div>` : ""}
           </div>
           <div class="${statusClass}">${done ? "🏅 Completed" : "In progress"}</div>
@@ -640,12 +629,22 @@ const YTA = (() => {
 
     const mount = document.getElementById(dayListId);
     const search = document.getElementById(searchInputId);
+    if(!mount) return;
 
     if(headerTrackId){
       const el = document.getElementById(headerTrackId);
       if(el){
-        el.textContent = `${curriculum.name} • Year ${profile.yearGroup}`;
+        el.textContent = `${curriculum.name} • Year ${profile?.yearGroup ?? "—"}`;
       }
+    }
+
+    function setText(id, text){
+      const el = document.getElementById(id);
+      if(el) el.textContent = text;
+    }
+    function setBar(id, pct){
+      const el = document.getElementById(id);
+      if(el) el.style.width = `${pct}%`;
     }
 
     function draw(expandedDefault=false){
@@ -663,9 +662,9 @@ const YTA = (() => {
       wireCheckboxes(mount, profileId);
 
       const mp = computeMonthProgress(month, profileId);
-      document.getElementById(progressTextId).textContent = `${mp.complete} / ${mp.total} days`;
-      document.getElementById(progressBarId).style.width = `${mp.pct}%`;
-      document.getElementById(streakId).textContent = computeStreak(profileId);
+      setText(progressTextId, `${mp.complete} / ${mp.total} days`);
+      setBar(progressBarId, mp.pct);
+      setText(streakId, String(computeStreak(profileId)));
     }
 
     draw(false);
@@ -692,11 +691,12 @@ const YTA = (() => {
     const profileId = getActiveProfileId();
     const days = getDays(profileId);
     const mount = document.getElementById(mountId);
+    if(!mount) return;
 
     mount.innerHTML = days.map(d => `
       <article class="card dayCard">
         <h3 class="dayTitle">Day ${d.num} — ${esc(d.dow)} (Week ${d.week}, Month ${d.month})</h3>
-        <div class="muted small">Main: ${esc(platforms[d.mainKey].name)} • Topic: ${esc(d.mainTopic)}</div>
+        <div class="muted small">Main: ${esc(platforms[d.mainKey]?.name || d.mainKey)} • Topic: ${esc(d.mainTopic)}</div>
         <div class="dayGrid">
           <div class="task"><div class="task__k">Main task</div><div class="task__v">${esc(d.buildTask)}</div></div>
           <div class="task"><div class="task__k">Logic</div><div class="task__v">${esc(d.logicTask)}</div></div>
@@ -755,32 +755,14 @@ const YTA = (() => {
   function certificateTitleForWeek(week, track){
     const t = track || "builder";
     const foundationTitles = {
-      1:"Scratch Explorer",
-      2:"Maze Maker",
-      3:"Level Star",
-      4:"Scratch Showcase",
-      5:"Roblox Builder",
-      6:"Script Starter",
-      7:"Power-Up Pro",
-      8:"Game Publisher",
-      9:"Python Beginner",
-      10:"Loop Legend",
-      11:"Story Builder",
-      12:"Champion Coder"
+      1:"Scratch Explorer", 2:"Maze Maker", 3:"Level Star", 4:"Scratch Showcase",
+      5:"Roblox Builder", 6:"Script Starter", 7:"Power-Up Pro", 8:"Game Publisher",
+      9:"Python Beginner", 10:"Loop Legend", 11:"Story Builder", 12:"Champion Coder"
     };
     const builderTitles = {
-      1:"Movement Master",
-      2:"Rule Builder",
-      3:"Level Creator",
-      4:"Scratch Showcase Star",
-      5:"World Builder",
-      6:"Script Starter",
-      7:"System Designer",
-      8:"Publisher Power",
-      9:"Python Beginner Boss",
-      10:"Logic Loop Legend",
-      11:"Adventure Architect",
-      12:"Capstone Champion"
+      1:"Movement Master", 2:"Rule Builder", 3:"Level Creator", 4:"Scratch Showcase Star",
+      5:"World Builder", 6:"Script Starter", 7:"System Designer", 8:"Publisher Power",
+      9:"Python Beginner Boss", 10:"Logic Loop Legend", 11:"Adventure Architect", 12:"Capstone Champion"
     };
     const map = t === "foundation" ? foundationTitles : builderTitles;
     return map[week] || "Achievement Unlocked";
@@ -806,7 +788,7 @@ const YTA = (() => {
       return `<div class="row row--compact">
         <div>
           <div class="row__title">Day ${d.num} — ${esc(d.dow)}</div>
-          <div class="row__meta">${esc(platforms[d.mainKey].name)} • ${esc(d.mainTopic)}</div>
+          <div class="row__meta">${esc(platforms[d.mainKey]?.name || d.mainKey)} • ${esc(d.mainTopic)}</div>
         </div>
         <div class="row__meta row__meta--strong">${done ? "✓ Done" : "—"}</div>
       </div>`;
@@ -883,7 +865,7 @@ const YTA = (() => {
     document.getElementById(ids.overallId).textContent = `${overall.completeDays} / ${overall.totalDays}`;
     document.getElementById(ids.overallBarId).style.width = `${overall.pct}%`;
     document.getElementById(ids.overallPctId).textContent = `${overall.pct}%`;
-    document.getElementById(ids.streakId).textContent = streak;
+    document.getElementById(ids.streakId).textContent = String(streak);
 
     if(next){
       document.getElementById(ids.nextId).textContent = `Day ${next.num}`;
@@ -895,40 +877,44 @@ const YTA = (() => {
     }
 
     const byMonth = document.getElementById(ids.byMonthId);
-    byMonth.innerHTML = [1,2,3].map(m => {
-      const mp = computeMonthProgress(m, profileId);
-      const name = m===1 ? "Month 1 — Scratch" : m===2 ? "Month 2 — Roblox Studio" : "Month 3 — Python";
-      return `
-        <div class="row">
-          <div>
-            <div class="row__title">${name}</div>
-            <div class="row__meta">${mp.complete} / ${mp.total} days completed</div>
+    if(byMonth){
+      byMonth.innerHTML = [1,2,3].map(m => {
+        const mp = computeMonthProgress(m, profileId);
+        const name = m===1 ? "Month 1 — Scratch" : m===2 ? "Month 2 — Roblox Studio" : "Month 3 — Python";
+        return `
+          <div class="row">
+            <div>
+              <div class="row__title">${name}</div>
+              <div class="row__meta">${mp.complete} / ${mp.total} days completed</div>
+            </div>
+            <div class="row__right">
+              <div class="bar"><div style="width:${mp.pct}%; height:100%"></div></div>
+              <div class="small muted">${mp.pct}%</div>
+            </div>
           </div>
-          <div class="row__right">
-            <div class="bar"><div style="width:${mp.pct}%; height:100%"></div></div>
-            <div class="small muted">${mp.pct}%</div>
-          </div>
-        </div>
-      `;
-    }).join("");
+        `;
+      }).join("");
+    }
 
     const byWeek = document.getElementById(ids.byWeekId);
-    byWeek.innerHTML = Array.from({length:12}, (_,i)=>i+1).map(w => {
-      const wp = weekProgress(w, profileId);
-      const label = weekLabel(w, profileId);
-      return `
-        <div class="row">
-          <div>
-            <div class="row__title">${esc(label)}</div>
-            <div class="row__meta">${wp.complete} / ${wp.total} days completed</div>
+    if(byWeek){
+      byWeek.innerHTML = Array.from({length:12}, (_,i)=>i+1).map(w => {
+        const wp = weekProgress(w, profileId);
+        const label = weekLabel(w, profileId);
+        return `
+          <div class="row">
+            <div>
+              <div class="row__title">${esc(label)}</div>
+              <div class="row__meta">${wp.complete} / ${wp.total} days completed</div>
+            </div>
+            <div class="row__right">
+              <div class="bar"><div style="width:${wp.pct}%; height:100%"></div></div>
+              <div class="small muted">${wp.pct}%</div>
+            </div>
           </div>
-          <div class="row__right">
-            <div class="bar"><div style="width:${wp.pct}%; height:100%"></div></div>
-            <div class="small muted">${wp.pct}%</div>
-          </div>
-        </div>
-      `;
-    }).join("");
+        `;
+      }).join("");
+    }
   }
 
   // ---------- resets ----------
