@@ -1,103 +1,129 @@
-<!-- FILE: month3.html — NAV UPDATED similarly -->
 <!doctype html>
 <html lang="en-GB">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Month 3 — Python | Young Tech Architect</title>
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-  <header class="topbar">
-    <div class="wrap topbar__inner">
-      <a class="brand" href="./index.html">
-        <span class="brand__mark" aria-hidden="true"></span>
-        <span class="brand__text">
-          <span class="brand__title">Young Tech Architect</span>
-          <span class="brand__subtitle">Month 3 — Python</span>
-        </span>
-      </a>
+<header class="topbar">
+  <div class="wrap topbar__inner">
+    <a class="brand" href="./index.html">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span class="brand__text">
+        <span class="brand__title">Young Tech Architect</span>
+        <span class="brand__subtitle">Month 3 — Python</span>
+      </span>
+    </a>
 
-      <nav class="nav" aria-label="Primary">
-        <a class="nav__link" href="./index.html">Home</a>
-        <a class="nav__link" href="./profiles.html">Profiles</a>
-        <a class="nav__link" href="./month1.html">Month 1</a>
-        <a class="nav__link" href="./month2.html">Month 2</a>
-        <a class="nav__link is-active" href="./month3.html">Month 3</a>
-        <a class="nav__link" href="./certificates.html">Certificates</a>
-        <a class="nav__link" href="./print.html">Print</a>
-        <a class="nav__link" href="./dashboard.html">Parent Dashboard</a>
-      </nav>
+    <nav class="navRow" aria-label="Primary">
+      <a class="nav__link" href="./index.html">Home</a>
+      <a class="nav__link" href="./tracks.html">Tracks</a>
+      <a class="nav__link" href="./profiles.html">Profiles</a>
+      <a class="nav__link" href="./month1.html">Month 1</a>
+      <a class="nav__link" href="./month2.html">Month 2</a>
+      <a class="nav__link is-active" href="./month3.html">Month 3</a>
+      <a class="nav__link" href="./certificates.html">Certificates</a>
+      <a class="nav__link" href="./print.html">Print</a>
+      <a class="nav__link" href="./dashboard.html">Parent Dashboard</a>
+    </nav>
 
-      <div class="topbar__actions">
-        <button class="btn btn--soft" id="kidModeToggle" type="button" aria-pressed="false">Kid Mode: Off</button>
+    <div class="topbar__actions">
+      <button class="menuBtn" type="button" data-yt="navbtn" aria-expanded="false" aria-label="Open menu">☰</button>
+      <button class="btn btn--soft" id="kidModeToggle" type="button" aria-pressed="false">Kid Mode: Off</button>
+    </div>
+  </div>
+</header>
+
+<div class="backdrop" data-yt="backdrop"></div>
+<aside class="drawer" data-yt="drawer" aria-label="Mobile menu">
+  <div class="drawerHeader">
+    <div class="drawerTitle">Menu</div>
+    <button class="menuBtn" type="button" data-yt="navbtn" aria-expanded="true" aria-label="Close menu">✕</button>
+  </div>
+  <div class="drawerLinks">
+    <a href="./index.html">Home</a>
+    <a href="./tracks.html">Tracks</a>
+    <a href="./profiles.html">Profiles</a>
+    <a href="./month1.html">Month 1</a>
+    <a href="./month2.html">Month 2</a>
+    <a href="./month3.html">Month 3</a>
+    <a href="./certificates.html">Certificates</a>
+    <a href="./print.html">Print</a>
+    <a href="./dashboard.html">Parent Dashboard</a>
+  </div>
+</aside>
+
+<main class="wrap stack">
+  <section class="card stack">
+    <div class="stack">
+      <h1 class="h1">Month 3: Python Programmer Mode</h1>
+      <div class="muted" id="trackLine">—</div>
+      <p class="muted">Days 49–72 • Tick all 4 boxes to complete a day.</p>
+
+      <div class="pillrow">
+        <a class="pill" href="https://replit.com" target="_blank" rel="noreferrer">
+          <span class="pill__k">Replit (Python)</span><span class="pill__v">Main</span>
+        </a>
+        <a class="pill" href="https://www.khanacademy.org" target="_blank" rel="noreferrer">
+          <span class="pill__k">Khan Academy</span><span class="pill__v">Logic</span>
+        </a>
+        <a class="pill" href="https://www.typingclub.com" target="_blank" rel="noreferrer">
+          <span class="pill__k">TypingClub</span><span class="pill__v">Typing</span>
+        </a>
       </div>
     </div>
-  </header>
 
-  <main class="wrap stack">
-    <section class="card stack">
-      <div class="headRow">
-        <div class="stack">
-          <h1 class="h1">Month 3: Python Programmer Mode</h1>
-          <p class="muted">Days 49–72 • Quizzes, guessing games, and a capstone text adventure.</p>
-          <div class="pillrow">
-            <a class="pill" href="https://replit.com" target="_blank" rel="noreferrer"><span class="pill__k">Replit</span><span class="pill__v">Python</span></a>
-            <a class="pill" href="https://www.khanacademy.org" target="_blank" rel="noreferrer"><span class="pill__k">Khan Academy</span><span class="pill__v">Logic</span></a>
-            <a class="pill" href="https://www.typingclub.com" target="_blank" rel="noreferrer"><span class="pill__k">TypingClub</span><span class="pill__v">Typing</span></a>
-          </div>
-        </div>
-
-        <div class="card card--soft stack miniPanel">
-          <div class="stat">
-            <div class="stat__k">Month progress</div>
-            <div class="stat__v" id="mProgressText">0 / 24 days</div>
-            <div class="bar"><div id="mProgressBar"></div></div>
-          </div>
-          <div class="stat">
-            <div class="stat__k">Streak</div>
-            <div class="stat__v"><span id="mStreak">0</span> 🔥</div>
-          </div>
-        </div>
+    <div class="controlsRow">
+      <div class="search">
+        <label class="small muted" for="search">Search topics</label>
+        <input id="search" class="input" placeholder="e.g., loops, lists, random, functions…" />
       </div>
 
-      <div class="controlsRow">
-        <div class="search">
-          <label class="small muted" for="search">Search topics</label>
-          <input id="search" class="input" placeholder="e.g., loops, random, lists, functions…" />
+      <div class="ctaRow">
+        <div class="card card--soft" style="padding:12px; min-width: 220px;">
+          <div class="stat__k">Month progress</div>
+          <div class="stat__v" id="mProgressText">0 / 24 days</div>
+          <div class="bar"><div id="mProgressBar"></div></div>
+          <div class="stat__k" style="margin-top:10px">Streak</div>
+          <div class="stat__v"><span id="mStreak">0</span> 🔥</div>
         </div>
 
-        <div class="ctaRow">
-          <button class="btn" type="button" id="jumpToday">Jump to next day</button>
-          <button class="btn btn--soft" type="button" id="expandAll">Expand all</button>
-          <button class="btn btn--soft" type="button" id="collapseAll">Collapse all</button>
-        </div>
+        <button class="btn" type="button" id="jumpToday">Jump to next day</button>
+        <button class="btn btn--soft" type="button" id="expandAll">Expand all</button>
+        <button class="btn btn--soft" type="button" id="collapseAll">Collapse all</button>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="stack" id="dayList"></section>
-  </main>
+  <section class="stack" id="dayList"></section>
+</main>
 
-  <footer class="footer wrap">
-    <span class="muted small">Tip: test edge cases and comment your code.</span>
-    <button class="btn btn--danger btn--tiny" id="resetAll" type="button">Reset active child ticks</button>
-  </footer>
+<footer class="footer wrap">
+  <span class="muted small">Tip: Fridays are great for tidy-up + bug fixing (real developer habit).</span>
+  <button class="btn btn--danger btn--tiny" id="resetAll" type="button">Reset active child ticks</button>
+</footer>
 
-  <script src="./app.js"></script>
-  <script>
-    YTA.initKidModeUI();
-    YTA.renderMonthPage({
-      month: 3,
-      dayListId: "dayList",
-      searchInputId: "search",
-      progressTextId: "mProgressText",
-      progressBarId: "mProgressBar",
-      streakId: "mStreak",
-      jumpBtnId: "jumpToday",
-      expandBtnId: "expandAll",
-      collapseBtnId: "collapseAll"
-    });
-    document.getElementById("resetAll").addEventListener("click", () => YTA.resetActiveChildTicks());
-  </script>
+<script src="./app.js"></script>
+<script>
+  YTA.init();
+  YTA.initKidModeUI();
+
+  YTA.renderMonthPage({
+    month: 3,
+    dayListId: "dayList",
+    searchInputId: "search",
+    progressTextId: "mProgressText",
+    progressBarId: "mProgressBar",
+    streakId: "mStreak",
+    jumpBtnId: "jumpToday",
+    expandBtnId: "expandAll",
+    collapseBtnId: "collapseAll",
+    headerTrackId: "trackLine"
+  });
+
+  document.getElementById("resetAll").addEventListener("click", () => YTA.resetActiveChildTicks());
+</script>
 </body>
 </html>
