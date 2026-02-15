@@ -279,3 +279,62 @@ p {
     padding: 40px 20px;
   }
 }
+
+
+/* ==========================================
+   PAGE OFFSET (fixed nav)
+========================================== */
+body:not(.home){
+  padding-top: 84px;
+}
+
+/* ==========================================
+   NAV JOURNEY DROPDOWN
+========================================== */
+.nav-journey{
+  position: relative;
+}
+
+.nav-journey__summary{
+  list-style: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.nav-journey__summary::-webkit-details-marker{ display:none; }
+
+.nav-journey[open] .nav-journey__summary{
+  opacity: .7;
+}
+
+.nav-journey__menu{
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  min-width: 180px;
+  background: var(--soft);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+  padding: 10px;
+  display: grid;
+  gap: 6px;
+}
+
+.nav-journey__menu a{
+  padding: 10px 12px;
+  border-radius: 12px;
+}
+
+.nav-journey__menu a:hover{
+  background: rgba(0,0,0,0.04);
+}
+
+/* Make sure nav sits above hero video */
+.nav{ z-index: 2000; }
+.mobile-drawer{ z-index: 1999; }
+
+/* Mobile drawer width tweak */
+@media (max-width: 520px){
+  .mobile-drawer{ width: 84%; padding: 28px; }
+}

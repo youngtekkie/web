@@ -1,6 +1,7 @@
 /* FILE: app.js — Track-based (Year 3–6) + multi-child profiles + start date + mobile nav + certificates */
 
 const YTA = (() => {
+  let __inited = false;
   // ---------- storage keys ----------
   const PROFILES_KEY = "yta_profiles_v2";
   const ACTIVE_PROFILE_KEY = "yta_active_profile_v2";
@@ -940,6 +941,8 @@ const YTA = (() => {
 
   // ---------- init ----------
   function init() {
+    if (__inited) return;
+    __inited = true;
     ensureDefaultProfile();
     migrateProfilesIfNeeded();
     initMobileNav();
@@ -1001,3 +1004,9 @@ const YTA = (() => {
     initFooterYear
   };
 })();
+
+
+// AUTO_INIT_YTA: ensure core init runs even on pages without inline bootstrapping
+document.addEventListener('DOMContentLoaded', () => {
+  try { YTA.init(); } catch (e) { /* no-op */ }
+});
