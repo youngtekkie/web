@@ -1,910 +1,162 @@
+<!-- FILE: index.html  (Home) -->
 <!doctype html>
 <html lang="en-GB">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jumial Digital Support | Premium Tech Support & Computer Repair</title>
-  <meta name="description" content="Jumial Digital Support: friendly, premium computer repair and tech support. Upgrades, Wi-Fi & printer setup, malware removal, troubleshooting. East Sussex + remote UK." />
-
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "name": "Jumial Digital Support",
-  "telephone": "+447876265264",
-  "areaServed": ["Bexhill", "Hastings", "Eastbourne", "Battle", "Rye", "Polegate", "Lewes", "Brighton"],
-  "url": "https://abuj07.github.io/jumial-digital-support/",
-  "sameAs": [],
-  "description": "Computer repair and tech support. Troubleshooting, repairs, upgrades, Wi-Fi fixes, printer setup, malware removal, website maintenance. East Sussex + remote UK."
-}
-</script>  
-  <style>
-    :root{
-      --bg0:#070a12;
-      --bg1:#0a1020;
-      --card: rgba(255,255,255,.06);
-      --line: rgba(255,255,255,.10);
-      --text:#eef2ff;
-      --muted: rgba(238,242,255,.72);
-      --muted2: rgba(238,242,255,.58);
-      --accent:#5aa7ff;
-      --accent2:#8ae1ff;
-      --shadow: 0 24px 70px rgba(0,0,0,.55);
-      --r: 22px;
-      --max: 1120px;
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(1200px 600px at 12% 0%, rgba(90,167,255,.22), transparent 60%),
-        radial-gradient(900px 500px at 92% 10%, rgba(138,225,255,.16), transparent 55%),
-        radial-gradient(900px 600px at 50% 110%, rgba(90,167,255,.12), transparent 60%),
-        linear-gradient(180deg, var(--bg0), var(--bg1));
-      line-height:1.55;
-    }
-    a{color:inherit; text-decoration:none}
-    .wrap{max-width:var(--max); margin:0 auto; padding:0 18px}
-
-    /* Top bar */
-    .topbar{
-      position:sticky; top:0; z-index:50;
-      backdrop-filter: blur(14px);
-      background: rgba(7,10,18,.62);
-      border-bottom:1px solid var(--line);
-    }
-    .nav{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:14px 0;
-      gap:12px;
-    }
-    .brand{display:flex; align-items:center; gap:12px; min-width: 220px;}
-    .logoWrap{
-      display:flex; align-items:center; gap:10px;
-      padding:8px 10px;
-      border-radius:16px;
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.05);
-    }
-    .logoImg{
-      height:42px;
-      width:auto;
-      display:block;
-      filter:none;
-    }
-
-    .brand .name{font-weight:800; letter-spacing:.3px}
-    .brand .tag{font-size:12px; color:var(--muted2); margin-top:2px}
-
-    .links{display:flex; gap:16px; align-items:center; flex-wrap:wrap}
-    .links a{font-size:14px; color:var(--muted); font-weight:650}
-    .links a:hover{color:var(--text)}
-
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center;
-      gap:10px;
-      padding:10px 14px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.04);
-      font-weight:800;
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
-      cursor:pointer;
-    }
-    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.16)}
-    .btn.primary{
-      border:0;
-      background: linear-gradient(135deg, rgba(90,167,255,.95), rgba(138,225,255,.85));
-      color:#061022;
-    }
-    .hamburger{display:none}
-    @media (max-width: 920px){
-      .links{display:none}
-      .hamburger{display:inline-flex}
-    }
-
-    /* Mobile menu */
-    .mobileMenu{
-      display:none;
-      padding:0 0 14px;
-    }
-    .mobileMenu a{
-      display:block;
-      padding:10px 0;
-      color:var(--muted);
-      font-weight:700;
-      border-top:1px solid var(--line);
-    }
-    .mobileMenu a:hover{color:var(--text)}
-
-    /* Hero */
-    .hero{padding:54px 0 16px}
-    .heroGrid{
-      display:grid;
-      grid-template-columns: 1.35fr .65fr;
-      gap:16px;
-      align-items:stretch;
-    }
-    @media (max-width: 920px){ .heroGrid{grid-template-columns:1fr} }
-
-    .card{
-      background: var(--card);
-      border:1px solid var(--line);
-      border-radius: var(--r);
-      box-shadow: var(--shadow);
-      padding:22px;
-    }
-    .kicker{
-      display:inline-flex; align-items:center; gap:10px;
-      font-size:13px; color:var(--muted);
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.03);
-      padding:8px 12px;
-      border-radius:999px;
-    }
-    h1{margin:14px 0 10px; font-size:46px; line-height:1.08; letter-spacing:-.5px}
-    @media (max-width: 540px){ h1{font-size:36px} }
-    .lead{margin:0; color:var(--muted); font-size:16px}
-    .ctas{display:flex; gap:10px; flex-wrap:wrap; margin-top:18px}
-    .pillRow{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px}
-    .pill{
-      font-size:13px; color:var(--muted);
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.03);
-      padding:7px 10px;
-      border-radius:999px;
-    }
-
-    .sideTitle{margin:0 0 10px; font-size:18px}
-    .kv{display:grid; gap:12px}
-    .kv .item{
-      background: rgba(255,255,255,.04);
-      border:1px solid var(--line);
-      border-radius: 18px;
-      padding:14px;
-    }
-    .kv b{display:block; margin-bottom:4px}
-    .small{font-size:12px; color:var(--muted2)}
-    .note{
-      margin-top:12px;
-      border-left:3px solid rgba(138,225,255,.75);
-      background: rgba(255,255,255,.03);
-      border-radius:14px;
-      padding:10px 12px;
-      color:var(--muted);
-      font-size:13px;
-    }
-
-    /* Sections */
-    section{padding:20px 0}
-    .sectionHead{
-      display:flex; align-items:flex-end; justify-content:space-between;
-      gap:12px; margin-bottom:12px;
-    }
-    .sectionHead h2{margin:0; font-size:24px}
-    .sectionHead p{margin:0; color:var(--muted2)}
-    .grid3{display:grid; grid-template-columns:repeat(3, 1fr); gap:14px}
-    @media (max-width: 920px){ .grid3{grid-template-columns:1fr} }
-
-    .service h3{margin:0 0 6px; font-size:18px}
-    .service p{margin:0; color:var(--muted)}
-    .metaRow{
-      display:flex; align-items:center; justify-content:space-between;
-      margin-top:12px;
-      padding-top:12px;
-      border-top:1px solid var(--line);
-      color:var(--muted2);
-      font-size:14px;
-      gap:10px;
-    }
-    .badge{
-      font-weight:900;
-      color:#061022;
-      background: linear-gradient(135deg, rgba(90,167,255,.95), rgba(138,225,255,.85));
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:12px;
-      white-space:nowrap;
-    }
-
-    .split{display:grid; grid-template-columns:1fr 1fr; gap:14px}
-    @media (max-width: 920px){ .split{grid-template-columns:1fr} }
-    ul{margin:10px 0 0; padding-left:18px; color:var(--muted)}
-    .divider{height:1px; background:var(--line); margin:14px 0}
-
-    footer{
-      margin-top:22px;
-      border-top:1px solid var(--line);
-      padding:28px 0 42px;
-      color:var(--muted2);
-    }
-    .footRow{display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px}
-        /* Make dropdown lists readable everywhere (desktop + mobile) */
-    select {
-      color: var(--text);                    /* closed select text stays white */
-      background: rgba(255,255,255,.03);     /* keep your premium dark look */
-    }
-    
-    select option {
-      color: #061022 !important;             /* options text dark */
-      background: #ffffff !important;        /* options background white */
-    }
-    
-    /* Optional: improves appearance on Safari/iOS */
-    select:focus {
-      outline: none;
-    }
-
-  </style>
-
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Young Tech Architect — 90 Day Challenge</title>
+  <link rel="stylesheet" href="./styles.css" />
 </head>
-
-
 <body>
   <header class="topbar">
-    <div class="wrap">
-      <div class="nav">
-        <div class="brand">
-            <!-- Put your transparent logo in: assets/jumial-logo-transparent.png -->
-            <img class="logoImg" src="assets/jumial-logo-transparent.png" alt="Jumial Digital Support logo">
-          <div>
-            <div class="name">Jumial Digital Support</div>
-            <div class="tag">Premium IT support</div>
-          </div>
-        </div>
+    <div class="wrap topbar__inner">
+      <a class="brand" href="./index.html" aria-label="Young Tech Architect Home">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__text">
+          <span class="brand__title">Young Tech Architect</span>
+          <span class="brand__subtitle">90 Day Challenge</span>
+        </span>
+      </a>
 
-        <nav class="links" aria-label="Primary">
-          <a href="#services">Services</a>
-          <a href="#pricing">Pricing</a>
-          <a href="#areas">Areas</a>
-          <a href="#reviews">Reviews</a>
-          <a href="#contact">Contact</a>
-          <a href="#retainers">Retainers</a>
-          <a href="#book">Book</a>
-        </nav>
-
-        <div style="display:flex; gap:10px; align-items:center">
-          <a class="btn primary" href="#contact">Book a job</a>
-          <button class="btn hamburger" id="menuBtn" aria-label="Open menu" type="button">Menu</button>
-        </div>
-      </div>
-
-      <nav class="mobileMenu" id="mobileMenu" aria-label="Mobile">
-        <a href="#services">Services</a>
-        <a href="#pricing">Pricing</a>
-        <a href="#retainers">Retainers</a>
-        <a href="#book">Book</a>
-        <a href="#areas">Areas</a>
-        <a href="#reviews">Reviews</a>
-        <a href="#contact">Contact</a>
+      <nav class="nav" aria-label="Primary">
+        <a class="nav__link is-active" href="./index.html">Home</a>
+        <a class="nav__link" href="./month1.html">Month 1</a>
+        <a class="nav__link" href="./month2.html">Month 2</a>
+        <a class="nav__link" href="./month3.html">Month 3</a>
+        <a class="nav__link" href="./print.html">Print</a>
+        <a class="nav__link" href="./dashboard.html">Parent Dashboard</a>
       </nav>
 
+      <div class="topbar__actions">
+        <button class="btn btn--soft" id="kidModeToggle" type="button" aria-pressed="false">
+          Kid Mode: Off
+        </button>
+      </div>
     </div>
   </header>
 
-  <main class="wrap">
-    <section class="hero">
-      <div class="heroGrid">
-        <div class="card">
-          <div class="kicker">Premium IT support • Fast response • Clear, professional service</div>
-          <h1>Premium IT support for homes and small businesses.</h1>
-          <p class="lead">
-          Reliable troubleshooting, upgrades, Wi-Fi optimisation, printer setup, malware removal, and device migrations, delivered with clean workmanship & clear communication.
+  <main class="wrap stack">
+    <section class="hero card">
+      <div class="hero__grid">
+        <div class="stack">
+          <h1 class="h1">A day-by-day learning path to help kids build games, learn logic, and type faster.</h1>
+          <p class="muted">
+            This is a Monday–Saturday plan for 12 weeks (72 days). Tick tasks to track progress.
+            Ticks save on this device.
           </p>
 
-          <div class="ctas">
-            <a class="btn primary" href="tel:+447876265264">Call</a>
-            <a class="btn" href="https://wa.me/447876265264">WhatsApp</a>
-            <!-- Optional: change this to your real email -->
-            <a class="btn" href="mailto:jumialdigitalsupport@gmail.com">Email</a>
+          <div class="pillrow">
+            <a class="pill" href="https://scratch.mit.edu" target="_blank" rel="noreferrer">
+              <span class="pill__k">Scratch</span><span class="pill__v">Month 1</span>
+            </a>
+            <a class="pill" href="https://create.roblox.com" target="_blank" rel="noreferrer">
+              <span class="pill__k">Roblox Studio</span><span class="pill__v">Month 2</span>
+            </a>
+            <a class="pill" href="https://replit.com" target="_blank" rel="noreferrer">
+              <span class="pill__k">Python (Replit)</span><span class="pill__v">Month 3</span>
+            </a>
+            <a class="pill" href="https://www.khanacademy.org" target="_blank" rel="noreferrer">
+              <span class="pill__k">Logic</span><span class="pill__v">All months</span>
+            </a>
+            <a class="pill" href="https://www.typingclub.com" target="_blank" rel="noreferrer">
+              <span class="pill__k">Typing</span><span class="pill__v">All months</span>
+            </a>
           </div>
 
-          <div class="pillRow">
-  <span class="pill">On-site & remote support</span>
-  <span class="pill">Transparent pricing</span>
-  <span class="pill">Data care & confidentiality</span>
-  <span class="pill">Tidy, documented work</span>
-</div>
+          <div class="ctaRow">
+            <a class="btn btn--primary" href="./month1.html">Start Day 1 →</a>
+            <a class="btn" href="./dashboard.html">View Parent Dashboard</a>
+            <a class="btn btn--soft" href="./print.html">Print Plan</a>
+          </div>
         </div>
 
-        <aside class="card">
-          <h3 class="sideTitle">Quick facts</h3>
-          <div class="kv">
-            <div class="item">
-              <b>Typical visit</b>
-              <span class="small">30–120 mins (issue dependent)</span>
+        <div class="card card--soft stack">
+          <div class="stats">
+            <div class="stat">
+              <div class="stat__k">Progress</div>
+              <div class="stat__v" id="homeProgressText">0 / 72 days</div>
+              <div class="bar" aria-label="Progress bar"><div id="homeProgressBar"></div></div>
             </div>
-            <div class="item">
-              <b>What customers like</b>
-              <span class="small">Clear explanations, no waffle, tidy work</span>
-            </div>
-            <div class="item">
-              <b>Payments</b>
-              <span class="small">Bank transfer / cash</span>
-            </div>
-          </div>
-          <div class="note">
-            If you can, have your device password ready so we can test properly (or set a temporary one).
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section id="services">
-      <div class="sectionHead">
-        <h2>Services</h2>
-        <p>Common jobs we handle</p>
-      </div>
-
-      <div class="grid3">
-        <div class="card service">
-          <h3>Repairs & troubleshooting</h3>
-          <p>Slow devices, boot issues, crashing apps, overheating, blue screens, odd errors.</p>
-          <div class="metaRow"><span>On-site or remote</span><span class="badge">Popular</span></div>
-        </div>
-
-        <div class="card service">
-          <h3>Upgrades</h3>
-          <p>SSD & RAM upgrades, clean installs, performance tune-ups, backups.</p>
-          <div class="metaRow"><span>Faster & smoother</span><span class="badge">Boost</span></div>
-        </div>
-
-        <div class="card service">
-          <h3>Home tech setup</h3>
-          <p>Wi-Fi extenders, printers, smart devices, email setup, account tidy-ups.</p>
-          <div class="metaRow"><span>Less stress</span><span class="badge">Setup</span></div>
-        </div>
-      </div>
-    </section>
-    
-    <section id="process">
-  <div class="sectionHead">
-    <h2>How it works</h2>
-    <p>Professional process, no guesswork</p>
-  </div>
-
-  <div class="grid3">
-    <div class="card service">
-      <h3>1) Diagnose & confirm</h3>
-      <p>We identify the cause, explain options clearly, and confirm cost before proceeding.</p>
-    </div>
-    <div class="card service">
-      <h3>2) Fix properly</h3>
-      <p>Clean workmanship, minimal disruption, and sensible recommendations (no upselling).</p>
-    </div>
-    <div class="card service">
-      <h3>3) Test & handover</h3>
-      <p>We test, document what was done, and show you how to avoid the same issue again.</p>
-    </div>
-  </div>
-
-  <div class="note">
-    Your data and privacy are treated with care. If a part or licence is needed, we agree it upfront and provide receipts.
-  </div>
-</section>
-
-    <!-- PRICING (Home vs Business toggle) -->
-    <section id="pricing">
-      <div class="sectionHead">
-        <h2>Pricing</h2>
-        <p>Clear rates (please confirm scope before work starts)</p>
-      </div>
-
-      <div class="card" style="padding:14px; margin-bottom:14px">
-        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between">
-          <div class="small" style="color:var(--muted)">
-            Charged fairly • No surprise extras • Receipts for any parts
-          </div>
-
-          <div style="display:flex; gap:10px; flex-wrap:wrap">
-            <button class="btn primary" id="btnHome" type="button">Home tech support</button>
-            <button class="btn" id="btnBiz" type="button">Small business</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- HOME -->
-      <div id="pricingHome">
-        <div class="grid3">
-          <div class="card service">
-            <h3>Visit & support fees</h3>
-            <p style="color:var(--muted); margin:0 0 10px">
-              Ideal for first-time call-outs and diagnosis.
-            </p>
-            <div class="metaRow"><span>Home visit & diagnosis</span><span class="badge">£55</span></div>
-            <div class="metaRow"><span>Remote support (30-min blocks)</span><span class="badge">£45/hr</span></div>
-            <div class="metaRow"><span>On-site labour (home visits)</span><span class="badge">£75/hr</span></div>
-          </div>
-
-          <div class="card service">
-            <h3>Core tech support</h3>
-            <p style="color:var(--muted); margin:0 0 10px">
-              Most common fixes and improvements.
-            </p>
-            <div class="metaRow"><span>Slow computer tune-up & optimisation</span><span class="badge">£95</span></div>
-            <div class="metaRow"><span>Virus & malware removal</span><span class="badge">£110</span></div>
-            <div class="metaRow"><span>Wi-Fi & printer troubleshooting</span><span class="badge">£85</span></div>
-          </div>
-
-          <div class="card service">
-            <h3>Setup, repairs & data</h3>
-            <p style="color:var(--muted); margin:0 0 10px">
-              Upgrades, migrations and device support.
-            </p>
-            <div class="metaRow"><span>Desktop & laptop repairs & upgrades</span><span class="badge">£75/hr</span></div>
-            <div class="metaRow"><span>Data transfer & backup</span><span class="badge">£85–£125</span></div>
-            <div class="metaRow"><span>Email & account help</span><span class="badge">£85–£125</span></div>
-            <div class="metaRow"><span>New desktop or laptop setup</span><span class="badge">£95</span></div>
-            <div class="metaRow"><span>New setup + data transfer (migration)</span><span class="badge">£115</span></div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-top:14px">
-          <h3 style="margin:0 0 8px">Additional services</h3>
-
-          <div class="grid3" style="margin-top:10px">
-            <div class="card service" style="box-shadow:none; background:rgba(255,255,255,.04)">
-              <h3>Website support</h3>
-              <p>Squarespace, WordPress & similar platforms</p>
-              <div class="metaRow"><span>From</span><span class="badge">£75/hr</span></div>
-            </div>
-
-            <div class="card service" style="box-shadow:none; background:rgba(255,255,255,.04)">
-              <h3>Tech guidance (1-to-1)</h3>
-              <p>Patient, non-technical tuition</p>
-              <div class="metaRow"><span>From</span><span class="badge">£60/hr</span></div>
-            </div>
-
-            <div class="card service" style="box-shadow:none; background:rgba(255,255,255,.04)">
-              <h3>Advice & networking</h3>
-              <p>Pre-buy advice + home network optimisation</p>
-              <div class="metaRow"><span>Device purchase advice</span><span class="badge">£60</span></div>
-              <div class="metaRow"><span>Home network optimisation</span><span class="badge">from £85</span></div>
+            <div class="stat">
+              <div class="stat__k">Streak</div>
+              <div class="stat__v"><span id="homeStreak">0</span> days 🔥</div>
+              <div class="muted small">Complete all 4 ticks for a day to count.</div>
             </div>
           </div>
 
-          <div class="note" style="margin-top:14px">
-            Prices can vary depending on device condition, access, and complexity. You’ll always get confirmation before anything chargeable begins.
-          </div>
-        </div>
-      </div>
-
-      <!-- BUSINESS -->
-      <div id="pricingBiz" style="display:none">
-        <div class="grid3">
-          <div class="card service">
-            <h3>Business support rates</h3>
-            <p style="color:var(--muted); margin:0 0 10px">
-              For sole traders, small teams & growing businesses.
-            </p>
-            <div class="metaRow"><span>Remote business support (30-min blocks)</span><span class="badge">£60/hr</span></div>
-            <div class="metaRow"><span>On-site business support (min 1 hour)</span><span class="badge">£90/hr</span></div>
-            <div class="metaRow"><span>Full day on-site (up to 7 hours)</span><span class="badge">£560/day</span></div>
+          <div class="badges">
+            <div class="badge" id="badgeStarter">🏁 Starter</div>
+            <div class="badge" id="badgeBuilder">🧱 Builder</div>
+            <div class="badge" id="badgeFinisher">🏆 Finisher</div>
           </div>
 
-          <div class="card service">
-            <h3>Computers & devices</h3>
-            <p style="color:var(--muted); margin:0 0 10px">
-              Setup, repairs and upgrades for work devices.
-            </p>
-            <div class="metaRow"><span>Staff laptop & desktop setup</span><span class="badge">£110/device</span></div>
-            <div class="metaRow"><span>Device replacement & data migration</span><span class="badge">£135/device</span></div>
-            <div class="metaRow"><span>Repairs / performance issues (on-site)</span><span class="badge">£90/hr</span></div>
-            <div class="metaRow"><span>Hardware upgrades (RAM/SSD)</span><span class="badge">£90/hr</span></div>
-          </div>
-
-          <div class="card service">
-            <h3>Email & productivity</h3>
-            <p style="color:var(--muted); margin:0 0 10px">
-              Microsoft 365 / Google Workspace and access issues.
-            </p>
-            <div class="metaRow"><span>M365 / Google Workspace setup</span><span class="badge">£90/hr</span></div>
-            <div class="metaRow"><span>Email troubleshooting (remote)</span><span class="badge">£60/hr</span></div>
-            <div class="metaRow"><span>Email troubleshooting (on-site)</span><span class="badge">£90/hr</span></div>
-            <div class="metaRow"><span>Shared mailboxes & calendars</span><span class="badge">£90/hr</span></div>
-          </div>
-        </div>
-
-        <div class="grid3" style="margin-top:14px">
-          <div class="card service">
-            <h3>Networks, Wi-Fi & printing</h3>
-            <p style="color:var(--muted); margin:0 0 10px">
-              Setup, optimisation and troubleshooting.
-            </p>
-            <div class="metaRow"><span>Business Wi-Fi setup / optimisation</span><span class="badge">from £110</span></div>
-            <div class="metaRow"><span>Printer setup & shared printing</span><span class="badge">from £110</span></div>
-            <div class="metaRow"><span>Network troubleshooting</span><span class="badge">£90/hr</span></div>
-          </div>
-
-          <div class="card service">
-            <h3>Data, backup & security</h3>
-            <p style="color:var(--muted); margin:0 0 10px">
-              Protect business data and reduce downtime.
-            </p>
-            <div class="metaRow"><span>Data transfer & backup</span><span class="badge">£110–£160</span></div>
-            <div class="metaRow"><span>Backup health check</span><span class="badge">£90/hr</span></div>
-          </div>
-
-          <div class="card service">
-            <h3>Consultation & planning</h3>
-            <p style="color:var(--muted); margin:0 0 10px">
-              Buying advice, planning and practical guidance.
-            </p>
-            <div class="metaRow"><span>IT consultation & planning</span><span class="badge">£85/hr</span></div>
-            <div class="metaRow"><span>Device & software purchase advice</span><span class="badge">£85/hr</span></div>
-          </div>
-        </div>
-
-        <div class="note" style="margin-top:14px">
-          Minimum 1-hour charge for business support. Prices exclude hardware, licences & subscriptions. Best-effort support (no SLA unless agreed). Scope agreed before work begins.
-        </div>
-      </div>
-    </section>
-    
-    <section id="retainers">
-  <div class="sectionHead">
-    <h2>IT Support Retainers</h2>
-    <p>Tiered plans for growing teams (priority response & discounted rates)</p>
-  </div>
-
-  <!-- 1–4 Staff -->
-  <h3 style="margin:18px 0 8px; font-size:22px; color:var(--text)">For teams with 1–4 staff</h3>
-  <div class="grid3">
-    <div class="card service">
-      <h3>Starter (1–4)</h3>
-      <div class="metaRow"><span>Price</span><span class="badge">£180 / mo</span></div>
-      <div class="metaRow"><span>Included</span><span class="badge">3 hrs remote</span></div>
-      <div class="metaRow"><span>Priority</span><span class="badge">Yes</span></div>
-      <div class="note" style="margin-top:10px">
-        Quick remote problem resolution and priority support when you need it most.
-      </div>
-    </div>
-
-    <div class="card service">
-      <h3>Essential (1–4)</h3>
-      <div class="metaRow"><span>Price</span><span class="badge">£300 / mo</span></div>
-      <div class="metaRow"><span>Included</span><span class="badge">6 hrs remote</span></div>
-      <div class="metaRow"><span>On-site</span><span class="badge">Half-day / quarter</span></div>
-      <div class="note" style="margin-top:10px">
-        Some on-site check-ins plus remote troubleshooting — ideal for steady support.
-      </div>
-    </div>
-  </div>
-
-  <!-- 5–10 Staff -->
-  <h3 style="margin:18px 0 8px; font-size:22px; color:var(--text)">For teams with 5–10 staff</h3>
-  <div class="grid3">
-    <div class="card service">
-      <h3>Growth (5–10)</h3>
-      <div class="metaRow"><span>Price</span><span class="badge">£420 / mo</span></div>
-      <div class="metaRow"><span>Included</span><span class="badge">8 hrs remote</span></div>
-      <div class="metaRow"><span>On-site</span><span class="badge">Half-day / quarter</span></div>
-      <div class="note" style="margin-top:10px">
-        Strong ongoing support with proactive checks and scheduled visits.
-      </div>
-    </div>
-
-    <div class="card service">
-      <h3>Pro (5–10)</h3>
-      <div class="metaRow"><span>Price</span><span class="badge">£620 / mo</span></div>
-      <div class="metaRow"><span>Included</span><span class="badge">12 hrs remote</span></div>
-      <div class="metaRow"><span>On-site</span><span class="badge">Full day / quarter</span></div>
-      <div class="note" style="margin-top:10px">
-        Additional time for optimisation, project support, and detailed reviews.
-      </div>
-    </div>
-  </div>
-
-  <!-- 11–50 Staff -->
-  <h3 style="margin:18px 0 8px; font-size:22px; color:var(--text)">For teams with 11–50 staff</h3>
-  <div class="grid3">
-    <div class="card service">
-      <h3>Business+ (11–50)</h3>
-      <div class="metaRow"><span>Price</span><span class="badge">£900 / mo</span></div>
-      <div class="metaRow"><span>Included</span><span class="badge">16 hrs remote</span></div>
-      <div class="metaRow"><span>On-site</span><span class="badge">Full day / quarter</span></div>
-      <div class="note" style="margin-top:10px">
-        Substantial support for larger teams and critical systems coverage.
-      </div>
-    </div>
-
-    <div class="card service">
-      <h3>Enterprise (11–50)</h3>
-      <div class="metaRow"><span>Price</span><span class="badge">£1,300 / mo</span></div>
-      <div class="metaRow"><span>Included</span><span class="badge">24 hrs remote</span></div>
-      <div class="metaRow"><span>On-site</span><span class="badge">2 full days / quarter</span></div>
-      <div class="note" style="margin-top:10px">
-        High-coverage support — ideal for multi-device networks and uptime focus.
-      </div>
-    </div>
-  </div>
-
-  <!-- Retainer details -->
-  <div class="card" style="margin-top:14px">
-    <h3 style="margin:0 0 8px">Additional information</h3>
-    <p style="margin:0; color:var(--muted)">
-      Extra hours beyond the retainer are billed at discounted rates: remote (£55/hr) and on-site (£85/hr). Hardware, licences, and subscriptions are separate.
-    </p>
-    <div class="note" style="margin-top:14px">
-      Retainers are billed monthly. Time can be used across staff within the same business. Unused hours do not roll over unless agreed.
-    </div>
-
-    <div class="ctas" style="margin-top:14px">
-      <a class="btn primary" href="https://wa.me/447876265264">Ask about retainers</a>
-      <button class="btn" id="rtCallback" type="button">Request a call-back</button>
-      <a class="btn" href="#book">Book a slot</a>
-    </div>
-
-  </div>
-</section>
-
-    <section id="areas">
-      <div class="sectionHead">
-        <h2>Areas covered</h2>
-        <p>Local visits + remote UK support</p>
-      </div>
-
-      <div class="card">
-        <div class="split">
-          <div>
-            <h3 style="margin:0 0 8px">Home visits</h3>
-            <p style="margin:0; color:var(--muted)">
-              Bexhill • Hastings • Eastbourne • Battle • Rye • Polegate • Lewes (and nearby areas).
-            </p>
-            <ul>
-              <li>Appointments available</li>
-              <li>Evenings/weekends sometimes possible</li>
-              <li>Travel charges may apply outside core area</li>
-            </ul>
-          </div>
-          <div>
-            <h3 style="margin:0 0 8px">Remote support</h3>
-            <p style="margin:0; color:var(--muted)">
-              Anywhere in the UK for many software issues.
-            </p>
-            <ul>
-              <li>Software installs and fixes</li>
-              <li>Email and account setups</li>
-              <li>Guided troubleshooting</li>
-            </ul>
+          <div class="stack">
+            <div class="small muted">Quick tip</div>
+            <div class="quote">
+              Keep scope small, finish something, then improve it. Consistency beats intensity.
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="reviews">
-      <div class="sectionHead">
-        <h2>Reviews</h2>
-        <p>Real customer messages from social media and general feedback</p>
-      </div>
+    <section class="grid2">
+      <article class="card stack">
+        <h2 class="h2">How a day works</h2>
+        <ul class="list">
+          <li><strong>Main platform</strong> (Scratch / Roblox / Python) — the core learning and building</li>
+          <li><strong>Logic</strong> (Khan Academy) — short brain stretch</li>
+          <li><strong>Typing</strong> (TypingClub) — steady practice</li>
+          <li><strong>Present</strong> — explain what you built (a superpower)</li>
+        </ul>
+      </article>
 
-      <div class="grid3">
-        <div class="card">
-          <p style="margin:0 0 10px">“Sorted my laptop quickly and explained everything in plain English.”</p>
-          <div class="small">— Customer name, Town</div>
-        </div>
-        <div class="card">
-          <p style="margin:0 0 10px">“Fixed my Wi-Fi and printer setup. Patient, professional, and tidy.”</p>
-          <div class="small">— Customer name, Town</div>
-        </div>
-        <div class="card">
-          <p style="margin:0 0 10px">“Honest advice — didn’t push repairs I didn’t need.”</p>
-          <div class="small">— Customer name, Town</div>
-        </div>
-      </div>
-    </section>
-    
-    <section id="book">
-  <div class="sectionHead">
-    <h2>Book a slot</h2>
-    <p>Send details, we’ll confirm availability</p>
-  </div>
-
-  <div class="card">
-    <p style="margin:0; color:var(--muted)">
-      Fill this in and tap <b>Send on WhatsApp</b>. It’ll open a message template with everything included.
-    </p>
-
-    <div class="divider"></div>
-
-    <div class="split">
-      <div>
-        <label style="display:block; font-size:13px; color:var(--muted2); margin:10px 0 6px">Name</label>
-        <input id="bkName" placeholder="Your name" style="width:100%; padding:12px 12px; border-radius:14px; border:1px solid var(--line); background: rgba(255,255,255,.03); color:var(--text); font-size:14px; outline:none;">
-      </div>
-
-      <div>
-        <label style="display:block; font-size:13px; color:var(--muted2); margin:10px 0 6px">Service type</label>
-        <select id="bkType" style="width:100%; padding:12px 12px; border-radius:14px; border:1px solid var(--line); background: rgba(255,255,255,.03); color:var(--text); font-size:14px; outline:none;">
-          <option>Home visit</option>
-          <option>Remote support</option>
-          <option>Business on-site</option>
-          <option>Business remote</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="split">
-      <div>
-        <label style="display:block; font-size:13px; color:var(--muted2); margin:10px 0 6px">Town / location</label>
-        <input id="bkTown" placeholder="e.g. Bexhill / Hastings / Eastbourne" style="width:100%; padding:12px 12px; border-radius:14px; border:1px solid var(--line); background: rgba(255,255,255,.03); color:var(--text); font-size:14px; outline:none;">
-      </div>
-
-      <div>
-        <label style="display:block; font-size:13px; color:var(--muted2); margin:10px 0 6px">Preferred time</label>
-        <input id="bkTime" placeholder="e.g. Today after 6pm / Saturday morning" style="width:100%; padding:12px 12px; border-radius:14px; border:1px solid var(--line); background: rgba(255,255,255,.03); color:var(--text); font-size:14px; outline:none;">
-      </div>
-    </div>
-
-    <label style="display:block; font-size:13px; color:var(--muted2); margin:10px 0 6px">What’s the issue?</label>
-    <textarea id="bkIssue" placeholder="Device type, what’s happening, any error message, and anything you’ve already tried..."
-      style="width:100%; min-height:110px; padding:12px 12px; border-radius:14px; border:1px solid var(--line); background: rgba(255,255,255,.03); color:var(--text); font-size:14px; outline:none; resize:vertical;"></textarea>
-
-    <div class="ctas" style="margin-top:14px">
-      <button class="btn primary" id="bkSend" type="button">Send on WhatsApp</button>
-      <a class="btn" href="tel:+447876265264">Call instead</a>
-      <a class="btn" href="#pricing">Check pricing</a>
-    </div>
-
-    <div class="note" style="margin-top:14px">
-      For remote sessions, have your device powered on and connected to the internet. For home visits, share your town and parking/access notes if relevant.
-    </div>
-  </div>
-</section>
-
-    <section id="contact">
-      <div class="sectionHead">
-        <h2>Contact</h2>
-        <p>Fastest response = WhatsApp</p>
-      </div>
-
-      <div class="card">
-        <p style="margin:0; color:var(--muted)">
-          Message with: device type, what’s happening, any error message, and your town (for home visits).
+      <article class="card stack">
+        <h2 class="h2">Kid Mode</h2>
+        <p class="muted">
+          Turn Kid Mode on for bigger buttons, bigger text, and more visible badges.
+          Parent Dashboard stays more “grown-up”.
         </p>
-        <div class="divider"></div>
-
-          <div class="split">
-            <div>
-              <h3 style="margin:0 0 6px">Business hours</h3>
-              <p style="margin:0; color:var(--muted)">
-                Mon–Fri: 9:00am–6:00pm<br>
-                Sat: 10:00am–4:00pm<br>
-                Sun: Limited availability (urgent only)
-              </p>
-            </div>
-          
-            <div>
-              <h3 style="margin:0 0 6px">Response target</h3>
-              <p style="margin:0; color:var(--muted)">
-                WhatsApp: typically within <b>2 hours</b> during business hours.<br>
-                Remote sessions can often be arranged the same day.
-              </p>
-            </div>
-          </div>
-
-
-        <div class="ctas" style="margin-top:14px">
-          <a class="btn primary" href="https://wa.me/447876265264">WhatsApp</a>
-          <a class="btn" href="tel:+447876265264">Call</a>
-          <a class="btn" href="mailto:jumialdigitalsupport@gmail.com">Email</a>
+        <div class="ctaRow">
+          <button class="btn btn--primary" type="button" id="kidModeToggle2">Turn Kid Mode On</button>
+          <a class="btn" href="./month1.html">Go to Month 1</a>
         </div>
-
-        <div class="divider"></div>
-        <div class="small">
-          Want a custom domain like <b>jumialdigitalsupport.co.uk</b>? You can keep hosting free on GitHub Pages and only pay for the domain.
-        </div>
-      </div>
+      </article>
     </section>
   </main>
 
-  <footer>
-    <div class="wrap">
-      <div class="footRow">
-        <div>
-          <div style="font-weight:900; color:var(--text)">Jumial Digital Support</div>
-          <div class="small">Call/WhatsApp: 07876 265264</div>
-        </div>
-        <div class="small">© <span id="y"></span> Jumial Digital Support</div>
-      </div>
-      <div class="small" style="margin-top:10px">
-        Privacy: your details are used only to respond to your enquiry.
-      </div>
-    </div>
+  <footer class="footer wrap">
+    <span class="muted small">Made for focus, fun, and progress.</span>
+    <button class="btn btn--danger btn--tiny" id="resetAll" type="button" title="Clears ticks on this device">
+      Reset ticks
+    </button>
   </footer>
 
+  <script src="./app.js"></script>
   <script>
-    // Footer year
-    document.getElementById("y").textContent = new Date().getFullYear();
+    // Home page widgets
+    YTA.initKidModeUI();
 
-    // Mobile menu
-    const btn = document.getElementById("menuBtn");
-    const menu = document.getElementById("mobileMenu");
-    btn?.addEventListener("click", () => {
-      const open = menu.style.display === "block";
-      menu.style.display = open ? "none" : "block";
-      btn.textContent = open ? "Menu" : "Close";
+    const { completeDays, totalDays, pct } = YTA.computeOverallProgress();
+    document.getElementById("homeProgressText").textContent = `${completeDays} / ${totalDays} days`;
+    document.getElementById("homeProgressBar").style.width = `${pct}%`;
+    document.getElementById("homeStreak").textContent = YTA.computeStreak();
+
+    // simple badges
+    const starter = document.getElementById("badgeStarter");
+    const builder = document.getElementById("badgeBuilder");
+    const finisher = document.getElementById("badgeFinisher");
+
+    starter.classList.toggle("badge--on", completeDays >= 1);
+    builder.classList.toggle("badge--on", completeDays >= 12);
+    finisher.classList.toggle("badge--on", completeDays >= 72);
+
+    document.getElementById("kidModeToggle2").addEventListener("click", () => {
+      YTA.setKidMode(true);
+      YTA.initKidModeUI();
     });
 
-    // Pricing toggle
-    (function(){
-      const btnHome = document.getElementById("btnHome");
-      const btnBiz  = document.getElementById("btnBiz");
-      const home    = document.getElementById("pricingHome");
-      const biz     = document.getElementById("pricingBiz");
-
-      function setMode(mode){
-        const isHome = mode === "home";
-        home.style.display = isHome ? "block" : "none";
-        biz.style.display  = isHome ? "none"  : "block";
-
-        btnHome.className = isHome ? "btn primary" : "btn";
-        btnBiz.className  = isHome ? "btn" : "btn primary";
-      }
-
-      btnHome?.addEventListener("click", () => setMode("home"));
-      btnBiz?.addEventListener("click", () => setMode("biz"));
-    })();
-    // Book a slot → WhatsApp template
-(function(){
-  const send = document.getElementById("bkSend");
-  if(!send) return;
-
-  send.addEventListener("click", () => {
-    const name = (document.getElementById("bkName")?.value || "").trim();
-    const type = (document.getElementById("bkType")?.value || "").trim();
-    const town = (document.getElementById("bkTown")?.value || "").trim();
-    const time = (document.getElementById("bkTime")?.value || "").trim();
-    const issue = (document.getElementById("bkIssue")?.value || "").trim();
-
-    const msg =
-`Hi Jumial Digital Support,
-Name: ${name || "-"}
-Service: ${type || "-"}
-Town/Location: ${town || "-"}
-Preferred time: ${time || "-"}
-Issue: ${issue || "-"}
-
-Please confirm availability and next steps.`;
-
-    const url = "https://wa.me/447876265264?text=" + encodeURIComponent(msg);
-    window.open(url, "_blank");
-  });
-})();
-    // Retainers → Request a call-back (prefilled WhatsApp)
-(function(){
-  const btn = document.getElementById("rtCallback");
-  if(!btn) return;
-
-  btn.addEventListener("click", () => {
-    const msg =
-`Hi Jumial Digital Support,
-I’m interested in an IT support retainer.
-
-Business name:
-Number of staff (1–4 / 5–10 / 11–50):
-Preferred plan (Starter/Essential/Growth/Pro/Business+/Enterprise):
-Best time to call:
-Main issue(s) / goals:
-
-Please call me back to discuss options.`;
-
-    const url = "https://wa.me/447876265264?text=" + encodeURIComponent(msg);
-    window.open(url, "_blank");
-  });
-})();
-
+    document.getElementById("resetAll").addEventListener("click", () => YTA.resetAll());
   </script>
-  
-  <a class="btn primary" href="https://wa.me/447876265264"
-   aria-label="WhatsApp Jumial Digital Support"
-   style="position:fixed; right:16px; bottom:16px; z-index:9999;">
-   WhatsApp to book
-  </a>
-
 </body>
 </html>
