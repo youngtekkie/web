@@ -1,35 +1,38 @@
-<!doctype html>
-<html lang="en-GB">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Young Tech Architect — Year 3–6</title>
-  <link rel="stylesheet" href="./styles.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>youngtekkie</title>
+
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="assets/site.js"></script>
+  <script defer src="app.js"></script>
 </head>
-<body data-subtitle="Year 3–6 Journey">
+
+<body class="home">
+
+  <!-- Injected Navigation -->
   <div id="site-chrome"></div>
-<main>
-    <section class="videoHero" aria-label="Home hero">
-      <video class="videoHero__video" autoplay muted loop playsinline preload="metadata" poster="./assets/video/hero-poster.jpg">
-                <source src="./assets/video/hero.webm" type="video/webm">
-        <source src="./assets/video/hero.mp4" type="video/mp4">
-      </video>
-      <div class="videoHero__overlay" aria-hidden="true"></div>
-      <div class="videoHero__inner wrap">
-        <div class="videoHero__actions">
-          <a class="btn btn--primary" href="./profiles.html">Choose profile</a>
-          <a class="btn" href="./tracks.html">Tracks</a>
-          <a class="btn btn--soft" href="./month1.html">Continue</a>
-        </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <video autoplay muted loop playsinline class="hero-video">
+      <source src="assets/vidhd.mp4" type="video/mp4">
+    </video>
+
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <div class="hero-actions">
+        <a href="tracks.html" class="btn-primary">Explore Tracks</a>
+        <a href="profiles.html" class="btn-secondary">Profiles</a>
       </div>
-    </section>
-  </main>
-<script src="./assets/site.js"></script>
-<script src="./app.js"></script>
-  <script>
-    YTA.init();
-    YTA.initKidModeUI();
-  </script>
+    </div>
+  </section>
+
+  <!-- Injected Footer -->
   <div id="site-footer"></div>
+
 </body>
 </html>
