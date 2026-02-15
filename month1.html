@@ -1,4 +1,4 @@
-<!-- FILE: month1.html  (Month 1 / Scratch) -->
+<!-- FILE: month1.html — NAV UPDATED: add Profiles + Certificates (rest unchanged) -->
 <!doctype html>
 <html lang="en-GB">
 <head>
@@ -20,9 +20,11 @@
 
       <nav class="nav" aria-label="Primary">
         <a class="nav__link" href="./index.html">Home</a>
+        <a class="nav__link" href="./profiles.html">Profiles</a>
         <a class="nav__link is-active" href="./month1.html">Month 1</a>
         <a class="nav__link" href="./month2.html">Month 2</a>
         <a class="nav__link" href="./month3.html">Month 3</a>
+        <a class="nav__link" href="./certificates.html">Certificates</a>
         <a class="nav__link" href="./print.html">Print</a>
         <a class="nav__link" href="./dashboard.html">Parent Dashboard</a>
       </nav>
@@ -38,7 +40,7 @@
       <div class="headRow">
         <div class="stack">
           <h1 class="h1">Month 1: Scratch Game Builder</h1>
-          <p class="muted">Days 1–24 • Build 3 games + a final project. Tick all 4 boxes to complete a day.</p>
+          <p class="muted">Days 1–24 • Tick all 4 boxes to complete a day.</p>
           <div class="pillrow">
             <a class="pill" href="https://scratch.mit.edu" target="_blank" rel="noreferrer"><span class="pill__k">Scratch</span><span class="pill__v">Main</span></a>
             <a class="pill" href="https://www.khanacademy.org" target="_blank" rel="noreferrer"><span class="pill__k">Khan Academy</span><span class="pill__v">Logic</span></a>
@@ -78,7 +80,7 @@
 
   <footer class="footer wrap">
     <span class="muted small">Tip: Tuesday & Saturday are “show-and-tell” days.</span>
-    <button class="btn btn--danger btn--tiny" id="resetAll" type="button">Reset ticks</button>
+    <button class="btn btn--danger btn--tiny" id="resetAll" type="button">Reset active child ticks</button>
   </footer>
 
   <script src="./app.js"></script>
@@ -95,8 +97,7 @@
       expandBtnId: "expandAll",
       collapseBtnId: "collapseAll"
     });
-
-    document.getElementById("resetAll").addEventListener("click", () => YTA.resetAll());
+    document.getElementById("resetAll").addEventListener("click", () => YTA.resetActiveChildTicks());
   </script>
 </body>
 </html>
