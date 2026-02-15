@@ -1,4 +1,4 @@
-<!-- FILE: dashboard.html  (Parent Dashboard) -->
+<!-- FILE: dashboard.html — NAV UPDATED: add Profiles + Certificates (and uses new per-profile logic) -->
 <!doctype html>
 <html lang="en-GB">
 <head>
@@ -20,15 +20,17 @@
 
       <nav class="nav" aria-label="Primary">
         <a class="nav__link" href="./index.html">Home</a>
+        <a class="nav__link" href="./profiles.html">Profiles</a>
         <a class="nav__link" href="./month1.html">Month 1</a>
         <a class="nav__link" href="./month2.html">Month 2</a>
         <a class="nav__link" href="./month3.html">Month 3</a>
+        <a class="nav__link" href="./certificates.html">Certificates</a>
         <a class="nav__link" href="./print.html">Print</a>
         <a class="nav__link is-active" href="./dashboard.html">Parent Dashboard</a>
       </nav>
 
       <div class="topbar__actions">
-        <button class="btn btn--danger btn--tiny" id="resetAll" type="button">Reset ticks</button>
+        <button class="btn btn--danger btn--tiny" id="resetAll" type="button">Reset active child ticks</button>
       </div>
     </div>
   </header>
@@ -36,9 +38,11 @@
   <main class="wrap stack">
     <section class="card stack">
       <h1 class="h1">Progress Summary</h1>
-      <p class="muted">
-        This dashboard summarises progress on this device. A day counts as complete when all 4 ticks are done.
-      </p>
+      <div class="pillrow">
+        <span class="pill pill--static"><span class="pill__k">Active profile</span><span class="pill__v" id="pName">—</span></span>
+        <span class="pill pill--static"><span class="pill__k">Start date</span><span class="pill__v" id="pStart">—</span></span>
+        <a class="pill" href="./profiles.html"><span class="pill__k">Change</span><span class="pill__v">profile</span></a>
+      </div>
 
       <div class="grid3">
         <div class="stat card card--soft">
@@ -51,7 +55,7 @@
         <div class="stat card card--soft">
           <div class="stat__k">Streak</div>
           <div class="stat__v"><span id="dStreak">0</span> days 🔥</div>
-          <div class="small muted">Streak = consecutive completed days.</div>
+          <div class="small muted">Uses start date if set.</div>
         </div>
 
         <div class="stat card card--soft">
@@ -75,22 +79,24 @@
     </section>
 
     <section class="card stack">
-      <h2 class="h2">Notes for parents</h2>
-      <ul class="list">
-        <li>Keep sessions short and consistent. Stop while they still want more.</li>
-        <li>If they get stuck, reduce scope: “Make it work first, make it cool later.”</li>
-        <li>Encourage explaining. It builds confidence and deep understanding.</li>
-        <li>Celebrate shipped projects, not perfection.</li>
-      </ul>
+      <h2 class="h2">Quick actions</h2>
+      <div class="ctaRow">
+        <a class="btn" href="./certificates.html">Print a weekly certificate</a>
+        <a class="btn btn--soft" href="./print.html">Print the full plan</a>
+      </div>
     </section>
   </main>
 
   <footer class="footer wrap">
-    <span class="muted small">If you want multi-device syncing later, you can add logins (Firebase/Supabase).</span>
+    <span class="muted small">If you want multi-device sync later, add logins (Firebase/Supabase).</span>
   </footer>
 
   <script src="./app.js"></script>
   <script>
+    const active = YTA.getActiveProfile();
+    document.getElementById("pName").textContent = active ? active.name : "No profile";
+    document.getElementById("pStart").textContent = active?.startDate ? YTA.fmtDate(active.startDate) : "Not set";
+
     YTA.renderDashboard({
       overallId: "dOverall",
       overallBarId: "dOverallBar",
@@ -102,7 +108,7 @@
       byWeekId: "byWeek"
     });
 
-    document.getElementById("resetAll").addEventListener("click", () => YTA.resetAll());
+    document.getElementById("resetAll").addEventListener("click", () => YTA.resetActiveChildTicks());
   </script>
 </body>
 </html>
