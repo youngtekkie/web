@@ -1,114 +1,135 @@
-<!-- FILE: dashboard.html — NAV UPDATED: add Profiles + Certificates (and uses new per-profile logic) -->
 <!doctype html>
 <html lang="en-GB">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Parent Dashboard | Young Tech Architect</title>
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-  <header class="topbar">
-    <div class="wrap topbar__inner">
-      <a class="brand" href="./index.html">
-        <span class="brand__mark" aria-hidden="true"></span>
-        <span class="brand__text">
-          <span class="brand__title">Young Tech Architect</span>
-          <span class="brand__subtitle">Parent Dashboard</span>
-        </span>
-      </a>
+<header class="topbar">
+  <div class="wrap topbar__inner">
+    <a class="brand" href="./index.html">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span class="brand__text">
+        <span class="brand__title">Young Tech Architect</span>
+        <span class="brand__subtitle">Parent Dashboard</span>
+      </span>
+    </a>
 
-      <nav class="nav" aria-label="Primary">
-        <a class="nav__link" href="./index.html">Home</a>
-        <a class="nav__link" href="./profiles.html">Profiles</a>
-        <a class="nav__link" href="./month1.html">Month 1</a>
-        <a class="nav__link" href="./month2.html">Month 2</a>
-        <a class="nav__link" href="./month3.html">Month 3</a>
-        <a class="nav__link" href="./certificates.html">Certificates</a>
-        <a class="nav__link" href="./print.html">Print</a>
-        <a class="nav__link is-active" href="./dashboard.html">Parent Dashboard</a>
-      </nav>
+    <nav class="navRow" aria-label="Primary">
+      <a class="nav__link" href="./index.html">Home</a>
+      <a class="nav__link" href="./tracks.html">Tracks</a>
+      <a class="nav__link" href="./profiles.html">Profiles</a>
+      <a class="nav__link" href="./month1.html">Month 1</a>
+      <a class="nav__link" href="./month2.html">Month 2</a>
+      <a class="nav__link" href="./month3.html">Month 3</a>
+      <a class="nav__link" href="./certificates.html">Certificates</a>
+      <a class="nav__link" href="./print.html">Print</a>
+      <a class="nav__link is-active" href="./dashboard.html">Parent Dashboard</a>
+    </nav>
 
-      <div class="topbar__actions">
-        <button class="btn btn--danger btn--tiny" id="resetAll" type="button">Reset active child ticks</button>
+    <div class="topbar__actions">
+      <button class="menuBtn" type="button" data-yt="navbtn" aria-expanded="false" aria-label="Open menu">☰</button>
+      <button class="btn btn--danger btn--tiny" id="resetAll" type="button">Reset active child ticks</button>
+    </div>
+  </div>
+</header>
+
+<div class="backdrop" data-yt="backdrop"></div>
+<aside class="drawer" data-yt="drawer" aria-label="Mobile menu">
+  <div class="drawerHeader">
+    <div class="drawerTitle">Menu</div>
+    <button class="menuBtn" type="button" data-yt="navbtn" aria-expanded="true" aria-label="Close menu">✕</button>
+  </div>
+  <div class="drawerLinks">
+    <a href="./index.html">Home</a>
+    <a href="./tracks.html">Tracks</a>
+    <a href="./profiles.html">Profiles</a>
+    <a href="./month1.html">Month 1</a>
+    <a href="./month2.html">Month 2</a>
+    <a href="./month3.html">Month 3</a>
+    <a href="./certificates.html">Certificates</a>
+    <a href="./print.html">Print</a>
+    <a href="./dashboard.html">Parent Dashboard</a>
+  </div>
+</aside>
+
+<main class="wrap stack">
+  <section class="card stack">
+    <h1 class="h1">Progress Summary</h1>
+
+    <div class="pillrow">
+      <span class="pill pill--static"><span class="pill__k">Active</span><span class="pill__v" id="who">—</span></span>
+      <span class="pill pill--static"><span class="pill__k">Info</span><span class="pill__v" id="meta">—</span></span>
+      <a class="pill" href="./profiles.html"><span class="pill__k">Change</span><span class="pill__v">profile</span></a>
+    </div>
+
+    <div class="grid3">
+      <div class="stat card card--soft">
+        <div class="stat__k">Overall</div>
+        <div class="stat__v" id="dOverall">0 / 72</div>
+        <div class="bar"><div id="dOverallBar"></div></div>
+        <div class="small muted" id="dOverallPct">0%</div>
+      </div>
+
+      <div class="stat card card--soft">
+        <div class="stat__k">Streak</div>
+        <div class="stat__v"><span id="dStreak">0</span> days 🔥</div>
+        <div class="small muted">Uses start date if set.</div>
+      </div>
+
+      <div class="stat card card--soft">
+        <div class="stat__k">Next step</div>
+        <div class="stat__v" id="dNext">Day 1</div>
+        <div class="small muted" id="dNextHint">Start with Month 1.</div>
       </div>
     </div>
-  </header>
+  </section>
 
-  <main class="wrap stack">
-    <section class="card stack">
-      <h1 class="h1">Progress Summary</h1>
-      <div class="pillrow">
-        <span class="pill pill--static"><span class="pill__k">Active profile</span><span class="pill__v" id="pName">—</span></span>
-        <span class="pill pill--static"><span class="pill__k">Start date</span><span class="pill__v" id="pStart">—</span></span>
-        <a class="pill" href="./profiles.html"><span class="pill__k">Change</span><span class="pill__v">profile</span></a>
-      </div>
+  <section class="grid2">
+    <article class="card stack">
+      <h2 class="h2">By month</h2>
+      <div class="monthRows" id="byMonth"></div>
+    </article>
 
-      <div class="grid3">
-        <div class="stat card card--soft">
-          <div class="stat__k">Overall</div>
-          <div class="stat__v" id="dOverall">0 / 72</div>
-          <div class="bar"><div id="dOverallBar"></div></div>
-          <div class="small muted" id="dOverallPct">0%</div>
-        </div>
+    <article class="card stack">
+      <h2 class="h2">By week</h2>
+      <div class="monthRows" id="byWeek"></div>
+    </article>
+  </section>
 
-        <div class="stat card card--soft">
-          <div class="stat__k">Streak</div>
-          <div class="stat__v"><span id="dStreak">0</span> days 🔥</div>
-          <div class="small muted">Uses start date if set.</div>
-        </div>
+  <section class="card stack">
+    <h2 class="h2">Quick actions</h2>
+    <div class="ctaRow">
+      <a class="btn" href="./certificates.html">Print a weekly certificate</a>
+      <a class="btn btn--soft" href="./print.html">Print the full plan</a>
+    </div>
+  </section>
+</main>
 
-        <div class="stat card card--soft">
-          <div class="stat__k">Next step</div>
-          <div class="stat__v" id="dNext">Day 1</div>
-          <div class="small muted" id="dNextHint">Start with Month 1.</div>
-        </div>
-      </div>
-    </section>
+<footer class="footer wrap">
+  <span class="muted small">If you want multi-device sync later, add logins (Firebase/Supabase).</span>
+</footer>
 
-    <section class="grid2">
-      <article class="card stack">
-        <h2 class="h2">By month</h2>
-        <div class="monthRows" id="byMonth"></div>
-      </article>
+<script src="./app.js"></script>
+<script>
+  YTA.init();
 
-      <article class="card stack">
-        <h2 class="h2">By week</h2>
-        <div class="monthRows" id="byWeek"></div>
-      </article>
-    </section>
+  YTA.renderDashboard({
+    profileNameId: "who",
+    profileMetaId: "meta",
+    overallId: "dOverall",
+    overallBarId: "dOverallBar",
+    overallPctId: "dOverallPct",
+    streakId: "dStreak",
+    nextId: "dNext",
+    nextHintId: "dNextHint",
+    byMonthId: "byMonth",
+    byWeekId: "byWeek"
+  });
 
-    <section class="card stack">
-      <h2 class="h2">Quick actions</h2>
-      <div class="ctaRow">
-        <a class="btn" href="./certificates.html">Print a weekly certificate</a>
-        <a class="btn btn--soft" href="./print.html">Print the full plan</a>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer wrap">
-    <span class="muted small">If you want multi-device sync later, add logins (Firebase/Supabase).</span>
-  </footer>
-
-  <script src="./app.js"></script>
-  <script>
-    const active = YTA.getActiveProfile();
-    document.getElementById("pName").textContent = active ? active.name : "No profile";
-    document.getElementById("pStart").textContent = active?.startDate ? YTA.fmtDate(active.startDate) : "Not set";
-
-    YTA.renderDashboard({
-      overallId: "dOverall",
-      overallBarId: "dOverallBar",
-      overallPctId: "dOverallPct",
-      streakId: "dStreak",
-      nextId: "dNext",
-      nextHintId: "dNextHint",
-      byMonthId: "byMonth",
-      byWeekId: "byWeek"
-    });
-
-    document.getElementById("resetAll").addEventListener("click", () => YTA.resetActiveChildTicks());
-  </script>
+  document.getElementById("resetAll").addEventListener("click", () => YTA.resetActiveChildTicks());
+</script>
 </body>
 </html>
