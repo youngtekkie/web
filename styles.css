@@ -61,7 +61,7 @@ p {
 }
 
 /* ==========================================
-   NAVIGATION (Injected)
+   NAVIGATION (Old styles - kept for compatibility)
 ========================================== */
 .nav {
   position: fixed;
@@ -104,7 +104,7 @@ p {
 }
 
 /* ==========================================
-   MOBILE NAV
+   MOBILE NAV (Old styles - kept)
 ========================================== */
 .nav-toggle {
   display: none;
@@ -237,7 +237,7 @@ p {
 }
 
 /* ==========================================
-   FOOTER
+   FOOTER (Old styles - kept)
 ========================================== */
 .footer {
   padding: 40px var(--pad);
@@ -248,7 +248,7 @@ p {
 }
 
 /* ==========================================
-   RESPONSIVE
+   RESPONSIVE (Old styles - kept)
 ========================================== */
 @media (max-width: 768px) {
 
@@ -279,7 +279,6 @@ p {
     padding: 40px 20px;
   }
 }
-
 
 /* ==========================================
    PAGE OFFSET (fixed nav)
@@ -337,4 +336,169 @@ body:not(.home){
 /* Mobile drawer width tweak */
 @media (max-width: 520px){
   .mobile-drawer{ width: 84%; padding: 28px; }
+}
+
+/* =========================================================
+   ✅ FIX: STYLES FOR INJECTED NAV (assets/site.js)
+   This is the missing piece that was breaking your layout.
+========================================================= */
+
+/* Topbar (injected header wrapper) */
+.topbar{
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: rgba(249,247,243,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  z-index: 2000;
+}
+
+/* Inner container used by injected markup */
+.topbar__inner{
+  max-width: 1200px;
+  margin: auto;
+  padding: 16px var(--pad);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+}
+
+/* Brand (injected) */
+.brand{
+  text-decoration: none;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand__title{
+  font-weight: 600;
+  font-size: 1.1rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.brand__subtitle{
+  display: block;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* Desktop nav row (injected) */
+.navRow{
+  display: flex;
+  gap: 28px;
+  align-items: center;
+}
+
+.nav__link{
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 500;
+  transition: 0.3s ease;
+}
+
+.nav__link:hover{
+  opacity: 0.6;
+}
+
+.nav__link.is-active{
+  opacity: 0.6;
+}
+
+/* Actions (injected) */
+.topbar__actions{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.iconLink{
+  text-decoration: none;
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+.menuBtn{
+  display: none; /* shown on mobile */
+  font-size: 1.4rem;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+}
+
+/* Backdrop + drawer (injected) */
+.backdrop{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s ease;
+  z-index: 1998;
+}
+
+.backdrop.is-open{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.drawer{
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 70%;
+  height: 100%;
+  background: var(--soft);
+  box-shadow: var(--shadow-hover);
+  padding: 40px;
+  transition: 0.3s ease;
+  z-index: 1999;
+}
+
+.drawer.is-open{
+  right: 0;
+}
+
+.drawerHeader{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom: 18px;
+}
+
+.drawerLinks a{
+  display: block;
+  margin-bottom: 14px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* injected footer */
+.siteFooter{
+  padding: 40px var(--pad);
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* no-scroll class (injected toggle) */
+.noScroll{
+  position: fixed;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Responsive for injected header */
+@media (max-width: 768px){
+  .navRow{ display:none; }
+  .menuBtn{ display:block; }
+}
+
+@media (max-width: 520px){
+  .drawer{ width: 84%; padding: 28px; }
 }
