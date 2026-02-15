@@ -7,53 +7,62 @@
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-<header class="topbar">
-  <div class="wrap topbar__inner">
-    <a class="brand" href="./index.html">
-      <span class="brand__mark" aria-hidden="true"></span>
-      <span class="brand__text">
-        <span class="brand__title">Young Tech Architect</span>
-        <span class="brand__subtitle">Month 3 — Python</span>
-      </span>
-    </a>
+  <header class="topbar">
+    <div class="wrap topbar__inner">
+      <a class="brand" href="./index.html" aria-label="Young Tech Architect Home">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__text">
+          <span class="brand__title">Young Tech Architect</span>
+          <span class="brand__subtitle">Month 3 — Python</span>
+        </span>
+      </a>
 
-    <nav class="navRow" aria-label="Primary">
-      <a class="nav__link" href="./index.html">Home</a>
-      <a class="nav__link" href="./tracks.html">Tracks</a>
-      <a class="nav__link" href="./profiles.html">Profiles</a>
-      <a class="nav__link" href="./month1.html">Month 1</a>
-      <a class="nav__link" href="./month2.html">Month 2</a>
-      <a class="nav__link is-active" href="./month3.html">Month 3</a>
-      <a class="nav__link" href="./certificates.html">Certificates</a>
-      <a class="nav__link" href="./print.html">Print</a>
-      <a class="nav__link" href="./dashboard.html">Parent Dashboard</a>
-    </nav>
+      <nav class="navRow" aria-label="Primary">
+        <a class="nav__link" href="./index.html">Home</a>
+        <a class="nav__link" href="./tracks.html">Tracks</a>
+        <a class="nav__link" href="./profiles.html">Profiles</a>
 
-    <div class="topbar__actions">
-      <button class="menuBtn" type="button" data-yt="navbtn" aria-expanded="false" aria-label="Open menu">☰</button>
-      <button class="btn btn--soft" id="kidModeToggle" type="button" aria-pressed="false">Kid Mode: Off</button>
+        <details class="navDrop">
+          <summary class="nav__link nav__link--btn is-active">
+            Journey <span class="navDrop__chev" aria-hidden="true">▾</span>
+          </summary>
+          <div class="navDrop__menu" role="menu" aria-label="Journey months">
+            <a class="navDrop__item" role="menuitem" href="./month1.html">Month 1 <span class="navDrop__hint">Scratch</span></a>
+            <a class="navDrop__item" role="menuitem" href="./month2.html">Month 2 <span class="navDrop__hint">Roblox</span></a>
+            <a class="navDrop__item is-active" role="menuitem" href="./month3.html">Month 3 <span class="navDrop__hint">Python</span></a>
+          </div>
+        </details>
+      </nav>
+
+      <div class="topbar__actions">
+        <a class="iconLink" href="./certificates.html" title="Certificates" aria-label="Certificates">🎓</a>
+        <a class="iconLink" href="./print.html" title="Print plan" aria-label="Print">🖨️</a>
+        <a class="iconLink" href="./dashboard.html" title="Parent dashboard" aria-label="Parent Dashboard">👨‍👩‍👧</a>
+
+        <button class="menuBtn" type="button" data-yt="navbtn" aria-expanded="false" aria-label="Open menu">☰</button>
+        <button class="btn btn--soft" id="kidModeToggle" type="button" aria-pressed="false">Kid Mode: Off</button>
+      </div>
     </div>
-  </div>
-</header>
+  </header>
 
-<div class="backdrop" data-yt="backdrop"></div>
-<aside class="drawer" data-yt="drawer" aria-label="Mobile menu">
-  <div class="drawerHeader">
-    <div class="drawerTitle">Menu</div>
-    <button class="menuBtn" type="button" data-yt="navbtn" aria-expanded="true" aria-label="Close menu">✕</button>
-  </div>
-  <div class="drawerLinks">
-    <a href="./index.html">Home</a>
-    <a href="./tracks.html">Tracks</a>
-    <a href="./profiles.html">Profiles</a>
-    <a href="./month1.html">Month 1</a>
-    <a href="./month2.html">Month 2</a>
-    <a href="./month3.html">Month 3</a>
-    <a href="./certificates.html">Certificates</a>
-    <a href="./print.html">Print</a>
-    <a href="./dashboard.html">Parent Dashboard</a>
-  </div>
-</aside>
+  <div class="backdrop" data-yt="backdrop"></div>
+  <aside class="drawer" data-yt="drawer" aria-label="Mobile menu">
+    <div class="drawerHeader">
+      <div class="drawerTitle">Menu</div>
+      <button class="menuBtn" type="button" data-yt="navbtn" aria-expanded="true" aria-label="Close menu">✕</button>
+    </div>
+    <div class="drawerLinks">
+      <a href="./index.html">Home</a>
+      <a href="./tracks.html">Tracks</a>
+      <a href="./profiles.html">Profiles</a>
+      <a href="./month1.html">Month 1 (Scratch)</a>
+      <a href="./month2.html">Month 2 (Roblox)</a>
+      <a href="./month3.html">Month 3 (Python)</a>
+      <a href="./certificates.html">Certificates</a>
+      <a href="./print.html">Print</a>
+      <a href="./dashboard.html">Parent Dashboard</a>
+    </div>
+  </aside>
 
 <main class="wrap stack">
   <section class="card stack">

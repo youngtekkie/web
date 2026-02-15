@@ -131,6 +131,74 @@ a:hover{ text-decoration:underline; }
   border-color: rgba(124,156,255,.45);
 }
 
+
+/* --- Compact desktop nav: Journey dropdown + utility icons --- */
+.iconLink{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:44px;
+  height:44px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.07);
+  color: var(--text);
+  text-decoration:none;
+  font-size: 18px;
+  cursor:pointer;
+  touch-action: manipulation;
+}
+.iconLink:hover{ background: rgba(255,255,255,.11); text-decoration:none; }
+.iconLink--active{
+  background: rgba(124,156,255,.18);
+  border-color: rgba(124,156,255,.45);
+}
+
+.navDrop{ position:relative; }
+.nav__link--btn{
+  cursor:pointer;
+  user-select:none;
+  list-style:none;
+}
+.navDrop > summary{ list-style:none; }
+.navDrop > summary::-webkit-details-marker{ display:none; }
+.navDrop[open] .navDrop__chev{ transform: rotate(180deg); }
+.navDrop__chev{ display:inline-block; transition: transform .12s ease; }
+
+.navDrop__menu{
+  position:absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  min-width: 240px;
+  background: rgba(10, 16, 36, .96);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 10px;
+  z-index: 80;
+}
+.navDrop__item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  color: var(--text);
+  font-weight: 900;
+  text-decoration:none;
+}
+.navDrop__item:hover{ background: rgba(255,255,255,.07); }
+.navDrop__item.is-active{
+  background: rgba(124,156,255,.18);
+  border-color: rgba(124,156,255,.35);
+}
+.navDrop__hint{
+  color: var(--muted);
+  font-weight: 800;
+  font-size: .9em;
+}
 /* Drawer nav (mobile) */
 .backdrop{
   position:fixed; inset:0;
