@@ -1,4 +1,4 @@
-<!-- FILE: month2.html  (Month 2 / Roblox) -->
+<!-- FILE: month2.html — NAV UPDATED similarly (copy this pattern; only subtitle differs) -->
 <!doctype html>
 <html lang="en-GB">
 <head>
@@ -20,9 +20,11 @@
 
       <nav class="nav" aria-label="Primary">
         <a class="nav__link" href="./index.html">Home</a>
+        <a class="nav__link" href="./profiles.html">Profiles</a>
         <a class="nav__link" href="./month1.html">Month 1</a>
         <a class="nav__link is-active" href="./month2.html">Month 2</a>
         <a class="nav__link" href="./month3.html">Month 3</a>
+        <a class="nav__link" href="./certificates.html">Certificates</a>
         <a class="nav__link" href="./print.html">Print</a>
         <a class="nav__link" href="./dashboard.html">Parent Dashboard</a>
       </nav>
@@ -38,7 +40,7 @@
       <div class="headRow">
         <div class="stack">
           <h1 class="h1">Month 2: Roblox Developer Mode</h1>
-          <p class="muted">Days 25–48 • Build an obby, add scripting, and publish a game (with supervision).</p>
+          <p class="muted">Days 25–48 • Build + script + publish (with supervision).</p>
           <div class="pillrow">
             <a class="pill" href="https://create.roblox.com" target="_blank" rel="noreferrer"><span class="pill__k">Roblox Studio</span><span class="pill__v">Main</span></a>
             <a class="pill" href="https://www.khanacademy.org" target="_blank" rel="noreferrer"><span class="pill__k">Khan Academy</span><span class="pill__v">Logic</span></a>
@@ -77,8 +79,8 @@
   </main>
 
   <footer class="footer wrap">
-    <span class="muted small">Tip: treat scripting like puzzle-solving. Small changes, test often.</span>
-    <button class="btn btn--danger btn--tiny" id="resetAll" type="button">Reset ticks</button>
+    <span class="muted small">Tip: tiny changes + test often.</span>
+    <button class="btn btn--danger btn--tiny" id="resetAll" type="button">Reset active child ticks</button>
   </footer>
 
   <script src="./app.js"></script>
@@ -95,8 +97,7 @@
       expandBtnId: "expandAll",
       collapseBtnId: "collapseAll"
     });
-
-    document.getElementById("resetAll").addEventListener("click", () => YTA.resetAll());
+    document.getElementById("resetAll").addEventListener("click", () => YTA.resetActiveChildTicks());
   </script>
 </body>
 </html>
