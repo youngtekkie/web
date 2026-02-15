@@ -2,7 +2,7 @@
 
 const YTA = (() => {
   let __inited = false;
-  let __kidBound = false;
+
   // ---------- storage keys ----------
   const PROFILES_KEY = "yta_profiles_v2";
   const ACTIVE_PROFILE_KEY = "yta_active_profile_v2";
@@ -117,6 +117,48 @@ const YTA = (() => {
     }
   }
 
+  // ---------- Journey dropdown (details.navDrop) ----------
+  // Fix: close the dropdown after selecting a month, and close on outside click/Escape.
+  function initJourneyDropdown() {
+    const drops = Array.from(document.querySelectorAll("details.navDrop"));
+    if (!drops.length) return;
+
+    drops.forEach(d => {
+      // prevent double-binding if init() is ever called twice (belt + braces)
+      if (d.dataset.ytaBound === "1") return;
+      d.dataset.ytaBound = "1";
+
+      // Close when clicking a link inside (Month 1/2/3 etc.)
+      d.querySelectorAll("a").forEach(a => {
+        a.addEventListener("click", () => {
+          d.removeAttribute("open");
+        });
+      });
+
+      // Only one open at a time
+      d.addEventListener("toggle", () => {
+        if (!d.open) return;
+        drops.forEach(other => {
+          if (other !== d) other.removeAttribute("open");
+        });
+      });
+    });
+
+    // Close if you click outside any open dropdown
+    document.addEventListener("click", (e) => {
+      drops.forEach(d => {
+        if (!d.open) return;
+        if (!d.contains(e.target)) d.removeAttribute("open");
+      });
+    });
+
+    // Close on Escape
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape") return;
+      drops.forEach(d => d.removeAttribute("open"));
+    });
+  }
+
   // ---------- kid mode ----------
   function getKidMode() { return localStorage.getItem(KIDMODE_KEY) === "1"; }
   function setKidMode(on) {
@@ -130,7 +172,6 @@ const YTA = (() => {
 
     // prevent duplicate listeners if pages call this more than once
     if (btn.dataset.ytaBound === "1") {
-      // still ensure label is correct
       const onNow = getKidMode();
       btn.setAttribute("aria-pressed", onNow ? "true" : "false");
       btn.textContent = `Kid Mode: ${onNow ? "On" : "Off"}`;
@@ -149,7 +190,6 @@ const YTA = (() => {
       btn.textContent = `Kid Mode: ${now ? "On" : "Off"}`;
     });
   }
-
 
   // ---------- curriculum ----------
   function mkDay(num, week, month, dow, mainKey, mainTopic, buildTask, logicTask, typingTask, notes = "") {
@@ -953,16 +993,6 @@ const YTA = (() => {
     window.location.reload();
   }
 
-  // ---------- init ----------
-  function init() {
-    if (__inited) return;
-    __inited = true;
-    ensureDefaultProfile();
-    migrateProfilesIfNeeded();
-    initMobileNav();
-    initFooterYear();
-  }
-
   function initFooterYear(){
     const apply = () => {
       const y = String(new Date().getFullYear());
@@ -973,6 +1003,17 @@ const YTA = (() => {
     } else {
       apply();
     }
+  }
+
+  // ---------- init ----------
+  function init() {
+    if (__inited) return;
+    __inited = true;
+    ensureDefaultProfile();
+    migrateProfilesIfNeeded();
+    initMobileNav();
+    initJourneyDropdown(); // ✅ added
+    initFooterYear();
   }
 
   // ---------- public API ----------
