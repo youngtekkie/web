@@ -5,7 +5,7 @@ const YTA = (() => {
   const PROFILES_KEY = "yta_profiles_v2";
   const ACTIVE_PROFILE_KEY = "yta_active_profile_v2";
   const KIDMODE_KEY = "yta_kidmode_v2";
-  const UI_KEY = "yta_ui_v1"; // reserved for future use
+  const UI_KEY = "yta_ui_v1";
   const stateKey = (profileId) => `yta_state_${profileId}_v2`;
 
   // ---------- platform links ----------
@@ -18,87 +18,113 @@ const YTA = (() => {
   };
 
   // ---------- helpers ----------
-  function esc(s){
+  function esc(s) {
     return String(s ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#39;");
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
   }
 
-  function cryptoId(){
+  function cryptoId() {
     try { return crypto.randomUUID(); }
     catch { return "p_" + Math.random().toString(16).slice(2) + Date.now().toString(16); }
   }
 
-  function fmtDate(iso){
-    if(!iso) return "";
+  function fmtDate(iso) {
+    if (!iso) return "";
     const d = new Date(iso + "T00:00:00");
-    return d.toLocaleDateString("en-GB", { weekday:"short", year:"numeric", month:"short", day:"2-digit" });
+    return d.toLocaleDateString("en-GB", { weekday: "short", year: "numeric", month: "short", day: "2-digit" });
   }
 
-  function nextMondayISO(fromDate = new Date()){
+  function nextMondayISO(fromDate = new Date()) {
     const d = new Date(fromDate);
-    d.setHours(0,0,0,0);
+    d.setHours(0, 0, 0, 0);
     const day = d.getDay(); // 0 Sun .. 6 Sat
-    const add = (8 - day) % 7; // days until Monday
+    const add = (8 - day) % 7;
     const inc = add === 0 ? 7 : add; // next Monday (not today)
     d.setDate(d.getDate() + inc);
-    return d.toISOString().slice(0,10);
+    return d.toISOString().slice(0, 10);
   }
 
   // ---------- mobile nav (hamburger + close) ----------
-  function initMobileNav(){
-    const navBtns = Array.from(document.querySelectorAll('[data-yt="navbtn"]'));
+  function loadUI() {
+    return JSON.parse(localStorage.getItem(UI_KEY) || "{}");
+  }
+  function saveUI(ui) {
+    localStorage.setItem(UI_KEY, JSON.stringify(ui));
+  }
+
+  function initMobileNav() {
+    const navBtns = Array.from(document.querySelectorAll('[data-yt="navbtn"]')); // supports ☰ and ✕
     const drawer = document.querySelector('[data-yt="drawer"]');
     const backdrop = document.querySelector('[data-yt="backdrop"]');
+    if (!navBtns.length || !drawer || !backdrop) return;
 
-    if(navBtns.length === 0 || !drawer || !backdrop) return;
+    const ui = loadUI();
+    let scrollY = 0;
 
-    function setExpanded(val){
-      navBtns.forEach(b => b.setAttribute("aria-expanded", val ? "true" : "false"));
+    function setExpanded(v) {
+      navBtns.forEach(btn => btn.setAttribute("aria-expanded", v ? "true" : "false"));
     }
 
-    function open(){
+    function open() {
+      scrollY = window.scrollY || 0;
       drawer.classList.add("is-open");
       backdrop.classList.add("is-open");
       setExpanded(true);
+
+      // robust scroll-lock (no iOS jump on close)
       document.body.classList.add("noScroll");
+      document.body.style.top = `-${scrollY}px`;
+
+      ui.drawerOpen = true;
+      saveUI(ui);
     }
 
-    function close(){
+    function close() {
       drawer.classList.remove("is-open");
       backdrop.classList.remove("is-open");
       setExpanded(false);
+
       document.body.classList.remove("noScroll");
+      const top = document.body.style.top;
+      document.body.style.top = "";
+      const restore = top ? Math.abs(parseInt(top, 10)) : scrollY;
+      window.scrollTo(0, restore);
+
+      ui.drawerOpen = false;
+      saveUI(ui);
     }
 
-    function toggle(){
+    navBtns.forEach(btn => btn.addEventListener("click", () => {
       const isOpen = drawer.classList.contains("is-open");
       isOpen ? close() : open();
-    }
+    }));
 
-    navBtns.forEach(btn => btn.addEventListener("click", toggle));
     backdrop.addEventListener("click", close);
-
     drawer.querySelectorAll("a").forEach(a => a.addEventListener("click", close));
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
 
-    document.addEventListener("keydown", (e) => {
-      if(e.key === "Escape") close();
-    });
+    // optional: persist open state across accidental reloads
+    if (ui.drawerOpen) {
+      // don’t force-open if desktop
+      if (window.matchMedia("(max-width: 899px)").matches) open();
+      else ui.drawerOpen = false, saveUI(ui);
+    }
   }
 
   // ---------- kid mode ----------
-  function getKidMode(){ return localStorage.getItem(KIDMODE_KEY) === "1"; }
-  function setKidMode(on){
+  function getKidMode() { return localStorage.getItem(KIDMODE_KEY) === "1"; }
+  function setKidMode(on) {
     localStorage.setItem(KIDMODE_KEY, on ? "1" : "0");
     document.body.classList.toggle("kidmode", on);
   }
-  function initKidModeUI(){
+  function initKidModeUI() {
     document.body.classList.toggle("kidmode", getKidMode());
     const btn = document.getElementById("kidModeToggle");
-    if(!btn) return;
+    if (!btn) return;
     const on = getKidMode();
     btn.setAttribute("aria-pressed", on ? "true" : "false");
     btn.textContent = `Kid Mode: ${on ? "On" : "Off"}`;
@@ -110,8 +136,8 @@ const YTA = (() => {
     });
   }
 
-  // ---------- curriculum (base -> track variants) ----------
-  function mkDay(num, week, month, dow, mainKey, mainTopic, buildTask, logicTask, typingTask, notes=""){
+  // ---------- curriculum ----------
+  function mkDay(num, week, month, dow, mainKey, mainTopic, buildTask, logicTask, typingTask, notes = "") {
     return { num, week, month, dow, mainKey, mainTopic, buildTask, logicTask, typingTask, notes };
   }
 
@@ -205,13 +231,13 @@ const YTA = (() => {
     mkDay(72,12,3,"Sat","replit","Demo day","Capstone: full text adventure demo","Quick mixed puzzles (10 mins)","TypingClub final check-in","Optional: share with family/friends"),
   ];
 
-  function buildCurriculum(track){
+  function buildCurriculum(track) {
     const isFoundation = track === "foundation";
 
     return baseDays.map(d => {
       const nd = { ...d };
 
-      if(isFoundation){
+      if (isFoundation) {
         nd.mainTopic = nd.mainTopic
           .replace("Lua variables", "Lua basics (variables)")
           .replace("Refactoring", "Clean-up day")
@@ -251,27 +277,27 @@ const YTA = (() => {
   }
 
   const curricula = {
-    foundation: { id:"foundation", name:"Foundation (Year 3–4)", days: buildCurriculum("foundation") },
-    builder: { id:"builder", name:"Builder (Year 5–6)", days: buildCurriculum("builder") },
+    foundation: { id: "foundation", name: "Foundation (Year 3–4)", days: buildCurriculum("foundation") },
+    builder: { id: "builder", name: "Builder (Year 5–6)", days: buildCurriculum("builder") },
   };
 
-  function trackFromYearGroup(yearGroup){
+  function trackFromYearGroup(yearGroup) {
     const yg = Number(yearGroup);
-    if(yg === 3 || yg === 4) return "foundation";
+    if (yg === 3 || yg === 4) return "foundation";
     return "builder";
   }
 
   // ---------- profiles ----------
-  function loadProfiles(){
+  function loadProfiles() {
     return JSON.parse(localStorage.getItem(PROFILES_KEY) || "[]");
   }
-  function saveProfiles(profiles){
+  function saveProfiles(profiles) {
     localStorage.setItem(PROFILES_KEY, JSON.stringify(profiles));
   }
 
-  function ensureDefaultProfile(){
+  function ensureDefaultProfile() {
     const profiles = loadProfiles();
-    if(profiles.length > 0) return;
+    if (profiles.length > 0) return;
 
     const id = cryptoId();
     const def = [{
@@ -286,61 +312,52 @@ const YTA = (() => {
     localStorage.setItem(stateKey(id), JSON.stringify({}));
   }
 
-  function migrateProfilesIfNeeded(){
+  function migrateProfilesIfNeeded() {
     ensureDefaultProfile();
     const profiles = loadProfiles();
     let changed = false;
 
-    for(const p of profiles){
-      if(p.yearGroup == null){
-        p.yearGroup = 5;
-        changed = true;
-      }
-      if(!p.track){
-        p.track = trackFromYearGroup(p.yearGroup);
-        changed = true;
-      }
+    for (const p of profiles) {
+      if (p.yearGroup == null) { p.yearGroup = 5; changed = true; }
+      if (!p.track) { p.track = trackFromYearGroup(p.yearGroup); changed = true; }
       const should = trackFromYearGroup(p.yearGroup);
-      if(p.track !== should && (p.track !== "foundation" && p.track !== "builder")){
+      if (p.track !== should && (p.track !== "foundation" && p.track !== "builder")) {
         p.track = should;
         changed = true;
       }
     }
 
-    if(changed) saveProfiles(profiles);
+    if (changed) saveProfiles(profiles);
   }
 
-  function getProfiles(){
+  function getProfiles() {
     ensureDefaultProfile();
     migrateProfilesIfNeeded();
     return loadProfiles();
   }
 
-  function getProfileById(id){
+  function getProfileById(id) {
     return getProfiles().find(p => p.id === id) || null;
   }
 
-  function getActiveProfileId(){
+  function getActiveProfileId() {
     ensureDefaultProfile();
     migrateProfilesIfNeeded();
     return localStorage.getItem(ACTIVE_PROFILE_KEY) || getProfiles()[0].id;
   }
 
-  function getActiveProfile(){
+  function getActiveProfile() {
     const id = getActiveProfileId();
     return getProfileById(id);
   }
 
-  function setActiveProfile(id){
+  function setActiveProfile(id) {
     const p = getProfileById(id);
-    if(!p){
-      alert("Profile not found.");
-      return;
-    }
+    if (!p) { alert("Profile not found."); return; }
     localStorage.setItem(ACTIVE_PROFILE_KEY, id);
   }
 
-  function createProfile({ name, yearGroup, startDate }){
+  function createProfile({ name, yearGroup, startDate }) {
     ensureDefaultProfile();
     migrateProfilesIfNeeded();
 
@@ -351,7 +368,7 @@ const YTA = (() => {
 
     profiles.push({
       id,
-      name: (name || "").trim(),
+      name: name.trim(),
       yearGroup: yg,
       track,
       startDate: (startDate || "").trim(),
@@ -362,114 +379,108 @@ const YTA = (() => {
     localStorage.setItem(ACTIVE_PROFILE_KEY, id);
   }
 
-  function updateProfile(id, patch){
+  function updateProfile(id, patch) {
     const profiles = loadProfiles();
     const idx = profiles.findIndex(p => p.id === id);
-    if(idx === -1) return;
+    if (idx === -1) return;
 
     const next = { ...profiles[idx], ...patch };
-
-    if(patch.yearGroup != null){
-      next.track = trackFromYearGroup(patch.yearGroup);
-    }
+    if (patch.yearGroup != null) next.track = trackFromYearGroup(patch.yearGroup);
 
     profiles[idx] = next;
     saveProfiles(profiles);
   }
 
-  function deleteProfile(id){
+  function deleteProfile(id) {
     const profiles = loadProfiles();
-    if(profiles.length <= 1){
-      alert("You must keep at least one profile.");
-      return;
-    }
+    if (profiles.length <= 1) { alert("You must keep at least one profile."); return; }
     const ok = confirm("Delete this profile and all its ticks on this device?");
-    if(!ok) return;
+    if (!ok) return;
 
     const next = profiles.filter(p => p.id !== id);
     saveProfiles(next);
     localStorage.removeItem(stateKey(id));
 
     const active = getActiveProfileId();
-    if(active === id) localStorage.setItem(ACTIVE_PROFILE_KEY, next[0].id);
+    if (active === id) localStorage.setItem(ACTIVE_PROFILE_KEY, next[0].id);
   }
 
   // ---------- curriculum selection ----------
-  function getActiveCurriculum(){
+  function getActiveCurriculum() {
     const p = getActiveProfile();
     const track = p?.track || trackFromYearGroup(p?.yearGroup || 5);
     return curricula[track] || curricula.builder;
   }
 
-  function getDays(profileId){
+  function getDays(profileId) {
     const p = profileId ? getProfileById(profileId) : getActiveProfile();
     const track = p?.track || trackFromYearGroup(p?.yearGroup || 5);
     return (curricula[track] || curricula.builder).days;
   }
 
   // ---------- state per profile ----------
-  function loadState(profileId){
+  function loadState(profileId) {
     ensureDefaultProfile();
     migrateProfilesIfNeeded();
     const pid = profileId || getActiveProfileId();
     return JSON.parse(localStorage.getItem(stateKey(pid)) || "{}");
   }
 
-  function saveState(profileId, st){
+  function saveState(profileId, st) {
     const pid = profileId || getActiveProfileId();
     localStorage.setItem(stateKey(pid), JSON.stringify(st));
   }
 
-  function setChecked(dayNum, key, val, profileId){
+  function setChecked(dayNum, key, val, profileId) {
     const st = loadState(profileId);
     st[dayNum] = st[dayNum] || {};
     st[dayNum][key] = !!val;
     saveState(profileId, st);
   }
 
-  function isChecked(dayNum, key, profileId){
+  function isChecked(dayNum, key, profileId) {
     const st = loadState(profileId);
     return !!(st[dayNum] && st[dayNum][key]);
   }
 
-  function dayIsComplete(dayNum, profileId){
-    return ["main","logic","typing","present"].every(k => isChecked(dayNum, k, profileId));
+  function dayIsComplete(dayNum, profileId) {
+    return ["main", "logic", "typing", "present"].every(k => isChecked(dayNum, k, profileId));
   }
 
   // ---------- start date mapping ----------
-  function getStartDate(profileId){
+  function getStartDate(profileId) {
     const p = profileId ? getProfileById(profileId) : getActiveProfile();
-    if(!p || !p.startDate) return null;
+    if (!p || !p.startDate) return null;
     const d = new Date(p.startDate + "T00:00:00");
-    if(Number.isNaN(d.getTime())) return null;
-    d.setHours(0,0,0,0);
+    if (Number.isNaN(d.getTime())) return null;
+    d.setHours(0, 0, 0, 0);
     return d;
   }
 
-  function planDayForDate(dateObj, profileId){
+  function planDayForDate(dateObj, profileId) {
     const start = getStartDate(profileId);
-    if(!start) return null;
+    if (!start) return null;
 
     const d = new Date(dateObj);
-    d.setHours(0,0,0,0);
-    if(d < start) return null;
+    d.setHours(0, 0, 0, 0);
+    if (d < start) return null;
 
     let cur = new Date(start);
     let count = 0;
 
-    while(cur <= d){
-      if(cur.getDay() !== 0) count++; // skip Sundays
+    while (cur <= d) {
+      if (cur.getDay() !== 0) count++; // skip Sundays
       cur.setDate(cur.getDate() + 1);
-      if(count > 400) break;
+      if (count > 400) break;
     }
 
-    if(d.getDay() === 0) return null;
-    if(count < 1 || count > 72) return null;
+    if (d.getDay() === 0) return null;
+    if (count < 1 || count > 72) return null;
     return count;
   }
 
   // ---------- progress ----------
-  function computeOverallProgress(profileId){
+  function computeOverallProgress(profileId) {
     const days = getDays(profileId);
     const totalDays = days.length;
     const completeDays = days.filter(d => dayIsComplete(d.num, profileId)).length;
@@ -477,7 +488,7 @@ const YTA = (() => {
     return { totalDays, completeDays, pct };
   }
 
-  function computeMonthProgress(month, profileId){
+  function computeMonthProgress(month, profileId) {
     const days = getDays(profileId);
     const monthDays = days.filter(d => d.month === month);
     const total = monthDays.length;
@@ -486,39 +497,39 @@ const YTA = (() => {
     return { total, complete, pct };
   }
 
-  function nextIncompleteDay(profileId){
+  function nextIncompleteDay(profileId) {
     const days = getDays(profileId);
     return days.find(x => !dayIsComplete(x.num, profileId)) || null;
   }
 
-  function computeStreak(profileId){
+  function computeStreak(profileId) {
     const days = getDays(profileId);
     const start = getStartDate(profileId);
 
-    if(!start){
+    if (!start) {
       let i = days.length - 1;
-      while(i >= 0 && !dayIsComplete(days[i].num, profileId)) i--;
-      if(i < 0) return 0;
+      while (i >= 0 && !dayIsComplete(days[i].num, profileId)) i--;
+      if (i < 0) return 0;
       let streak = 0;
-      while(i >= 0 && dayIsComplete(days[i].num, profileId)){ streak++; i--; }
+      while (i >= 0 && dayIsComplete(days[i].num, profileId)) { streak++; i--; }
       return streak;
     }
 
     const today = new Date();
-    today.setHours(0,0,0,0);
+    today.setHours(0, 0, 0, 0);
 
     let cursor = new Date(today);
     let dayNum = planDayForDate(cursor, profileId);
 
-    while(dayNum === null && cursor >= start){
+    while (dayNum === null && cursor >= start) {
       cursor.setDate(cursor.getDate() - 1);
       dayNum = planDayForDate(cursor, profileId);
-      if((today - cursor) > 1000*60*60*24*500) break;
+      if ((today - cursor) > 1000 * 60 * 60 * 24 * 500) break;
     }
-    if(dayNum === null) return 0;
+    if (dayNum === null) return 0;
 
     let streak = 0;
-    while(dayNum >= 1 && dayIsComplete(dayNum, profileId)){
+    while (dayNum >= 1 && dayIsComplete(dayNum, profileId)) {
       streak++;
       dayNum--;
     }
@@ -526,34 +537,32 @@ const YTA = (() => {
   }
 
   // ---------- rendering: day cards ----------
-  function linkFor(key){
+  function linkFor(key) {
     const p = platforms[key];
-    if(!p) return esc(key);
     return `<a href="${p.url}" target="_blank" rel="noreferrer">${esc(p.name)}</a>`;
   }
 
-  function renderCheck(dayNum, key, label, profileId){
+  function renderCheck(dayNum, key, label, profileId) {
     const id = `c-${profileId}-${dayNum}-${key}`;
     return `
       <label class="check" for="${id}">
-        <input id="${id}" type="checkbox" data-day="${dayNum}" data-key="${key}" ${isChecked(dayNum,key,profileId) ? "checked" : ""} />
+        <input id="${id}" type="checkbox" data-day="${dayNum}" data-key="${key}" ${isChecked(dayNum, key, profileId) ? "checked" : ""} />
         ${esc(label)}
       </label>
     `;
   }
 
-  function renderDayCard(d, profileId, { expandedDefault=false } = {}){
+  function renderDayCard(d, profileId, { expandedDefault = false } = {}) {
     const done = dayIsComplete(d.num, profileId);
     const statusClass = done ? "kidTag kidTag--done" : "kidTag";
     const detailsOpen = expandedDefault ? " open" : "";
-    const mainName = platforms[d.mainKey]?.name || d.mainKey;
 
     return `
       <article class="dayCard" id="day-${d.num}">
         <div class="dayCard__top">
           <div class="stack gap8">
             <h3 class="dayTitle">Day ${d.num} — ${esc(d.dow)}</h3>
-            <div class="dayMeta">Week ${d.week} • Month ${d.month} • Main: ${esc(mainName)}</div>
+            <div class="dayMeta">Week ${d.week} • Month ${d.month} • Main: ${esc(platforms[d.mainKey].name)}</div>
             ${d.notes ? `<div class="dayMeta">${esc(d.notes)}</div>` : ""}
           </div>
           <div class="${statusClass}">${done ? "🏅 Completed" : "In progress"}</div>
@@ -579,10 +588,10 @@ const YTA = (() => {
         </div>
 
         <div class="checkRow" data-day="${d.num}">
-          ${renderCheck(d.num,"main","Main done", profileId)}
-          ${renderCheck(d.num,"logic","Logic done", profileId)}
-          ${renderCheck(d.num,"typing","Typing done", profileId)}
-          ${renderCheck(d.num,"present","Presented / explained", profileId)}
+          ${renderCheck(d.num, "main", "Main done", profileId)}
+          ${renderCheck(d.num, "logic", "Logic done", profileId)}
+          ${renderCheck(d.num, "typing", "Typing done", profileId)}
+          ${renderCheck(d.num, "present", "Presented / explained", profileId)}
         </div>
 
         <details class="dayDetails"${detailsOpen}>
@@ -593,7 +602,7 @@ const YTA = (() => {
     `;
   }
 
-  function wireCheckboxes(container, profileId){
+  function wireCheckboxes(container, profileId) {
     container.querySelectorAll('input[type="checkbox"][data-day][data-key]').forEach(cb => {
       cb.addEventListener("change", (e) => {
         const dayNum = Number(e.target.getAttribute("data-day"));
@@ -601,10 +610,10 @@ const YTA = (() => {
         setChecked(dayNum, key, e.target.checked, profileId);
 
         const card = document.getElementById(`day-${dayNum}`);
-        if(card){
+        if (card) {
           const tag = card.querySelector(".kidTag");
           const done = dayIsComplete(dayNum, profileId);
-          if(tag){
+          if (tag) {
             tag.classList.toggle("kidTag--done", done);
             tag.textContent = done ? "🏅 Completed" : "In progress";
           }
@@ -614,7 +623,7 @@ const YTA = (() => {
   }
 
   // ---------- page renderers ----------
-  function renderMonthPage(opts){
+  function renderMonthPage(opts) {
     const {
       month, dayListId, searchInputId,
       progressTextId, progressBarId, streakId,
@@ -629,31 +638,19 @@ const YTA = (() => {
 
     const mount = document.getElementById(dayListId);
     const search = document.getElementById(searchInputId);
-    if(!mount) return;
 
-    if(headerTrackId){
+    if (headerTrackId) {
       const el = document.getElementById(headerTrackId);
-      if(el){
-        el.textContent = `${curriculum.name} • Year ${profile?.yearGroup ?? "—"}`;
-      }
+      if (el) el.textContent = `${curriculum.name} • Year ${profile.yearGroup}`;
     }
 
-    function setText(id, text){
-      const el = document.getElementById(id);
-      if(el) el.textContent = text;
-    }
-    function setBar(id, pct){
-      const el = document.getElementById(id);
-      if(el) el.style.width = `${pct}%`;
-    }
-
-    function draw(expandedDefault=false){
+    function draw(expandedDefault = false) {
       const q = (search?.value || "").trim().toLowerCase();
 
       const monthDays = days
         .filter(d => d.month === month)
         .filter(d => {
-          if(!q) return true;
+          if (!q) return true;
           const hay = `${d.mainTopic} ${d.buildTask} ${d.logicTask} ${d.typingTask} ${d.notes}`.toLowerCase();
           return hay.includes(q);
         });
@@ -662,41 +659,42 @@ const YTA = (() => {
       wireCheckboxes(mount, profileId);
 
       const mp = computeMonthProgress(month, profileId);
-      setText(progressTextId, `${mp.complete} / ${mp.total} days`);
-      setBar(progressBarId, mp.pct);
-      setText(streakId, String(computeStreak(profileId)));
+      document.getElementById(progressTextId).textContent = `${mp.complete} / ${mp.total} days`;
+      document.getElementById(progressBarId).style.width = `${mp.pct}%`;
+      document.getElementById(streakId).textContent = computeStreak(profileId);
     }
 
     draw(false);
 
-    if(search) search.addEventListener("input", () => draw(false));
+    if (search) search.addEventListener("input", () => draw(false));
 
     document.getElementById(jumpBtnId)?.addEventListener("click", () => {
       const next = nextIncompleteDay(profileId);
-      if(!next) return;
-      if(next.month !== month){
+      if (!next) return;
+
+      if (next.month !== month) {
         const target = next.month === 1 ? "./month1.html" : next.month === 2 ? "./month2.html" : "./month3.html";
         window.location.href = `${target}#day-${next.num}`;
         return;
       }
+
       window.location.hash = `day-${next.num}`;
-      document.getElementById(`day-${next.num}`)?.scrollIntoView({ behavior: "smooth", block:"start" });
+      document.getElementById(`day-${next.num}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
     document.getElementById(expandBtnId)?.addEventListener("click", () => draw(true));
     document.getElementById(collapseBtnId)?.addEventListener("click", () => draw(false));
   }
 
-  function renderPrintPage({ mountId }){
+  function renderPrintPage({ mountId }) {
     const profileId = getActiveProfileId();
     const days = getDays(profileId);
     const mount = document.getElementById(mountId);
-    if(!mount) return;
 
     mount.innerHTML = days.map(d => `
       <article class="card dayCard">
         <h3 class="dayTitle">Day ${d.num} — ${esc(d.dow)} (Week ${d.week}, Month ${d.month})</h3>
-        <div class="muted small">Main: ${esc(platforms[d.mainKey]?.name || d.mainKey)} • Topic: ${esc(d.mainTopic)}</div>
+        <div class="muted small">Main: ${esc(platforms[d.mainKey].name)} • Topic: ${esc(d.mainTopic)}</div>
         <div class="dayGrid">
           <div class="task"><div class="task__k">Main task</div><div class="task__v">${esc(d.buildTask)}</div></div>
           <div class="task"><div class="task__k">Logic</div><div class="task__v">${esc(d.logicTask)}</div></div>
@@ -707,42 +705,42 @@ const YTA = (() => {
     `).join("");
   }
 
-  function weekDateRange(week, profileId){
+  function weekDateRange(week, profileId) {
     const start = getStartDate(profileId);
-    if(!start) return null;
+    if (!start) return null;
 
-    const offsetPlanDays = (week - 1) * 6; // weeks are Mon–Sat
+    const offsetPlanDays = (week - 1) * 6;
     let cur = new Date(start);
     let planCount = 0;
 
-    while(planCount < offsetPlanDays){
+    while (planCount < offsetPlanDays) {
       cur.setDate(cur.getDate() + 1);
-      if(cur.getDay() !== 0) planCount++;
-      if(planCount > 1000) break;
+      if (cur.getDay() !== 0) planCount++;
+      if (planCount > 1000) break;
     }
 
     const weekStart = new Date(cur);
 
     let end = new Date(weekStart);
     let endCount = 0;
-    while(endCount < 5){
+    while (endCount < 5) {
       end.setDate(end.getDate() + 1);
-      if(end.getDay() !== 0) endCount++;
-      if(endCount > 1000) break;
+      if (end.getDay() !== 0) endCount++;
+      if (endCount > 1000) break;
     }
     return { start: weekStart, end };
   }
 
-  function weekLabel(week, profileId){
+  function weekLabel(week, profileId) {
     const pid = profileId || getActiveProfileId();
     const r = weekDateRange(week, pid);
-    if(!r) return `Week ${week}`;
-    const s = r.start.toLocaleDateString("en-GB", { day:"2-digit", month:"short" });
-    const e = r.end.toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" });
+    if (!r) return `Week ${week}`;
+    const s = r.start.toLocaleDateString("en-GB", { day: "2-digit", month: "short" });
+    const e = r.end.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
     return `Week ${week} (${s} – ${e})`;
   }
 
-  function weekProgress(week, profileId){
+  function weekProgress(week, profileId) {
     const pid = profileId || getActiveProfileId();
     const days = getDays(pid);
     const weekDays = days.filter(d => d.week === week);
@@ -752,23 +750,41 @@ const YTA = (() => {
     return { total, complete, pct, fullyComplete: complete === total };
   }
 
-  function certificateTitleForWeek(week, track){
+  function certificateTitleForWeek(week, track) {
     const t = track || "builder";
     const foundationTitles = {
-      1:"Scratch Explorer", 2:"Maze Maker", 3:"Level Star", 4:"Scratch Showcase",
-      5:"Roblox Builder", 6:"Script Starter", 7:"Power-Up Pro", 8:"Game Publisher",
-      9:"Python Beginner", 10:"Loop Legend", 11:"Story Builder", 12:"Champion Coder"
+      1: "Scratch Explorer",
+      2: "Maze Maker",
+      3: "Level Star",
+      4: "Scratch Showcase",
+      5: "Roblox Builder",
+      6: "Script Starter",
+      7: "Power-Up Pro",
+      8: "Game Publisher",
+      9: "Python Beginner",
+      10: "Loop Legend",
+      11: "Story Builder",
+      12: "Champion Coder"
     };
     const builderTitles = {
-      1:"Movement Master", 2:"Rule Builder", 3:"Level Creator", 4:"Scratch Showcase Star",
-      5:"World Builder", 6:"Script Starter", 7:"System Designer", 8:"Publisher Power",
-      9:"Python Beginner Boss", 10:"Logic Loop Legend", 11:"Adventure Architect", 12:"Capstone Champion"
+      1: "Movement Master",
+      2: "Rule Builder",
+      3: "Level Creator",
+      4: "Scratch Showcase Star",
+      5: "World Builder",
+      6: "Script Starter",
+      7: "System Designer",
+      8: "Publisher Power",
+      9: "Python Beginner Boss",
+      10: "Logic Loop Legend",
+      11: "Adventure Architect",
+      12: "Capstone Champion"
     };
     const map = t === "foundation" ? foundationTitles : builderTitles;
     return map[week] || "Achievement Unlocked";
   }
 
-  function renderCertificateHTML({ week }){
+  function renderCertificateHTML({ week }) {
     const pid = getActiveProfileId();
     const profile = getProfileById(pid);
     const label = weekLabel(week, pid);
@@ -788,7 +804,7 @@ const YTA = (() => {
       return `<div class="row row--compact">
         <div>
           <div class="row__title">Day ${d.num} — ${esc(d.dow)}</div>
-          <div class="row__meta">${esc(platforms[d.mainKey]?.name || d.mainKey)} • ${esc(d.mainTopic)}</div>
+          <div class="row__meta">${esc(platforms[d.mainKey].name)} • ${esc(d.mainTopic)}</div>
         </div>
         <div class="row__meta row__meta--strong">${done ? "✓ Done" : "—"}</div>
       </div>`;
@@ -841,14 +857,14 @@ const YTA = (() => {
     `;
   }
 
-  function suggestWeek(){
+  function suggestWeek() {
     const pid = getActiveProfileId();
     const next = nextIncompleteDay(pid);
-    if(!next) return 12;
+    if (!next) return 12;
     return next.week;
   }
 
-  function renderDashboard(ids){
+  function renderDashboard(ids) {
     const profileId = getActiveProfileId();
     const profile = getActiveProfile();
     const curriculum = getActiveCurriculum();
@@ -856,8 +872,8 @@ const YTA = (() => {
     const streak = computeStreak(profileId);
     const next = nextIncompleteDay(profileId);
 
-    if(ids.profileNameId) document.getElementById(ids.profileNameId).textContent = profile?.name || "No profile";
-    if(ids.profileMetaId){
+    if (ids.profileNameId) document.getElementById(ids.profileNameId).textContent = profile?.name || "No profile";
+    if (ids.profileMetaId) {
       const meta = `${curriculum.name} • Year ${profile?.yearGroup ?? "—"} • Start: ${profile?.startDate ? fmtDate(profile.startDate) : "Not set"}`;
       document.getElementById(ids.profileMetaId).textContent = meta;
     }
@@ -865,9 +881,9 @@ const YTA = (() => {
     document.getElementById(ids.overallId).textContent = `${overall.completeDays} / ${overall.totalDays}`;
     document.getElementById(ids.overallBarId).style.width = `${overall.pct}%`;
     document.getElementById(ids.overallPctId).textContent = `${overall.pct}%`;
-    document.getElementById(ids.streakId).textContent = String(streak);
+    document.getElementById(ids.streakId).textContent = streak;
 
-    if(next){
+    if (next) {
       document.getElementById(ids.nextId).textContent = `Day ${next.num}`;
       const hint = next.month === 1 ? "Scratch building." : next.month === 2 ? "Roblox build + scripting." : "Python projects.";
       document.getElementById(ids.nextHintId).textContent = `Next: Month ${next.month} • ${hint}`;
@@ -877,57 +893,53 @@ const YTA = (() => {
     }
 
     const byMonth = document.getElementById(ids.byMonthId);
-    if(byMonth){
-      byMonth.innerHTML = [1,2,3].map(m => {
-        const mp = computeMonthProgress(m, profileId);
-        const name = m===1 ? "Month 1 — Scratch" : m===2 ? "Month 2 — Roblox Studio" : "Month 3 — Python";
-        return `
-          <div class="row">
-            <div>
-              <div class="row__title">${name}</div>
-              <div class="row__meta">${mp.complete} / ${mp.total} days completed</div>
-            </div>
-            <div class="row__right">
-              <div class="bar"><div style="width:${mp.pct}%; height:100%"></div></div>
-              <div class="small muted">${mp.pct}%</div>
-            </div>
+    byMonth.innerHTML = [1, 2, 3].map(m => {
+      const mp = computeMonthProgress(m, profileId);
+      const name = m === 1 ? "Month 1 — Scratch" : m === 2 ? "Month 2 — Roblox Studio" : "Month 3 — Python";
+      return `
+        <div class="row">
+          <div>
+            <div class="row__title">${name}</div>
+            <div class="row__meta">${mp.complete} / ${mp.total} days completed</div>
           </div>
-        `;
-      }).join("");
-    }
+          <div class="row__right">
+            <div class="bar"><div style="width:${mp.pct}%; height:100%"></div></div>
+            <div class="small muted">${mp.pct}%</div>
+          </div>
+        </div>
+      `;
+    }).join("");
 
     const byWeek = document.getElementById(ids.byWeekId);
-    if(byWeek){
-      byWeek.innerHTML = Array.from({length:12}, (_,i)=>i+1).map(w => {
-        const wp = weekProgress(w, profileId);
-        const label = weekLabel(w, profileId);
-        return `
-          <div class="row">
-            <div>
-              <div class="row__title">${esc(label)}</div>
-              <div class="row__meta">${wp.complete} / ${wp.total} days completed</div>
-            </div>
-            <div class="row__right">
-              <div class="bar"><div style="width:${wp.pct}%; height:100%"></div></div>
-              <div class="small muted">${wp.pct}%</div>
-            </div>
+    byWeek.innerHTML = Array.from({ length: 12 }, (_, i) => i + 1).map(w => {
+      const wp = weekProgress(w, profileId);
+      const label = weekLabel(w, profileId);
+      return `
+        <div class="row">
+          <div>
+            <div class="row__title">${esc(label)}</div>
+            <div class="row__meta">${wp.complete} / ${wp.total} days completed</div>
           </div>
-        `;
-      }).join("");
-    }
+          <div class="row__right">
+            <div class="bar"><div style="width:${wp.pct}%; height:100%"></div></div>
+            <div class="small muted">${wp.pct}%</div>
+          </div>
+        </div>
+      `;
+    }).join("");
   }
 
   // ---------- resets ----------
-  function resetActiveChildTicks(){
+  function resetActiveChildTicks() {
     const pid = getActiveProfileId();
     const ok = confirm("Clear ticks for the active child on this device?");
-    if(!ok) return;
+    if (!ok) return;
     localStorage.setItem(stateKey(pid), JSON.stringify({}));
     window.location.reload();
   }
 
-  // ---------- init (call on every page) ----------
-  function init(){
+  // ---------- init ----------
+  function init() {
     ensureDefaultProfile();
     migrateProfilesIfNeeded();
     initMobileNav();
@@ -939,12 +951,10 @@ const YTA = (() => {
     platforms,
     curricula,
 
-    // kid mode
     initKidModeUI,
     setKidMode,
     getKidMode,
 
-    // profiles
     getProfiles,
     getProfileById,
     getActiveProfileId,
@@ -954,32 +964,26 @@ const YTA = (() => {
     updateProfile,
     deleteProfile,
 
-    // curriculum
     getActiveCurriculum,
     getDays,
 
-    // date
     fmtDate,
     nextMondayISO,
 
-    // progress
     computeOverallProgress,
     computeMonthProgress,
     computeStreak,
     nextIncompleteDay,
 
-    // pages
     renderMonthPage,
     renderPrintPage,
     renderDashboard,
 
-    // certificates
     weekLabel,
     weekProgress,
     renderCertificateHTML,
     suggestWeek,
 
-    // reset
     resetActiveChildTicks
   };
 })();
