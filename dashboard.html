@@ -1,0 +1,108 @@
+<!-- FILE: dashboard.html  (Parent Dashboard) -->
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Parent Dashboard | Young Tech Architect</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar__inner">
+      <a class="brand" href="./index.html">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__text">
+          <span class="brand__title">Young Tech Architect</span>
+          <span class="brand__subtitle">Parent Dashboard</span>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Primary">
+        <a class="nav__link" href="./index.html">Home</a>
+        <a class="nav__link" href="./month1.html">Month 1</a>
+        <a class="nav__link" href="./month2.html">Month 2</a>
+        <a class="nav__link" href="./month3.html">Month 3</a>
+        <a class="nav__link" href="./print.html">Print</a>
+        <a class="nav__link is-active" href="./dashboard.html">Parent Dashboard</a>
+      </nav>
+
+      <div class="topbar__actions">
+        <button class="btn btn--danger btn--tiny" id="resetAll" type="button">Reset ticks</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap stack">
+    <section class="card stack">
+      <h1 class="h1">Progress Summary</h1>
+      <p class="muted">
+        This dashboard summarises progress on this device. A day counts as complete when all 4 ticks are done.
+      </p>
+
+      <div class="grid3">
+        <div class="stat card card--soft">
+          <div class="stat__k">Overall</div>
+          <div class="stat__v" id="dOverall">0 / 72</div>
+          <div class="bar"><div id="dOverallBar"></div></div>
+          <div class="small muted" id="dOverallPct">0%</div>
+        </div>
+
+        <div class="stat card card--soft">
+          <div class="stat__k">Streak</div>
+          <div class="stat__v"><span id="dStreak">0</span> days 🔥</div>
+          <div class="small muted">Streak = consecutive completed days.</div>
+        </div>
+
+        <div class="stat card card--soft">
+          <div class="stat__k">Next step</div>
+          <div class="stat__v" id="dNext">Day 1</div>
+          <div class="small muted" id="dNextHint">Start with Month 1.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid2">
+      <article class="card stack">
+        <h2 class="h2">By month</h2>
+        <div class="monthRows" id="byMonth"></div>
+      </article>
+
+      <article class="card stack">
+        <h2 class="h2">By week</h2>
+        <div class="monthRows" id="byWeek"></div>
+      </article>
+    </section>
+
+    <section class="card stack">
+      <h2 class="h2">Notes for parents</h2>
+      <ul class="list">
+        <li>Keep sessions short and consistent. Stop while they still want more.</li>
+        <li>If they get stuck, reduce scope: “Make it work first, make it cool later.”</li>
+        <li>Encourage explaining. It builds confidence and deep understanding.</li>
+        <li>Celebrate shipped projects, not perfection.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="footer wrap">
+    <span class="muted small">If you want multi-device syncing later, you can add logins (Firebase/Supabase).</span>
+  </footer>
+
+  <script src="./app.js"></script>
+  <script>
+    YTA.renderDashboard({
+      overallId: "dOverall",
+      overallBarId: "dOverallBar",
+      overallPctId: "dOverallPct",
+      streakId: "dStreak",
+      nextId: "dNext",
+      nextHintId: "dNextHint",
+      byMonthId: "byMonth",
+      byWeekId: "byWeek"
+    });
+
+    document.getElementById("resetAll").addEventListener("click", () => YTA.resetAll());
+  </script>
+</body>
+</html>
