@@ -943,6 +943,19 @@ const YTA = (() => {
     ensureDefaultProfile();
     migrateProfilesIfNeeded();
     initMobileNav();
+    initFooterYear();
+  }
+
+  function initFooterYear(){
+    const apply = () => {
+      const y = String(new Date().getFullYear());
+      document.querySelectorAll('[data-yt="year"]').forEach(el => { el.textContent = y; });
+    };
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", apply, { once: true });
+    } else {
+      apply();
+    }
   }
 
   // ---------- public API ----------
@@ -984,6 +997,7 @@ const YTA = (() => {
     renderCertificateHTML,
     suggestWeek,
 
-    resetActiveChildTicks
+    resetActiveChildTicks,
+    initFooterYear
   };
 })();
