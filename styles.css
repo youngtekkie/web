@@ -1,0 +1,310 @@
+/* FILE: styles.css  (Kids-friendly fonts + colours, plus Kid Mode UI) */
+
+/* Fonts:
+   - System UI (clean)
+   - Plus a Google-font-like stack without loading external assets
+   If you want, you can later add: Inter / Plus Jakarta Sans / Nunito Sans via <link>.
+*/
+:root{
+  --bg1:#0b1020;
+  --bg2:#0b132a;
+  --card:#101a33;
+  --card2:#0f1a36;
+  --text:#eef5ff;
+  --muted:#b9c7e6;
+  --line:rgba(255,255,255,.10);
+  --shadow: 0 14px 40px rgba(0,0,0,.35);
+
+  /* Kid-friendly palette (bright but not neon) */
+  --primary:#7c9cff;     /* soft blue */
+  --primary2:#45e6b2;    /* mint */
+  --warning:#ffd66b;     /* sunshine */
+  --danger:#ff6b8b;      /* soft red/pink */
+  --good:#45e6b2;
+
+  --radius:18px;
+  --radius2:24px;
+
+  /* sizing */
+  --textSize: 16px;
+  --h1: 28px;
+  --h2: 20px;
+
+  /* kid mode scale */
+  --kidScale: 1;
+}
+
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  font-size: calc(var(--textSize) * var(--kidScale));
+  color: var(--text);
+  background:
+    radial-gradient(900px 600px at 12% 0%, rgba(124,156,255,.25), transparent 60%),
+    radial-gradient(900px 600px at 90% 5%, rgba(69,230,178,.18), transparent 60%),
+    linear-gradient(180deg, var(--bg1), var(--bg2));
+}
+
+a{color:var(--primary); text-decoration:none}
+a:hover{text-decoration:underline}
+
+.wrap{max-width:1100px; margin:0 auto; padding:16px}
+.stack{display:flex; flex-direction:column; gap:14px}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+.grid3{display:grid; grid-template-columns:repeat(3, 1fr); gap:14px}
+@media (max-width: 900px){ .grid2,.grid3{grid-template-columns:1fr} }
+
+.topbar{
+  position:sticky; top:0; z-index:20;
+  backdrop-filter: blur(10px);
+  background: rgba(10, 16, 36, .72);
+  border-bottom:1px solid var(--line);
+}
+.topbar__inner{
+  display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+}
+
+.brand{display:flex; align-items:center; gap:12px}
+.brand__mark{
+  width:44px; height:44px; border-radius:14px;
+  background: linear-gradient(135deg, var(--primary), var(--primary2));
+  box-shadow: var(--shadow);
+}
+.brand__text{display:flex; flex-direction:column; line-height:1.05}
+.brand__title{font-weight:800; letter-spacing:.2px}
+.brand__subtitle{font-size:.85em; color:var(--muted)}
+
+.nav{display:flex; gap:10px; flex-wrap:wrap}
+.nav__link{
+  padding:10px 12px;
+  border-radius: 999px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  color: var(--text);
+  font-weight:600;
+}
+.nav__link.is-active{
+  background: rgba(124,156,255,.18);
+  border-color: rgba(124,156,255,.45);
+}
+
+.topbar__actions{display:flex; gap:10px; align-items:center}
+
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+  border:1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+.card--soft{
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+}
+
+.h1{font-size: calc(var(--h1) * var(--kidScale)); margin:0; line-height:1.12}
+.h2{font-size: calc(var(--h2) * var(--kidScale)); margin:0; line-height:1.2}
+.muted{color:var(--muted)}
+.small{font-size:.9em}
+
+.pillrow{display:flex; gap:10px; flex-wrap:wrap}
+.pill{
+  display:flex; align-items:center; gap:10px;
+  padding:10px 12px;
+  border-radius: 999px;
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.18);
+}
+.pill--static{cursor:default}
+.pill__k{font-weight:800}
+.pill__v{color:var(--muted); font-weight:600}
+
+.btn{
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.07);
+  color: var(--text);
+  padding: calc(10px * var(--kidScale)) calc(14px * var(--kidScale));
+  border-radius: 14px;
+  font-weight:800;
+  cursor:pointer;
+}
+.btn:hover{background: rgba(255,255,255,.11)}
+.btn--primary{
+  background: linear-gradient(135deg, rgba(124,156,255,.95), rgba(69,230,178,.90));
+  border-color: rgba(255,255,255,.18);
+  color: #07101f;
+}
+.btn--soft{
+  background: rgba(124,156,255,.12);
+  border-color: rgba(124,156,255,.35);
+}
+.btn--danger{
+  background: rgba(255,107,139,.14);
+  border-color: rgba(255,107,139,.45);
+}
+.btn--tiny{
+  padding: 8px 10px;
+  border-radius: 12px;
+  font-weight:800;
+}
+
+.ctaRow{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+.headRow{display:flex; gap:14px; justify-content:space-between; align-items:flex-start; flex-wrap:wrap}
+.miniPanel{min-width: 280px}
+
+.stats{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+@media (max-width: 800px){ .stats{grid-template-columns:1fr} }
+
+.stat__k{font-size:.9em; color:var(--muted); font-weight:700}
+.stat__v{font-size:1.25em; font-weight:900; margin-top:6px}
+
+.bar{
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+  border:1px solid var(--line);
+  overflow:hidden;
+  margin-top:10px;
+}
+.bar > div{
+  height:100%;
+  width:0%;
+  background: linear-gradient(90deg, var(--primary), var(--primary2));
+}
+
+.badges{display:flex; gap:10px; flex-wrap:wrap}
+.badge{
+  padding:10px 12px;
+  border-radius: 999px;
+  border:1px dashed rgba(255,255,255,.18);
+  background: rgba(0,0,0,.12);
+  color: rgba(238,245,255,.75);
+  font-weight:900;
+}
+.badge--on{
+  border-style: solid;
+  background: rgba(69,230,178,.14);
+  border-color: rgba(69,230,178,.45);
+  color: var(--text);
+}
+
+.quote{
+  padding: 12px 14px;
+  border-radius: 16px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.12);
+  font-weight:700;
+  line-height:1.35;
+}
+
+.controlsRow{
+  display:flex; gap:12px; justify-content:space-between; align-items:flex-end; flex-wrap:wrap;
+}
+.search{flex:1; min-width: 260px}
+.input{
+  width:100%;
+  padding: 12px 12px;
+  border-radius: 14px;
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.18);
+  color: var(--text);
+  outline:none;
+  font-weight:700;
+}
+.input::placeholder{color: rgba(238,245,255,.45)}
+
+.dayCard{
+  padding: 14px;
+  border-radius: var(--radius2);
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.18);
+}
+.dayCard__top{
+  display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:flex-start;
+}
+.dayTitle{margin:0; font-weight:950; letter-spacing:.2px}
+.dayMeta{color:var(--muted); font-size:.9em; margin-top:4px}
+
+.kidTag{
+  border-radius: 999px;
+  padding: 8px 10px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.06);
+  color: var(--muted);
+  font-weight:900;
+}
+
+.kidTag--done{
+  background: rgba(69,230,178,.14);
+  border-color: rgba(69,230,178,.45);
+  color: var(--text);
+}
+
+.dayGrid{
+  display:grid; grid-template-columns:1fr 1fr; gap:12px;
+  margin-top:12px;
+}
+@media (max-width: 800px){ .dayGrid{grid-template-columns:1fr} }
+
+.task{
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  border-radius: 16px;
+  padding: 12px;
+}
+.task__k{font-size:.9em; color:var(--muted); font-weight:800}
+.task__v{margin-top:6px; font-weight:700; line-height:1.35}
+
+.checkRow{
+  display:flex; flex-wrap:wrap; gap:10px;
+  margin-top:12px;
+  padding-top:10px;
+  border-top:1px dashed rgba(255,255,255,.16);
+}
+.check{
+  display:flex; align-items:center; gap:10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.12);
+  cursor:pointer;
+  user-select:none;
+  font-weight:900;
+}
+.check input{
+  width:18px; height:18px;
+  accent-color: var(--good);
+}
+
+.dayDetails{margin-top:10px}
+details summary{
+  cursor:pointer;
+  font-weight:900;
+  color: var(--warning);
+}
+
+/* Parent dashboard lists */
+.monthRows{display:flex; flex-direction:column; gap:10px}
+.row{
+  display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;
+  padding:12px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.14);
+}
+.row__title{font-weight:950}
+.row__meta{color:var(--muted); font-weight:700}
+.row__right{min-width: 220px}
+.row .bar{margin-top:8px}
+
+.footer{
+  display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;
+  padding: 18px 16px;
+}
+
+/* Kid Mode: bigger and bouncier, but still clean */
+body.kidmode{
+  --kidScale: 1.14;
+}
+body.kidmode .nav__link{padding: 12px 14px}
+body.kidmode .btn{border-radius: 16px}
