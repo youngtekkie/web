@@ -29,6 +29,8 @@
 
 *{ box-sizing:border-box; }
 html,body{ height:100%; }
+html, body { overflow-x: hidden; } /* prevents tiny sideways scroll on mobile */
+
 body{
   margin:0;
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
@@ -41,7 +43,13 @@ body{
   -webkit-text-size-adjust: 100%;
 }
 
-body.noScroll{ overflow:hidden; }
+a, button { -webkit-tap-highlight-color: transparent; } /* nicer taps on iOS */
+
+body.noScroll{
+  overflow:hidden;
+  position: fixed;   /* iOS Safari: reliably stops background scroll */
+  width: 100%;
+}
 
 a{ color:var(--primary); text-decoration:none; }
 a:hover{ text-decoration:underline; }
@@ -149,6 +157,9 @@ a:hover{ text-decoration:underline; }
   display:flex;
   flex-direction:column;
   gap:12px;
+
+  overflow-y: auto;                 /* allow scrolling inside drawer */
+  -webkit-overflow-scrolling: touch;/* smooth iOS scroll */
 }
 .drawer.is-open{ transform: translateX(0); }
 
