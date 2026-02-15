@@ -1,66 +1,79 @@
-<!-- FILE: print.html — NAV UPDATED: add Profiles + Certificates -->
 <!doctype html>
 <html lang="en-GB">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Print Plan | Young Tech Architect</title>
   <link rel="stylesheet" href="./styles.css" />
   <style>
     @media print{
-      .topbar, .footer, .noPrint { display:none !important; }
+      .topbar, .footer, .noPrint, .backdrop, .drawer{ display:none !important; }
       body { background:#fff !important; color:#000 !important; }
       .card { box-shadow:none !important; border:1px solid #ddd !important; }
       .dayCard { break-inside: avoid; }
       a { color:#000; text-decoration:underline; }
-      .muted{color:#333 !important;}
+      .muted{ color:#333 !important; }
     }
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="wrap topbar__inner">
-      <a class="brand" href="./index.html">
-        <span class="brand__mark" aria-hidden="true"></span>
-        <span class="brand__text">
-          <span class="brand__title">Young Tech Architect</span>
-          <span class="brand__subtitle">Print Plan</span>
-        </span>
-      </a>
+<header class="topbar">
+  <div class="wrap topbar__inner">
+    <a class="brand" href="./index.html">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span class="brand__text">
+        <span class="brand__title">Young Tech Architect</span>
+        <span class="brand__subtitle">Print Plan</span>
+      </span>
+    </a>
 
-      <nav class="nav" aria-label="Primary">
-        <a class="nav__link" href="./index.html">Home</a>
-        <a class="nav__link" href="./profiles.html">Profiles</a>
-        <a class="nav__link" href="./month1.html">Month 1</a>
-        <a class="nav__link" href="./month2.html">Month 2</a>
-        <a class="nav__link" href="./month3.html">Month 3</a>
-        <a class="nav__link" href="./certificates.html">Certificates</a>
-        <a class="nav__link is-active" href="./print.html">Print</a>
-        <a class="nav__link" href="./dashboard.html">Parent Dashboard</a>
-      </nav>
-
-      <div class="topbar__actions noPrint">
-        <button class="btn btn--primary" type="button" onclick="window.print()">Print / Save as PDF</button>
-      </div>
+    <div class="topbar__actions noPrint">
+      <button class="menuBtn" type="button" data-yt="navbtn" aria-expanded="false" aria-label="Open menu">☰</button>
+      <button class="btn btn--primary" type="button" onclick="window.print()">Print / Save as PDF</button>
     </div>
-  </header>
+  </div>
+</header>
 
-  <main class="wrap stack">
-    <section class="card stack">
-      <h1 class="h1">Printable 90-Day Plan</h1>
-      <p class="muted">Tip: choose “Save as PDF” in print settings for a clean file.</p>
-    </section>
+<div class="backdrop" data-yt="backdrop"></div>
+<aside class="drawer" data-yt="drawer" aria-label="Mobile menu">
+  <div class="drawerHeader">
+    <div class="drawerTitle">Menu</div>
+    <button class="menuBtn" type="button" data-yt="navbtn" aria-expanded="true" aria-label="Close menu">✕</button>
+  </div>
+  <div class="drawerLinks">
+    <a href="./index.html">Home</a>
+    <a href="./profiles.html">Profiles</a>
+    <a href="./month1.html">Month 1</a>
+    <a href="./month2.html">Month 2</a>
+    <a href="./month3.html">Month 3</a>
+    <a href="./certificates.html">Certificates</a>
+    <a href="./dashboard.html">Parent Dashboard</a>
+  </div>
+</aside>
 
-    <section id="printList" class="stack"></section>
-  </main>
+<main class="wrap stack">
+  <section class="card stack">
+    <h1 class="h1">Printable Plan</h1>
+    <p class="muted" id="printMeta">—</p>
+  </section>
 
-  <footer class="footer wrap noPrint">
-    <span class="muted small">Print view shows which days are completed for the active profile.</span>
-  </footer>
+  <section id="printList" class="stack"></section>
+</main>
 
-  <script src="./app.js"></script>
-  <script>
-    YTA.renderPrintPage({ mountId: "printList" });
-  </script>
+<footer class="footer wrap noPrint">
+  <span class="muted small">Tip: “Save as PDF” works well on iOS Safari and Android Chrome.</span>
+</footer>
+
+<script src="./app.js"></script>
+<script>
+  YTA.init();
+
+  const p = YTA.getActiveProfile();
+  const cur = YTA.getActiveCurriculum();
+  document.getElementById("printMeta").textContent =
+    `${p?.name ?? "No profile"} • Year ${p?.yearGroup ?? "—"} • ${cur?.name ?? "—"}`;
+
+  YTA.renderPrintPage({ mountId: "printList" });
+</script>
 </body>
 </html>
