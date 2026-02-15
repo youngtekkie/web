@@ -1,4 +1,4 @@
-<!-- FILE: print.html  (Print-friendly) -->
+<!-- FILE: print.html — NAV UPDATED: add Profiles + Certificates -->
 <!doctype html>
 <html lang="en-GB">
 <head>
@@ -7,13 +7,13 @@
   <title>Print Plan | Young Tech Architect</title>
   <link rel="stylesheet" href="./styles.css" />
   <style>
-    /* extra print rules */
     @media print{
       .topbar, .footer, .noPrint { display:none !important; }
-      body { background:#fff !important; }
+      body { background:#fff !important; color:#000 !important; }
       .card { box-shadow:none !important; border:1px solid #ddd !important; }
       .dayCard { break-inside: avoid; }
       a { color:#000; text-decoration:underline; }
+      .muted{color:#333 !important;}
     }
   </style>
 </head>
@@ -30,9 +30,11 @@
 
       <nav class="nav" aria-label="Primary">
         <a class="nav__link" href="./index.html">Home</a>
+        <a class="nav__link" href="./profiles.html">Profiles</a>
         <a class="nav__link" href="./month1.html">Month 1</a>
         <a class="nav__link" href="./month2.html">Month 2</a>
         <a class="nav__link" href="./month3.html">Month 3</a>
+        <a class="nav__link" href="./certificates.html">Certificates</a>
         <a class="nav__link is-active" href="./print.html">Print</a>
         <a class="nav__link" href="./dashboard.html">Parent Dashboard</a>
       </nav>
@@ -46,27 +48,18 @@
   <main class="wrap stack">
     <section class="card stack">
       <h1 class="h1">Printable 90-Day Plan</h1>
-      <p class="muted">
-        Tip: in your browser print settings choose “Save as PDF” if you want a clean file.
-      </p>
-
-      <div class="pillrow">
-        <span class="pill pill--static"><span class="pill__k">Scratch</span><span class="pill__v">Days 1–24</span></span>
-        <span class="pill pill--static"><span class="pill__k">Roblox Studio</span><span class="pill__v">Days 25–48</span></span>
-        <span class="pill pill--static"><span class="pill__k">Python</span><span class="pill__v">Days 49–72</span></span>
-      </div>
+      <p class="muted">Tip: choose “Save as PDF” in print settings for a clean file.</p>
     </section>
 
     <section id="printList" class="stack"></section>
   </main>
 
   <footer class="footer wrap noPrint">
-    <span class="muted small">Print view hides Kid Mode and checkboxes.</span>
+    <span class="muted small">Print view shows which days are completed for the active profile.</span>
   </footer>
 
   <script src="./app.js"></script>
   <script>
-    // Print page: render all days in a compact layout, no checkboxes
     YTA.renderPrintPage({ mountId: "printList" });
   </script>
 </body>
