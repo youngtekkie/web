@@ -1,4 +1,4 @@
-<!-- FILE: index.html  (Home) -->
+<!-- FILE: index.html  (Home) — UPDATED: adds Profiles + Certificates -->
 <!doctype html>
 <html lang="en-GB">
 <head>
@@ -20,17 +20,17 @@
 
       <nav class="nav" aria-label="Primary">
         <a class="nav__link is-active" href="./index.html">Home</a>
+        <a class="nav__link" href="./profiles.html">Profiles</a>
         <a class="nav__link" href="./month1.html">Month 1</a>
         <a class="nav__link" href="./month2.html">Month 2</a>
         <a class="nav__link" href="./month3.html">Month 3</a>
+        <a class="nav__link" href="./certificates.html">Certificates</a>
         <a class="nav__link" href="./print.html">Print</a>
         <a class="nav__link" href="./dashboard.html">Parent Dashboard</a>
       </nav>
 
       <div class="topbar__actions">
-        <button class="btn btn--soft" id="kidModeToggle" type="button" aria-pressed="false">
-          Kid Mode: Off
-        </button>
+        <button class="btn btn--soft" id="kidModeToggle" type="button" aria-pressed="false">Kid Mode: Off</button>
       </div>
     </div>
   </header>
@@ -41,31 +41,22 @@
         <div class="stack">
           <h1 class="h1">A day-by-day learning path to help kids build games, learn logic, and type faster.</h1>
           <p class="muted">
-            This is a Monday–Saturday plan for 12 weeks (72 days). Tick tasks to track progress.
-            Ticks save on this device.
+            Monday–Saturday plan for 12 weeks (72 days). Pick a child profile and a start date, then tick tasks daily.
           </p>
 
           <div class="pillrow">
-            <a class="pill" href="https://scratch.mit.edu" target="_blank" rel="noreferrer">
-              <span class="pill__k">Scratch</span><span class="pill__v">Month 1</span>
-            </a>
-            <a class="pill" href="https://create.roblox.com" target="_blank" rel="noreferrer">
-              <span class="pill__k">Roblox Studio</span><span class="pill__v">Month 2</span>
-            </a>
-            <a class="pill" href="https://replit.com" target="_blank" rel="noreferrer">
-              <span class="pill__k">Python (Replit)</span><span class="pill__v">Month 3</span>
-            </a>
-            <a class="pill" href="https://www.khanacademy.org" target="_blank" rel="noreferrer">
-              <span class="pill__k">Logic</span><span class="pill__v">All months</span>
-            </a>
-            <a class="pill" href="https://www.typingclub.com" target="_blank" rel="noreferrer">
-              <span class="pill__k">Typing</span><span class="pill__v">All months</span>
-            </a>
+            <span class="pill pill--static">
+              <span class="pill__k">Active profile</span><span class="pill__v" id="activeProfileName">—</span>
+            </span>
+            <span class="pill pill--static">
+              <span class="pill__k">Start date</span><span class="pill__v" id="activeStartDate">—</span>
+            </span>
+            <a class="pill" href="./profiles.html"><span class="pill__k">Manage</span><span class="pill__v">Profiles</span></a>
           </div>
 
           <div class="ctaRow">
-            <a class="btn btn--primary" href="./month1.html">Start Day 1 →</a>
-            <a class="btn" href="./dashboard.html">View Parent Dashboard</a>
+            <a class="btn btn--primary" href="./month1.html">Start / Continue →</a>
+            <a class="btn" href="./certificates.html">Weekly Certificates</a>
             <a class="btn btn--soft" href="./print.html">Print Plan</a>
           </div>
         </div>
@@ -80,7 +71,7 @@
             <div class="stat">
               <div class="stat__k">Streak</div>
               <div class="stat__v"><span id="homeStreak">0</span> days 🔥</div>
-              <div class="muted small">Complete all 4 ticks for a day to count.</div>
+              <div class="muted small">Uses your chosen start date (Mon–Sat weeks).</div>
             </div>
           </div>
 
@@ -92,71 +83,41 @@
 
           <div class="stack">
             <div class="small muted">Quick tip</div>
-            <div class="quote">
-              Keep scope small, finish something, then improve it. Consistency beats intensity.
-            </div>
+            <div class="quote">Finish a small version first, then upgrade it. Consistency wins.</div>
           </div>
         </div>
       </div>
     </section>
-
-    <section class="grid2">
-      <article class="card stack">
-        <h2 class="h2">How a day works</h2>
-        <ul class="list">
-          <li><strong>Main platform</strong> (Scratch / Roblox / Python) — the core learning and building</li>
-          <li><strong>Logic</strong> (Khan Academy) — short brain stretch</li>
-          <li><strong>Typing</strong> (TypingClub) — steady practice</li>
-          <li><strong>Present</strong> — explain what you built (a superpower)</li>
-        </ul>
-      </article>
-
-      <article class="card stack">
-        <h2 class="h2">Kid Mode</h2>
-        <p class="muted">
-          Turn Kid Mode on for bigger buttons, bigger text, and more visible badges.
-          Parent Dashboard stays more “grown-up”.
-        </p>
-        <div class="ctaRow">
-          <button class="btn btn--primary" type="button" id="kidModeToggle2">Turn Kid Mode On</button>
-          <a class="btn" href="./month1.html">Go to Month 1</a>
-        </div>
-      </article>
-    </section>
   </main>
 
   <footer class="footer wrap">
-    <span class="muted small">Made for focus, fun, and progress.</span>
-    <button class="btn btn--danger btn--tiny" id="resetAll" type="button" title="Clears ticks on this device">
-      Reset ticks
+    <span class="muted small">Progress is saved per child on this device.</span>
+    <button class="btn btn--danger btn--tiny" id="resetAll" type="button" title="Clears ticks for the active child on this device">
+      Reset active child ticks
     </button>
   </footer>
 
   <script src="./app.js"></script>
   <script>
-    // Home page widgets
     YTA.initKidModeUI();
+
+    const p = YTA.getActiveProfile();
+    document.getElementById("activeProfileName").textContent = p ? p.name : "No profile";
+    document.getElementById("activeStartDate").textContent = p?.startDate ? YTA.fmtDate(p.startDate) : "Not set";
 
     const { completeDays, totalDays, pct } = YTA.computeOverallProgress();
     document.getElementById("homeProgressText").textContent = `${completeDays} / ${totalDays} days`;
     document.getElementById("homeProgressBar").style.width = `${pct}%`;
     document.getElementById("homeStreak").textContent = YTA.computeStreak();
 
-    // simple badges
     const starter = document.getElementById("badgeStarter");
     const builder = document.getElementById("badgeBuilder");
     const finisher = document.getElementById("badgeFinisher");
-
     starter.classList.toggle("badge--on", completeDays >= 1);
     builder.classList.toggle("badge--on", completeDays >= 12);
     finisher.classList.toggle("badge--on", completeDays >= 72);
 
-    document.getElementById("kidModeToggle2").addEventListener("click", () => {
-      YTA.setKidMode(true);
-      YTA.initKidModeUI();
-    });
-
-    document.getElementById("resetAll").addEventListener("click", () => YTA.resetAll());
+    document.getElementById("resetAll").addEventListener("click", () => YTA.resetActiveChildTicks());
   </script>
 </body>
 </html>
