@@ -852,3 +852,39 @@ body{ padding-top: 92px; }
 }
 .menuBtn:hover{ background: rgba(47,109,255,.08); }
 
+
+/* ==================================================
+   MOBILE POLISH
+   Tightens spacing + fixes home hero + prevents header
+   from eating the whole screen on small devices.
+================================================== */
+
+/* Use "small viewport" units where supported (better on iOS/Android address bar) */
+.hero{ height: 100svh; }
+
+@media (max-width: 520px){
+  /* Reduce visual clutter in the fixed header */
+  .brand__subtitle{ display:none; }
+  .brand__title{ font-size: 1rem; }
+  .topbar__inner{ padding: 12px 16px; }
+
+  /* Match body offset to the shorter header */
+  body{ padding-top: 72px; }
+
+  /* Home hero: centre actions + keep them above browser UI */
+  .hero-content{
+    align-items: center;
+    padding: 0 16px 28px;
+  }
+  .hero-actions{ width: 100%; }
+  .btn-primary,
+  .btn-secondary{
+    width: min(360px, 92vw);
+  }
+}
+
+@media (max-width: 380px){
+  .topbar__inner{ padding: 10px 14px; }
+  body{ padding-top: 68px; }
+}
+
