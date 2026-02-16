@@ -59,17 +59,80 @@ const YTA = (() => {
   }
 
   function initMobileNav() {
-    const navBtns = Array.from(document.querySelectorAll('[data-yt="navbtn"]')); // supports ☰ and ✕
-    const drawer = document.querySelector('[data-yt="drawer"]');
-    const backdrop = document.querySelector('[data-yt="backdrop"]');
-    if (!navBtns.length || !drawer || !backdrop) return;
+  const navBtns = Array.from(document.querySelectorAll('[data-yt="navbtn"]')); // supports ☰ and ✕
+  const drawer = document.querySelector('[data-yt="drawer"]');
+  const backdrop = document.querySelector('[data-yt="backdrop"]');
+  if (!navBtns.length || !drawer || !backdrop) return;
 
-    // Prevent double-binding (can happen if nav is injected after app.js runs)
-    if (drawer.dataset.ytaNavBound === "1") return;
-    drawer.dataset.ytaNavBound = "1";
+  // Prevent double-binding (can happen if nav is injected after app.js runs)
+  if (drawer.dataset.ytaNavBound === "1") return;
+  drawer.dataset.ytaNavBound = "1";
 
-    const ui = loadUI();
-    let scrollY = 0;
+  const ui = loadUI();
+  let scrollY = 0;
+
+  function setExpanded(v) {
+    navBtns.forEach(btn => btn.setAttribute("aria-expanded", v ? "true" : "false"));
+  }
+
+  function open() {
+    scrollY = window.scrollY || 0;
+    drawer.classList.add("is-open");
+    backdrop.classList.add("is-open");
+    setExpanded(true);
+
+    // robust scroll-lock (no iOS jump on close)
+    document.body.classList.add("noScroll");
+    document.body.style.top = `-${scrollY}px`;
+
+    ui.drawerOpen = true;
+    saveUI(ui);
+  }
+
+  function close() {
+    drawer.classList.remove("is-open");
+    backdrop.classList.remove("is-open");
+    setExpanded(false);
+
+    document.body.classList.remove("noScroll");
+    const top = document.body.style.top;
+    document.body.style.top = "";
+    const restore = top ? Math.abs(parseInt(top, 10)) : scrollY;
+    window.scrollTo(0, restore);
+
+    ui.drawerOpen = false;
+    saveUI(ui);
+  }
+
+  function toggle() {
+    if (drawer.classList.contains("is-open")) close();
+    else open();
+  }
+
+  navBtns.forEach(btn => btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    toggle();
+  }));
+
+  backdrop.addEventListener("click", close);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") close();
+  });
+
+  // optional: persist open state across accidental reloads
+  if (ui.drawerOpen) {
+    // don’t force-open if desktop
+    if (window.matchMedia("(max-width: 899px)").matches) open();
+    else ui.drawerOpen = false, saveUI(ui);
+  }
+
+  // Close drawer if viewport becomes desktop
+  window.addEventListener("resize", () => {
+    if (!window.matchMedia("(max-width: 899px)").matches) close();
+  });
+}
+
+
 
     function setExpanded(v) {
       navBtns.forEach(btn => btn.setAttribute("aria-expanded", v ? "true" : "false"));

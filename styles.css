@@ -1305,3 +1305,49 @@ body{ padding-top: 82px; }
   color: var(--muted);
   font-size: 0.9rem;
 }
+
+
+/* ==============================
+   FIX: BUTTON VISIBILITY + LINK STYLES
+============================== */
+.btn-primary{
+  background: var(--accent) !important;
+  color: #fff !important;
+  border: 1px solid var(--accent) !important;
+}
+.btn-primary:hover{ opacity: 0.92; }
+
+.btn-secondary{
+  background: transparent;
+  border: 1px solid var(--border);
+}
+
+/* Make Donate button compact and not break desktop layout */
+.topbar__actions{ gap: 10px; flex-wrap: nowrap; }
+.topbarSupport{
+  padding: 8px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* Footer support button: ensure contrast */
+.footer-support__link{
+  background: var(--accent) !important;
+  color: #fff !important;
+  text-decoration: none !important;
+}
+
+/* Ensure hamburger is always clickable and visible */
+.menuBtn{
+  cursor: pointer;
+}
+
+
+/* ==============================
+   FIX: HEADER HEIGHT + CONTENT SPACING
+============================== */
+.topbar{ padding: 8px 0; }
+body{ padding-top: 88px; }
+@media (min-width: 900px){
+  body{ padding-top: 80px; }
+}
