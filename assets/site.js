@@ -25,7 +25,9 @@
     const mount = document.getElementById("site-chrome");
     if (!mount) return;
 
-    const subtitle = document.body.getAttribute("data-subtitle") || "";
+    let subtitle = (document.body.getAttribute("data-subtitle") || "").trim();
+    if (!subtitle) subtitle = "Foundations for tomorrow’s tech leaders.";
+    const kidMode = (localStorage.getItem("yta_kidmode_v2") === "1");
     const inJourney = ["month1.html","month2.html","month3.html"].includes(currentFile().toLowerCase());
 
     mount.innerHTML = `
@@ -42,7 +44,7 @@
           <nav class="navRow" aria-label="Primary">
             <a class="nav__link ${isActive(routes.home) ? "is-active" : ""}" href="${routes.home}">Home</a>
             <a class="nav__link ${isActive(routes.tracks) ? "is-active" : ""}" href="${routes.tracks}">Tracks</a>
-            <a class="nav__link ${isActive(routes.profiles) ? "is-active" : ""}" href="${routes.profiles}">Profiles</a>
+            ${kidMode ? "" : `<a class="nav__link ${isActive(routes.profiles) ? "is-active" : ""}" href="${routes.profiles}">Profiles</a>`}
 
             <!-- Keep Journey dropdown closed on page-load (prevents it feeling "stuck" open after navigation) -->
             <details class="navDrop">
@@ -119,8 +121,20 @@
 }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => { injectChrome(); injectFooter(); }, { once: true });
+    document.addEventListener("DOMContentLoaded", () => { 
+  // Re-inject header when Kid Mode changes (so nav simplifies/returns immediately)
+  document.addEventListener("yta:kidmode:change", () => {
+    try { injectChrome(); } catch (e) { /* no-op */ }
+  });
+
+injectChrome(); injectFooter(); }, { once: true });
   } else {
-    injectChrome(); injectFooter();
+    
+  // Re-inject header when Kid Mode changes (so nav simplifies/returns immediately)
+  document.addEventListener("yta:kidmode:change", () => {
+    try { injectChrome(); } catch (e) { /* no-op */ }
+  });
+
+injectChrome(); injectFooter();
   }
 })();
