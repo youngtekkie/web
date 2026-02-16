@@ -168,6 +168,8 @@ const YTA = (() => {
   function setKidMode(on) {
     localStorage.setItem(KIDMODE_KEY, on ? "1" : "0");
     document.body.classList.toggle("kidmode", on);
+    // Notify other scripts (e.g., site.js) so the header/nav can adapt immediately.
+    try { document.dispatchEvent(new CustomEvent("yta:kidmode:change", { detail: { on } })); } catch (e) { /* no-op */ }
   }
   function initKidModeUI() {
     document.body.classList.toggle("kidmode", getKidMode());
