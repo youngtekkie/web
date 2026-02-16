@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Support YoungTekkie</title>
+
+  <!-- Favicons -->
+  <link rel="icon" href="./assets/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="48x48" href="./assets/favicon-48.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png" />
+
+  <link rel="stylesheet" href="./styles.css" />
+  <script defer src="./assets/site.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body data-subtitle="Foundations for tomorrow’s tech leaders.">
+
+  <!-- Injected Navigation -->
+  <div id="site-chrome"></div>
+
+  <main class="section">
+    <div class="container">
+      <h1 class="pageTitle">Support YoungTekkie</h1>
+      <p class="pageLead">
+        If YoungTekkie has helped your child grow in confidence, independence and digital literacy,
+        you can support the platform below. Every contribution helps us keep improving the learning experience.
+      </p>
+
+      <div class="supportGrid">
+        <article class="supportCard">
+          <h2>Apple Pay / Credit Card</h2>
+          <p>Fast, secure checkout (Apple Pay available on supported devices).</p>
+          <a class="btn-primary" href="https://pay.sumup.com/b2c/Q8W7JIUW" target="_blank" rel="noopener">
+            Pay with Card or Apple Pay
+          </a>
+          
+        </article>
+
+        <article class="supportCard">
+          <h2>Crypto (Bitcoin)</h2>
+          <p>Send Bitcoin directly from your wallet using the address below.</p>
+
+          <div class="supportSplit">
+            
+
+            <div class="supportSplit__col">
+              <h3 class="supportMiniTitle">Option 2: Direct transfer</h3>
+              <p class="supportMiniText">Copy the address below, or scan the QR code in your wallet app.</p>
+
+              <div class="btcBox" role="group" aria-label="Bitcoin donation address">
+                <div class="btcRow">
+                  <code id="btcAddress" class="btcAddress">bc1qm02une0vpcy86u3u5wmkegke0jf97rt8zsgstj</code>
+                  <button class="btn-secondary btcCopy" type="button" id="btcCopyBtn">Copy</button>
+                </div>
+
+                <img
+                  class="btcQr"
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=bitcoin:bc1qm02une0vpcy86u3u5wmkegke0jf97rt8zsgstj"
+                  alt="QR code for Bitcoin address"
+                  loading="lazy"
+                />
+
+                <p class="supportHint">
+                  Please double-check the address before sending. Bitcoin transfers can’t be reversed.
+                </p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="supportCard">
+          <h2>Buy Me a Coffee</h2>
+          <p>A simple way to support the mission (one-off or recurring).</p>
+          <a class="btn-secondary" href="https://buymeacoffee.com/youngtekkie" target="_blank" rel="noopener">
+            ☕ Buy Me a Coffee
+          </a>
+        </article>
+      </div>
+
+      <div class="supportNote">
+        <p>
+          Prefer another method (bank transfer, invoice, sponsorship)?
+          Email us and we’ll make it easy.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Injected Footer -->
+  <div id="site-footer"></div>
+
+
+<script>
+  (function () {
+    const btn = document.getElementById("btcCopyBtn");
+    const code = document.getElementById("btcAddress");
+    if (!btn || !code) return;
+
+    btn.addEventListener("click", async () => {
+      const addr = (code.textContent || "").trim();
+      if (!addr || addr === "bc1qm02une0vpcy86u3u5wmkegke0jf97rt8zsgstj") {
+        btn.textContent = "Add address";
+        setTimeout(() => (btn.textContent = "Copy"), 1200);
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(addr);
+        btn.textContent = "Copied";
+        setTimeout(() => (btn.textContent = "Copy"), 1200);
+      } catch (e) {
+        const ta = document.createElement("textarea");
+        ta.value = addr;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+        btn.textContent = "Copied";
+        setTimeout(() => (btn.textContent = "Copy"), 1200);
+      }
+    });
+  })();
+</script>
+
+</body>
+</html>

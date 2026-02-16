@@ -1133,3 +1133,100 @@ body.home .topbar{background:rgba(214,226,255,0.96);backdrop-filter:none;-webkit
   .brand__mark{width:38px;height:38px;border-radius:12px;}
   .brand__mark img{width:30px;height:30px;}
 }
+
+
+/* ==============================
+   SUPPORT PAGE
+============================== */
+.supportGrid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 22px;
+}
+.supportCard{
+  background: var(--soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow-soft);
+}
+.supportCard h2{
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+.supportCard p{
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.supportHint{
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-top: 10px;
+}
+.supportNote{
+  margin-top: 18px;
+  padding: 16px 18px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,0.02);
+}
+@media (max-width: 900px){
+  .supportGrid{ grid-template-columns: 1fr; }
+}
+
+
+/* ==============================
+   SUPPORT PAGE — BTC DIRECT TRANSFER
+============================== */
+.supportSplit{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 12px;
+}
+.supportSplit__col{
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  background: rgba(0,0,0,0.02);
+}
+.supportMiniTitle{
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+.supportMiniText{
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.btcBox{ margin-top: 10px; }
+.btcRow{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+}
+.btcAddress{
+  display:block;
+  padding:10px 12px;
+  border:1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.65);
+  max-width: 100%;
+  overflow-wrap:anywhere;
+}
+.btcCopy{ white-space:nowrap; }
+.btcQr{
+  margin-top: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: #fff;
+  padding: 10px;
+  width: 220px;
+  height: 220px;
+}
+@media (max-width: 900px){
+  .supportSplit{ grid-template-columns: 1fr; }
+  .btcQr{ width: 200px; height: 200px; }
+}
