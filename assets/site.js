@@ -87,6 +87,10 @@
         </div>
       </aside>
     `;
+
+    // Let other scripts (e.g., app.js) know the header/nav/drawer now exist.
+    // This matters on pages where site.js isn't loaded with `defer`.
+    document.dispatchEvent(new CustomEvent("yta:chrome:ready"));
   }
 
   function injectFooter() {
@@ -100,6 +104,9 @@
         </div>
       </footer>
     `;
+
+    // Footer injected; allow footer-year setters etc. to run reliably.
+    document.dispatchEvent(new CustomEvent("yta:chrome:ready"));
   }
 
   function escapeHtml(str) {
