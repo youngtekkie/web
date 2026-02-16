@@ -104,16 +104,29 @@ const YTA = (() => {
       saveUI(ui);
     }
 
-    navBtns.forEach(btn => btn.addEventListener("click", () => {
-      const isOpen = drawer.classList.contains("is-open");
-      isOpen ? close() : open();
-    }));
+    navBtns.forEach(btn => btn.addEventListener("click", async () => {
+  const currentlyKid = getKidMode(); // true => Parent locked
+  if (currentlyKid) {
+    // Trying to unlock parent mode (turn Kid Mode OFF) — require password
+    if (!hasParentPass()) {
+      const created = await promptForPass(true);
+      if (!created) return;
+    } else {
+      const ok = await promptForPass(false);
+      if (!ok) return;
+    }
+    setKidMode(false);
+    btn.setAttribute("aria-pressed", "false");
+    btn.textContent = "Parent: Unlocked";
+    return;
+  }
 
-    backdrop.addEventListener("click", close);
-    drawer.querySelectorAll("a").forEach(a => a.addEventListener("click", close));
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
-
-    // optional: persist open state across accidental reloads
+  // Lock parent mode (turn Kid Mode ON) — no password needed
+  setKidMode(true);
+  btn.setAttribute("aria-pressed", "true");
+  btn.textContent = "Parent: Locked";
+});
+// optional: persist open state across accidental reloads
     if (ui.drawerOpen) {
       // don’t force-open if desktop
       if (window.matchMedia("(max-width: 899px)").matches) open();
@@ -165,6 +178,38 @@ const YTA = (() => {
 
   // ---------- kid mode ----------
   function getKidMode() { return localStorage.getItem(KIDMODE_KEY) === "1"; }
+  const PARENT_PASS_KEY = "yta_parent_pass_v1";
+  function hasParentPass() { return !!localStorage.getItem(PARENT_PASS_KEY); }
+  async function sha256(s) {
+    const enc = new TextEncoder();
+    const buf = await crypto.subtle.digest("SHA-256", enc.encode(String(s)));
+    const arr = Array.from(new Uint8Array(buf));
+    return arr.map(b => b.toString(16).padStart(2,"0")).join("");
+  }
+  async function setParentPass(pass) {
+    const h = await sha256(pass);
+    localStorage.setItem(PARENT_PASS_KEY, h);
+  }
+  async function checkParentPass(pass) {
+    const saved = localStorage.getItem(PARENT_PASS_KEY);
+    if (!saved) return false;
+    return (await sha256(pass)) === saved;
+  }
+  async function promptForPass(firstTime=false) {
+    if (firstTime) {
+      const p1 = prompt("Create a parent password to unlock Parent mode:\n\nTip: If you forget it, press & hold the Parent button to reset on this device.");
+      if (!p1) return false;
+      const p2 = prompt("Confirm password:");
+      if (!p2 || p2 !== p1) { alert("Passwords did not match."); return false; }
+      await setParentPass(p1);
+      return true;
+    }
+    const p = prompt("Enter parent password to unlock Parent mode:\n\nForgot it? Press & hold the Parent button to reset on this device.");
+    if (!p) return false;
+    const ok = await checkParentPass(p);
+    if (!ok) alert("Incorrect password.\n\nForgot it? Press & hold the Parent button to reset on this device.");
+    return ok;
+  }
   function setKidMode(on) {
     localStorage.setItem(KIDMODE_KEY, on ? "1" : "0");
     document.body.classList.toggle("kidmode", on);
@@ -180,22 +225,75 @@ const YTA = (() => {
     if (btn.dataset.ytaBound === "1") {
       const onNow = getKidMode();
       btn.setAttribute("aria-pressed", onNow ? "true" : "false");
-      btn.textContent = `Kid Mode: ${onNow ? "On" : "Off"}`;
+      btn.textContent = onNow ? "Parent: Locked" : "Parent: Unlocked";
       return;
     }
     btn.dataset.ytaBound = "1";
 
+// hold-to-reset (hidden): press & hold this button to reset the parent password on this device.
+// This keeps the site static (no email reset) while giving parents a recovery route.
+(function bindHoldToReset() {
+  let t = null;
+  const HOLD_MS = 2800;
+
+  function clearTimer() {
+    if (t) { clearTimeout(t); t = null; }
+  }
+
+  function startTimer() {
+    clearTimer();
+    t = setTimeout(() => {
+      clearTimer();
+      const ok = confirm("Reset Parent password on this device?\n\nThis will require you to create a new password next time you unlock Parent mode.");
+      if (!ok) return;
+      try { localStorage.removeItem("yta_parent_pass_v1"); } catch (e) { /* no-op */ }
+      // Keep Parent locked after reset for safety
+      setKidMode(true);
+      btn.setAttribute("aria-pressed", "true");
+      btn.textContent = "Parent: Locked";
+      try { document.dispatchEvent(new CustomEvent("yta:kidmode:change", { detail: { on: true } })); } catch (e) { /* no-op */ }
+      alert("Parent password reset. You can create a new one when unlocking Parent mode.");
+    }, HOLD_MS);
+  }
+
+  btn.addEventListener("mousedown", startTimer);
+  btn.addEventListener("touchstart", startTimer, { passive: true });
+  btn.addEventListener("mouseup", clearTimer);
+  btn.addEventListener("mouseleave", clearTimer);
+  btn.addEventListener("touchend", clearTimer);
+  btn.addEventListener("touchcancel", clearTimer);
+})();
+// end hold-to-reset
+
+
+
     const on = getKidMode();
     btn.setAttribute("aria-pressed", on ? "true" : "false");
-    btn.textContent = `Kid Mode: ${on ? "On" : "Off"}`;
+    btn.textContent = on ? "Parent: Locked" : "Parent: Unlocked";
 
-    btn.addEventListener("click", () => {
-      const now = !getKidMode();
-      setKidMode(now);
-      btn.setAttribute("aria-pressed", now ? "true" : "false");
-      btn.textContent = `Kid Mode: ${now ? "On" : "Off"}`;
-    });
+    btn.addEventListener("click", async () => {
+  const currentlyKid = getKidMode(); // true => Parent locked
+  if (currentlyKid) {
+    // Trying to unlock parent mode (turn Kid Mode OFF) — require password
+    if (!hasParentPass()) {
+      const created = await promptForPass(true);
+      if (!created) return;
+    } else {
+      const ok = await promptForPass(false);
+      if (!ok) return;
+    }
+    setKidMode(false);
+    btn.setAttribute("aria-pressed", "false");
+    btn.textContent = "Parent: Unlocked";
+    return;
   }
+
+  // Lock parent mode (turn Kid Mode ON) — no password needed
+  setKidMode(true);
+  btn.setAttribute("aria-pressed", "true");
+  btn.textContent = "Parent: Locked";
+});
+}
 
   // ---------- curriculum ----------
   function mkDay(num, week, month, dow, mainKey, mainTopic, buildTask, logicTask, typingTask, notes = "") {

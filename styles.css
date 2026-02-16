@@ -1230,3 +1230,78 @@ body.home .topbar{background:rgba(214,226,255,0.96);backdrop-filter:none;-webkit
   .supportSplit{ grid-template-columns: 1fr; }
   .btcQr{ width: 200px; height: 200px; }
 }
+
+
+/* ==============================
+   HEADER TUNING + SUPPORT LINK
+============================== */
+.topbar{ padding: 10px 0; }
+.topbar__inner{ min-height: 56px; }
+@media (min-width: 900px){ .topbar__inner{ min-height: 52px; } }
+
+/* Ensure content doesn't sit too close to fixed header */
+body{ padding-top: 82px; }
+@media (min-width: 900px){ body{ padding-top: 76px; } }
+
+.topbarSupport{
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 12px;
+}
+
+
+/* ==============================
+   FOOTER SUPPORT LINK (BUTTON)
+============================== */
+.footer-support__link{
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+.footer-support__link:hover{ opacity: 0.92; }
+
+
+/* ==============================
+   SUPPORT PAGE — BTC INLINE COPY
+============================== */
+.btcInline{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(0,0,0,0.03);
+}
+.btcIconBtn{
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+.btcIconBtn svg{ fill: var(--text); }
+.btcIconBtn:hover{ opacity: 0.85; }
+.btcAddress{
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.btcCopied{
+  color: var(--muted);
+  font-size: 0.9rem;
+}
