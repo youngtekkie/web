@@ -22,7 +22,7 @@
   <div id="site-chrome"></div>
 
   <!-- HERO -->
-  <section class="hero">
+  <section class="hero" aria-label="YoungTekkie intro video">
     <video autoplay muted loop playsinline class="hero-video">
       <source src="assets/vidhd.mp4" type="video/mp4">
     </video>
@@ -30,23 +30,25 @@
     <div class="hero-overlay"></div>
 
     <div class="hero-content">
-      <p class="hero-tagline">
-        Laying the foundations for tomorrow’s tech leaders.
-      </p>
+      <div class="hero-inner">
+        <p class="hero-tagline">Laying the foundations for tomorrow’s tech leaders.</p>
 
-      <h1>
-        A structured 3-month pathway helping children build real digital skills.
-      </h1>
+        <h1>A structured 3-month pathway helping children build real digital skills.</h1>
 
-      <p class="hero-subtext">
-        Designed for parents who want more than screen time — 
-        YoungTekkie develops confidence, independence and digital literacy through guided learning.
-      </p>
-
-      <div class="hero-actions">
-        <a href="tracks.html" class="btn-primary">Explore the Journey</a>
-        <a href="profiles.html" class="btn-secondary">Start a Profile</a>
+        <div class="hero-actions">
+          <a href="tracks.html" class="btn-primary">Explore the Journey</a>
+          <a href="profiles.html" class="btn-secondary">Start a Profile</a>
+        </div>
       </div>
+    </div>
+  </section>
+
+  <!-- BRIDGE COPY (below video) -->
+  <section class="hero-bridge">
+    <div class="hero-bridge__inner">
+      <p class="hero-bridge__text">
+        Designed for parents who want more than screen time — YoungTekkie develops confidence, independence and digital literacy through guided learning.
+      </p>
     </div>
   </section>
 
@@ -55,31 +57,25 @@
     <div class="container">
       <h2>How It Works</h2>
 
-      <div class="steps">
-        <div class="step">
-          <span class="step-number">01</span>
+      <div class="steps" role="list">
+        <div class="step" role="listitem">
           <h3>Follow the Track</h3>
           <p>
-            Children progress through a structured 3-month learning journey,
-            designed around age-appropriate tech skills.
+            Children progress through a structured 3-month learning journey, designed around age-appropriate tech skills.
           </p>
         </div>
 
-        <div class="step">
-          <span class="step-number">02</span>
+        <div class="step" role="listitem">
           <h3>Build Real Skills</h3>
           <p>
-            Each month develops practical abilities — problem solving,
-            logical thinking and hands-on digital creation.
+            Each month develops practical abilities — problem solving, logical thinking and hands-on digital creation.
           </p>
         </div>
 
-        <div class="step">
-          <span class="step-number">03</span>
+        <div class="step" role="listitem">
           <h3>Gain Confidence</h3>
           <p>
-            By the end of the programme, children demonstrate independence,
-            improved digital literacy and greater confidence using technology.
+            By the end of the programme, children demonstrate independence, improved digital literacy and greater confidence using technology.
           </p>
         </div>
       </div>
