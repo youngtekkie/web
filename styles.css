@@ -358,6 +358,17 @@ body:not(.home){
   .mobile-drawer{ width: 84%; padding: 28px; }
 }
 
+/* Compact mobile UI fixes */
+@media (max-width: 420px){
+  .ctaRow{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+  .ctaRow .btn{ width:100%; font-size: .92rem; padding: 10px 10px; }
+  .lineMobile{ display:block; }
+}
+
+@media (max-width: 360px){
+  .ctaRow{ grid-template-columns: 1fr; }
+}
+
 /* =========================================================
    ✅ FIX: STYLES FOR INJECTED NAV (assets/site.js)
    This is the missing piece that was breaking your layout.
@@ -368,11 +379,15 @@ body:not(.home){
   position: fixed;
   top: 0;
   width: 100%;
-  background: rgba(245,249,255,0.82);
+  /* Ribbon colour (darker blue but still soft) */
+  background: rgba(47,109,255,0.16);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
   z-index: 2000;
 }
+
+/* Any anchor styled as a button should never underline */
+a.btn, a.pill, .ctaRow a.btn, .ctaRow a.pill { text-decoration: none; }
 
 /* Inner container used by injected markup */
 .topbar__inner{
@@ -639,6 +654,10 @@ body:not(.home){
   border:1px solid var(--border);
   background: rgba(255,255,255,.92);
   color: var(--text);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: calc(11px * var(--kidScale)) calc(14px * var(--kidScale));
   border-radius: 14px;
   font-weight: 800;
@@ -651,7 +670,7 @@ body:not(.home){
 .btn--primary{
   background: linear-gradient(135deg, rgba(47,109,255,.98), rgba(34,197,182,.95));
   border-color: rgba(2,6,23,.10);
-  color: #081226;
+  color: #ffffff;
 }
 .btn--soft{
   background: rgba(47,109,255,.10);
@@ -666,6 +685,14 @@ body:not(.home){
   border-radius: 12px;
   font-weight: 850;
 }
+
+/* CTA rows (used across pages for action buttons) */
+.ctaRow{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+.ctaRow .btn{ white-space: nowrap; }
+
+/* Utility: split text on mobile only */
+.lineMobile{ display:inline; }
+
 
 /* Inputs / selects */
 .input{
@@ -718,8 +745,12 @@ select.input{
   padding:10px 12px;
   border-radius: 999px;
   border:1px solid rgba(15,23,42,.12);
-  background: rgba(255,255,255,.88);
+  background: rgba(47,109,255,.08);
+  text-decoration: none;
+  color: var(--text);
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
 }
+.pill:hover{ box-shadow: var(--shadow-soft); transform: translateY(-1px); }
 .pill--static{ cursor:default; }
 .pill__k{ font-weight: 850; }
 .pill__v{ color: var(--muted); font-weight: 750; }

@@ -354,25 +354,10 @@ const YTA = (() => {
     localStorage.setItem(PROFILES_KEY, JSON.stringify(profiles));
   }
 
-  function ensureDefaultProfile() {
-    const profiles = loadProfiles();
-    if (profiles.length > 0) return;
-
-    const id = cryptoId();
-    const def = [{
-      id,
-      name: "Child 1",
-      yearGroup: 5,
-      track: "builder",
-      startDate: ""
-    }];
-    saveProfiles(def);
-    localStorage.setItem(ACTIVE_PROFILE_KEY, id);
-    localStorage.setItem(stateKey(id), JSON.stringify({}));
-  }
+  // No default profile: user must create profiles explicitly.
+  function ensureDefaultProfile() { /* intentionally empty */ }
 
   function migrateProfilesIfNeeded() {
-    ensureDefaultProfile();
     const profiles = loadProfiles();
     let changed = false;
 
@@ -390,7 +375,6 @@ const YTA = (() => {
   }
 
   function getProfiles() {
-    ensureDefaultProfile();
     migrateProfilesIfNeeded();
     return loadProfiles();
   }
@@ -400,14 +384,17 @@ const YTA = (() => {
   }
 
   function getActiveProfileId() {
-    ensureDefaultProfile();
     migrateProfilesIfNeeded();
-    return localStorage.getItem(ACTIVE_PROFILE_KEY) || getProfiles()[0].id;
+    const profiles = loadProfiles();
+    if (!profiles.length) return null;
+    const saved = localStorage.getItem(ACTIVE_PROFILE_KEY);
+    if (saved && profiles.some(p => p.id === saved)) return saved;
+    return profiles[0].id;
   }
 
   function getActiveProfile() {
     const id = getActiveProfileId();
-    return getProfileById(id);
+    return id ? getProfileById(id) : null;
   }
 
   function setActiveProfile(id) {
@@ -417,7 +404,6 @@ const YTA = (() => {
   }
 
   function createProfile({ name, yearGroup, startDate }) {
-    ensureDefaultProfile();
     migrateProfilesIfNeeded();
 
     const yg = Number(yearGroup);
@@ -452,7 +438,6 @@ const YTA = (() => {
 
   function deleteProfile(id) {
     const profiles = loadProfiles();
-    if (profiles.length <= 1) { alert("You must keep at least one profile."); return; }
     const ok = confirm("Delete this profile and all its ticks on this device?");
     if (!ok) return;
 
@@ -461,7 +446,10 @@ const YTA = (() => {
     localStorage.removeItem(stateKey(id));
 
     const active = getActiveProfileId();
-    if (active === id) localStorage.setItem(ACTIVE_PROFILE_KEY, next[0].id);
+    if (active === id) {
+      if (next.length) localStorage.setItem(ACTIVE_PROFILE_KEY, next[0].id);
+      else localStorage.removeItem(ACTIVE_PROFILE_KEY);
+    }
   }
 
   // ---------- curriculum selection ----------
@@ -479,14 +467,15 @@ const YTA = (() => {
 
   // ---------- state per profile ----------
   function loadState(profileId) {
-    ensureDefaultProfile();
     migrateProfilesIfNeeded();
     const pid = profileId || getActiveProfileId();
+    if (!pid) return {};
     return JSON.parse(localStorage.getItem(stateKey(pid)) || "{}");
   }
 
   function saveState(profileId, st) {
     const pid = profileId || getActiveProfileId();
+    if (!pid) return;
     localStorage.setItem(stateKey(pid), JSON.stringify(st));
   }
 
@@ -698,6 +687,31 @@ const YTA = (() => {
     const mount = document.getElementById(dayListId);
     const search = document.getElementById(searchInputId);
 
+    // No profile yet → show a friendly call-to-action instead of breaking pages.
+    if (!profileId || !profile) {
+      if (headerTrackId) {
+        const el = document.getElementById(headerTrackId);
+        if (el) el.textContent = "Create a child profile to begin";
+      }
+      if (mount) {
+        mount.innerHTML = `
+          <div class="card card--soft stack">
+            <h2 class="h2">No active child profile</h2>
+            <p class="muted">Create a child profile first, then come back to start ticking off days.</p>
+            <div class="ctaRow">
+              <a class="btn btn--primary" href="./profiles.html">Create a profile</a>
+              <a class="btn" href="./tracks.html">View tracks</a>
+            </div>
+          </div>
+        `;
+      }
+      if (search) search.disabled = true;
+      if (progressTextId) document.getElementById(progressTextId).textContent = "—";
+      if (progressBarId) document.getElementById(progressBarId).style.width = "0%";
+      if (streakId) document.getElementById(streakId).textContent = "0";
+      return;
+    }
+
     if (headerTrackId) {
       const el = document.getElementById(headerTrackId);
       if (el) el.textContent = `${curriculum.name} • Year ${profile.yearGroup}`;
@@ -749,6 +763,20 @@ const YTA = (() => {
     const profileId = getActiveProfileId();
     const days = getDays(profileId);
     const mount = document.getElementById(mountId);
+
+    if (!profileId) {
+      mount.innerHTML = `
+        <section class="card card--soft stack">
+          <h2 class="h2">No child profile yet</h2>
+          <p class="muted">Create a profile first so the print view matches your child’s year group.</p>
+          <div class="ctaRow">
+            <a class="btn btn--primary" href="./profiles.html">Create a profile</a>
+            <a class="btn" href="./tracks.html">View tracks</a>
+          </div>
+        </section>
+      `;
+      return;
+    }
 
     mount.innerHTML = days.map(d => `
       <article class="card dayCard">
@@ -845,6 +873,18 @@ const YTA = (() => {
 
   function renderCertificateHTML({ week }) {
     const pid = getActiveProfileId();
+    if (!pid) {
+      return `
+        <section class="card card--soft stack">
+          <h2 class="h2">No child profile yet</h2>
+          <p class="muted">Create a child profile first, then you can generate weekly certificates.</p>
+          <div class="ctaRow">
+            <a class="btn btn--primary" href="./profiles.html">Create a profile</a>
+            <a class="btn" href="./tracks.html">View tracks</a>
+          </div>
+        </section>
+      `;
+    }
     const profile = getProfileById(pid);
     const label = weekLabel(week, pid);
     const wp = weekProgress(week, pid);
@@ -933,7 +973,9 @@ const YTA = (() => {
 
     if (ids.profileNameId) document.getElementById(ids.profileNameId).textContent = profile?.name || "No profile";
     if (ids.profileMetaId) {
-      const meta = `${curriculum.name} • Year ${profile?.yearGroup ?? "—"} • Start: ${profile?.startDate ? fmtDate(profile.startDate) : "Not set"}`;
+      const meta = profile
+        ? `Year ${profile.yearGroup} • Start: ${profile.startDate ? fmtDate(profile.startDate) : "Not set"}`
+        : "—";
       document.getElementById(ids.profileMetaId).textContent = meta;
     }
 
@@ -1013,7 +1055,6 @@ const YTA = (() => {
   function init() {
     if (__inited) return;
     __inited = true;
-    ensureDefaultProfile();
     migrateProfilesIfNeeded();
     initMobileNav();
     initJourneyDropdown(); // ✅ added
