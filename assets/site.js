@@ -32,9 +32,9 @@
       <header class="topbar">
         <div class="wrap topbar__inner">
           <a class="brand" href="${routes.home}" aria-label="Young Tech Architect Home">
-            <span class="brand__mark" aria-hidden="true"></span>
+            <span class="brand__mark" aria-hidden="true"><img src="./assets/logo-mascot.png" alt=""></span>
             <span class="brand__text">
-              <span class="brand__title">Young Tech Architect</span>
+              <span class="brand__title">Youngtekkie</span>
               <span class="brand__subtitle">${escapeHtml(subtitle)}</span>
             </span>
           </a>
