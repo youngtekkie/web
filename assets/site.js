@@ -25,7 +25,7 @@
     const mount = document.getElementById("site-chrome");
     if (!mount) return;
 
-    const subtitle = document.body.getAttribute("data-subtitle") || "Laying the foundations for tomorrow’s tech leaders.";
+    const subtitle = document.body.getAttribute("data-subtitle") || "";
     const inJourney = ["month1.html","month2.html","month3.html"].includes(currentFile().toLowerCase());
 
     mount.innerHTML = `
