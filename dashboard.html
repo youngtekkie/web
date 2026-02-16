@@ -60,29 +60,8 @@
     </div>
   </section>
 </main>
-<script src="./assets/site.js"></script>
-<script src="./app.js"></script>
-<script>
-  YTA.init();
-  YTA.initKidModeUI();
-
-  YTA.renderDashboard({
-    profileNameId: "who",
-    profileMetaId: "meta",
-    overallId: "dOverall",
-    overallBarId: "dOverallBar",
-    overallPctId: "dOverallPct",
-    streakId: "dStreak",
-    nextId: "dNext",
-    nextHintId: "dNextHint",
-    byMonthId: "byMonth",
-    byWeekId: "byWeek"
-  });
-
-  document.getElementById("resetAll").addEventListener("click", () => YTA.resetActiveChildTicks());
-  const topReset = document.getElementById("resetActiveTop");
-  if(topReset) topReset.addEventListener("click", () => YTA.resetActiveChildTicks());
-</script>
-  <div id="site-footer"></div>
+<script src="./assets/site.js" defer></script>
+<script src="./app.js" defer></script>
+<div id="site-footer"></div>
 </body>
 </html>

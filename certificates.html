@@ -51,11 +51,10 @@
 
   <section id="certMount" class="stack"></section>
 </main>
-<script src="./assets/site.js"></script>
-<script src="./app.js"></script>
+<script src="./assets/site.js" defer></script>
+<script src="./app.js" defer></script>
 <script>
-  YTA.init();
-  YTA.initKidModeUI();
+  // YTA auto-inits on DOMContentLoaded (see app.js)
 
   const active = YTA.getActiveProfile();
   const cur = YTA.getActiveCurriculum();

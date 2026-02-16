@@ -960,3 +960,31 @@ body{ padding-top: 92px; }
 }
 .menuBtn:hover{ background: rgba(47,109,255,.08); }
 
+
+
+
+/* ==========================================
+   ACCESSIBILITY & INTERACTION POLISH
+========================================== */
+:focus-visible{
+  outline: 3px solid rgba(17,17,17,0.35);
+  outline-offset: 3px;
+}
+
+a.btn, a.pill, .btn, .pill{
+  text-decoration: none;
+}
+
+/* Month pages: stats card responsive */
+.monthStatsCard{
+  padding: 12px;
+  min-width: 220px;
+}
+.stat__k--mt{ margin-top: 10px; }
+
+@media (max-width: 600px){
+  .monthStatsCard{
+    min-width: 0;
+    width: 100%;
+  }
+}

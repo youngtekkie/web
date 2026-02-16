@@ -29,11 +29,11 @@
       </div>
 
       <div class="ctaRow">
-        <div class="card card--soft" style="padding:12px; min-width: 220px;">
+        <div class="card card--soft monthStatsCard">
           <div class="stat__k">Month progress</div>
           <div class="stat__v" id="mProgressText">0 / 24 days</div>
           <div class="bar"><div id="mProgressBar"></div></div>
-          <div class="stat__k" style="margin-top:10px">Streak</div>
+          <div class="stat__k stat__k--mt">Streak</div>
           <div class="stat__v"><span id="mStreak">0</span> 🔥</div>
         </div>
 
@@ -46,27 +46,8 @@
 
   <section class="stack" id="dayList"></section>
 </main>
-<script src="./assets/site.js"></script>
-<script src="./app.js"></script>
-<script>
-  YTA.init();
-  YTA.initKidModeUI();
-
-  YTA.renderMonthPage({
-    month: 1,
-    dayListId: "dayList",
-    searchInputId: "search",
-    progressTextId: "mProgressText",
-    progressBarId: "mProgressBar",
-    streakId: "mStreak",
-    jumpBtnId: "jumpToday",
-    expandBtnId: "expandAll",
-    collapseBtnId: "collapseAll",
-    headerTrackId: "trackLine"
-  });
-
-  document.getElementById("resetAll").addEventListener("click", () => YTA.resetActiveChildTicks());
-</script>
-  <div id="site-footer"></div>
+<script src="./assets/site.js" defer></script>
+<script src="./app.js" defer></script>
+<div id="site-footer"></div>
 </body>
 </html>

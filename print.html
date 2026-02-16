@@ -26,22 +26,8 @@
 
   <section id="printList" class="stack"></section>
 </main>
-<script src="./assets/site.js"></script>
-<script src="./app.js"></script>
-<script>
-  YTA.init();
-  YTA.initKidModeUI();
-
-  const p = YTA.getActiveProfile();
-  const cur = YTA.getActiveCurriculum();
-  document.getElementById("printMeta").textContent =
-    `${p?.name ?? "No profile"} • Year ${p?.yearGroup ?? "—"} • ${cur?.name ?? "—"}`;
-
-  const pb = document.getElementById("printBtn");
-  if(pb) pb.addEventListener("click", () => window.print());
-
-  YTA.renderPrintPage({ mountId: "printList" });
-</script>
-  <div id="site-footer"></div>
+<script src="./assets/site.js" defer></script>
+<script src="./app.js" defer></script>
+<div id="site-footer"></div>
 </body>
 </html>

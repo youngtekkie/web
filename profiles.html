@@ -65,11 +65,10 @@
       <div id="profilesList" class="monthRows"></div>
     </section>
   </main>
-<script src="./assets/site.js"></script>
-<script src="./app.js"></script>
+<script src="./assets/site.js" defer></script>
+<script src="./app.js" defer></script>
   <script>
-    YTA.init();
-    YTA.initKidModeUI();
+    // YTA auto-inits on DOMContentLoaded (see app.js)
 
     const childName = document.getElementById("childName");
     const yearGroup = document.getElementById("yearGroup");
