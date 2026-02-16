@@ -44,7 +44,8 @@
             <a class="nav__link ${isActive(routes.tracks) ? "is-active" : ""}" href="${routes.tracks}">Tracks</a>
             <a class="nav__link ${isActive(routes.profiles) ? "is-active" : ""}" href="${routes.profiles}">Profiles</a>
 
-            <details class="navDrop" ${inJourney ? "open" : ""}>
+            <!-- Keep Journey dropdown closed on page-load (prevents it feeling "stuck" open after navigation) -->
+            <details class="navDrop">
               <summary class="nav__link nav__link--btn ${inJourney ? "is-active" : ""}">
                 Journey <span class="navDrop__chev" aria-hidden="true">▾</span>
               </summary>
