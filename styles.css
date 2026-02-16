@@ -562,35 +562,39 @@ body:not(.home){
 
   /* Drawer: more usable on small screens */
   .drawer{ width: 88%; padding: 22px; }
+  /* Header: prevent actions from falling off-screen on small mobiles */
+  .topbar__inner{ flex-wrap: wrap; gap: 10px; }
+  .topbar__actions{ gap: 8px; }
+  .menuBtn{ position: relative; z-index: 2001; }
+  .topbar__actions .iconLink{ display: none; } /* drawer already contains these links */
+  #kidModeToggle{ display: none; }
+
 }
 
+
 @media (max-width: 520px){
-  /* Hero video: fully visible 16:9, no cropping */
+  /* Hero: keep the full 16:9 frame WITHOUT black bars by matching the container ratio */
   .hero{
-    height: 100svh;            /* better on mobile address bars */
-    background: #000;          /* letterboxing looks intentional */
+    height: auto;
+    aspect-ratio: 16 / 9;
+    min-height: 0;
+    background: transparent;
   }
   .hero-video{
-    object-fit: contain;       /* no crop: full 16:9 view */
-    background: #000;
-  }
-  .hero-overlay{
-    background: linear-gradient(
-      to bottom,
-      rgba(0,0,0,0.22),
-      rgba(0,0,0,0.52)
-    );
+    object-fit: contain;
+    background: transparent;
   }
   .hero-content{
-    padding-bottom: 26px;
-    padding-left: var(--pad);
-    padding-right: var(--pad);
+    padding-bottom: 14px;
   }
   .hero-actions{
-    width: 100%;
-    gap: 12px;
+    gap: 10px;
+  }
+  .hero-actions a{
+    width: min(320px, 100%);
   }
 }
+
 
 @media (max-width: 520px){
   .drawer{ width: 84%; padding: 28px; }
