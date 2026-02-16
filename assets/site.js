@@ -104,6 +104,13 @@
         <div class="wrap siteFooter__inner">
           <span>© <span data-yt="year"></span> youngtekkie</span>
         </div>
+      
+        <div class="footer-support">
+          <a href="./support.html" target="_blank" rel="noopener" class="footer-support__link">
+            ☕ Support YoungTekkie
+          </a>
+        </div>
+
       </footer>
     `;
 
