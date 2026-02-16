@@ -1,7 +1,7 @@
 /* ==========================================
    GOOGLE FONTS
 ========================================== */
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600&family=Sora:wght@600;700&display=swap');
 
 /* ==========================================
    ROOT VARIABLES
@@ -401,6 +401,9 @@ a.btn, a.pill, .ctaRow a.btn, .ctaRow a.pill { text-decoration: none; }
 }
 
 /* Brand (injected) */
+.brand__mark{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,0.65);border:1px solid rgba(17,17,17,0.08);box-shadow:0 10px 24px rgba(0,0,0,0.08);overflow:hidden;}
+.brand__mark img{width:36px;height:36px;display:block;}
+
 .brand{
   text-decoration: none;
   color: var(--text);
@@ -412,7 +415,7 @@ a.btn, a.pill, .ctaRow a.btn, .ctaRow a.pill { text-decoration: none; }
 .brand__title{
   font-weight: 600;
   font-size: 1.1rem;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Sora', 'Inter', sans-serif;
 }
 
 .brand__subtitle{
@@ -987,4 +990,15 @@ a.btn, a.pill, .btn, .pill{
     min-width: 0;
     width: 100%;
   }
+}
+
+
+/* ==========================================
+   HOMEPAGE HEADER OVERRIDE (avoid video darkening)
+========================================== */
+body.home .topbar{background:rgba(214,226,255,0.96);backdrop-filter:none;-webkit-backdrop-filter:none;}
+
+@media (max-width: 600px){
+  .brand__mark{width:38px;height:38px;border-radius:12px;}
+  .brand__mark img{width:30px;height:30px;}
 }
