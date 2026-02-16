@@ -64,6 +64,10 @@ const YTA = (() => {
     const backdrop = document.querySelector('[data-yt="backdrop"]');
     if (!navBtns.length || !drawer || !backdrop) return;
 
+    // Prevent double-binding (can happen if nav is injected after app.js runs)
+    if (drawer.dataset.ytaNavBound === "1") return;
+    drawer.dataset.ytaNavBound = "1";
+
     const ui = loadUI();
     let scrollY = 0;
 
@@ -1015,6 +1019,19 @@ const YTA = (() => {
     initJourneyDropdown(); // ✅ added
     initFooterYear();
   }
+
+  // If the shared header/nav/footer is injected after this script runs (non-defer pages),
+  // run the UI initialisers again once chrome exists.
+  document.addEventListener("yta:chrome:ready", () => {
+    try {
+      initMobileNav();
+      initJourneyDropdown();
+      initKidModeUI();
+      initFooterYear();
+    } catch (e) {
+      /* no-op */
+    }
+  });
 
   // ---------- public API ----------
   return {
