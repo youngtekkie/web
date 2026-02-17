@@ -1439,3 +1439,25 @@ main.section{ padding-top: 18px; }
 @media (min-width: 900px){
   main.section{ padding-top: 22px; }
 }
+
+
+/* ==============================
+   FIX: RESPONSIVE NAV FOR INJECTED HEADER
+   (navRow/menuBtn + drawer)
+============================== */
+@media (max-width: 900px){
+  .navRow{ display: none; }
+  .menuBtn{ display: inline-flex; align-items: center; justify-content: center; }
+  .topbar__actions{ gap: 8px; }
+  .topbar__actions .iconLink{ display: none; } /* keep header minimal on mobile */
+  #kidModeToggle{ padding: 8px 10px; font-size: 0.92rem; }
+}
+
+@media (min-width: 901px){
+  .menuBtn{ display: none; }
+}
+
+/* Ensure drawer is usable on small screens */
+@media (max-width: 520px){
+  .drawer{ width: 86%; padding: 26px; }
+}
