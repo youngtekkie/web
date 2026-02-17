@@ -58,6 +58,12 @@
               </div>
             </details>
           </nav>
+${isHome ? `
+<div class="topbarCoffee">
+  <a class="topbarCoffee__link" href="./support.html" aria-label="Buy us a coffee">
+    ☕ <span>buy us a coffee</span>
+  </a>
+</div>` : ``}
 
           <div class="topbar__actions">
 <a class="iconLink" href="${routes.certificates}" title="Certificates" aria-label="Certificates">🎓</a>
