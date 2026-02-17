@@ -99,6 +99,7 @@ ${isHome ? `
 
     // Let other scripts (e.g., app.js) know the header/nav/drawer now exist.
     // This matters on pages where site.js isn't loaded with `defer`.
+    bindChromeNav();
     document.dispatchEvent(new CustomEvent("yta:chrome:ready"));
   }
 
@@ -116,6 +117,7 @@ ${isHome ? `
     `;
 
     // Footer injected; allow footer-year setters etc. to run reliably.
+    bindChromeNav();
     document.dispatchEvent(new CustomEvent("yta:chrome:ready"));
   }
 
