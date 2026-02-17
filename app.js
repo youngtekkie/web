@@ -167,27 +167,12 @@ const YTA = (() => {
       saveUI(ui);
     }
 
-    navBtns.forEach(btn => btn.addEventListener("click", async () => {
-  const currentlyKid = getKidMode(); // true => Parent locked
-  if (currentlyKid) {
-    // Trying to unlock parent mode (turn Kid Mode OFF) — require password
-    if (!hasParentPass()) {
-      const created = await promptForPass(true);
-      if (!created) return;
-    } else {
-      const ok = await promptForPass(false);
-      if (!ok) return;
-    }
-    setKidMode(false);
-    btn.setAttribute("aria-pressed", "false");
-    btn.textContent = "Parent: Unlocked";
-    return;
-  }
-
-  // Lock parent mode (turn Kid Mode ON) — no password needed
-  setKidMode(true);
-  btn.setAttribute("aria-pressed", "true");
-  btn.textContent = "Parent: Locked";
+    navBtns.forEach(btn => btn.addEventListener("click", () => {
+  const currentlyKid = getKidMode();
+  const now = !currentlyKid;
+  setKidMode(now);
+  btn.setAttribute("aria-pressed", now ? "true" : "false");
+  btn.textContent = now ? "Parent: Locked" : "Parent: Unlocked";
 });
 // optional: persist open state across accidental reloads
     if (ui.drawerOpen) {
@@ -273,28 +258,6 @@ const YTA = (() => {
     if (!ok) alert("Incorrect password.\n\nForgot it? Press & hold the Parent button to reset on this device.");
     return ok;
   }
-function isProtectedParentPage() {
-  const p = location.pathname.toLowerCase();
-  return p.endsWith("dashboard.html") || p.endsWith("profiles.html");
-}
-
-async function guardParentPages() {
-  if (!isProtectedParentPage()) return;
-
-  // If Parent is locked (Kid Mode ON), require password to proceed.
-  if (getKidMode()) {
-    // Create password if none exists, otherwise prompt.
-    if (!hasParentPass()) {
-      const created = await promptForPass(true);
-      if (!created) { location.href = "./index.html"; return; }
-    } else {
-      const ok = await promptForPass(false);
-      if (!ok) { location.href = "./index.html"; return; }
-    }
-    // Unlock parent mode and continue
-    setKidMode(false);
-  }
-}
 
   function setKidMode(on) {
     localStorage.setItem(KIDMODE_KEY, on ? "1" : "0");
@@ -1225,7 +1188,66 @@ async function guardParentPages() {
     window.location.reload();
   }
 
-  function initFooterYear(){
+  
+function initProfilesPage() {
+  if (!location.pathname.toLowerCase().endsWith("profiles.html")) return;
+
+  const nameEl = document.getElementById("childName");
+  const yearEl = document.getElementById("yearGroup");
+  const trackEl = document.getElementById("trackSelect");
+  const startEl = document.getElementById("startDate");
+  const createBtn = document.getElementById("createProfileBtn");
+  const nextMonBtn = document.getElementById("setNextMonBtn");
+
+  if (!createBtn || createBtn.dataset.ytaBound === "1") return;
+  createBtn.dataset.ytaBound = "1";
+
+  // Set start to next Monday (robust across desktop/mobile date inputs)
+  function setNextMonday() {
+    const iso = nextMondayISO();
+    if (startEl) {
+      startEl.value = iso;
+      try { startEl.dispatchEvent(new Event("change", { bubbles: true })); } catch (e) {}
+      try { startEl.dispatchEvent(new Event("input", { bubbles: true })); } catch (e) {}
+    }
+  }
+
+  if (nextMonBtn) {
+    nextMonBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      setNextMonday();
+    });
+  }
+
+  createBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const name = (nameEl?.value || "").trim();
+    const year = (yearEl?.value || "").trim();
+    const track = (trackEl?.value || "").trim();
+    const startDate = (startEl?.value || "").trim();
+
+    if (!name) { alert("Please enter a child name."); nameEl?.focus(); return; }
+
+    // Create and activate profile
+    try {
+      const prof = createProfile({
+        name,
+        year,
+        track,
+        startDate: startDate || null
+      });
+      setActiveProfile(prof.id);
+      // Friendly refresh
+      alert("Profile created.");
+      location.reload();
+    } catch (err) {
+      console.error(err);
+      alert("Could not create profile. Please try again.");
+    }
+  });
+}
+
+function initFooterYear(){
     const apply = () => {
       const y = String(new Date().getFullYear());
       document.querySelectorAll('[data-yt="year"]').forEach(el => { el.textContent = y; });
@@ -1239,16 +1261,25 @@ async function guardParentPages() {
 
   // ---------- init ----------
   function init() {
-  // Run one-time startup once
   if (!__inited) {
     __inited = true;
     migrateProfilesIfNeeded();
   }
+  initMobileNav();
+  initJourneyDropdown();
+  initProfilesPage();
+  initFooterYear();
+
+  // Page renderers (safe guards inside)
+  renderMonthPage();
+  renderDashboard();
+  renderPrintPage();
+}
   // These can safely re-run (they guard against double-binding)
   initMobileNav();
   initJourneyDropdown();
   initFooterYear();
-  guardParentPages();
+  
 }
 
   // If the shared header/nav/footer is injected after this script runs (non-defer pages),
