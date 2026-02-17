@@ -1389,19 +1389,37 @@ body{ padding-top: 88px; }
 .drawerLinks a:active{ background: rgba(15,23,42,0.10); }
 
 
+.coffeeLink:hover{ color: var(--text); }
+@media (max-width: 520px){
+  .coffeeLink{ left: 14px; top: 74px; font-size: 0.82rem; }
+}
+
+
+/* ==============================
+   HEADER HEIGHT ADJUST (FIX)
+============================== */
+.topbar{ padding: 6px 0 !important; }
+.topbar__inner{ min-height: 50px !important; }
+body{ padding-top: 86px !important; }
+@media (min-width: 900px){
+  body{ padding-top: 76px !important; }
+}
+
+
 /* ==============================
    HOMEPAGE: BUY US A COFFEE LINK
 ============================== */
 .coffeeLink{
   position: fixed;
-  top: 72px; /* just below fixed header */
-  left: 18px;
-  font-size: 0.85rem;
-  color: var(--muted);
+  top: 64px; /* just below fixed header */
+  right: 18px;
+  font-size: 0.82rem;
+  color: var(--text);
   text-decoration: underline;
-  z-index: 50;
+  z-index: 2000;
+  opacity: 0.9;
 }
-.coffeeLink:hover{ color: var(--text); }
+.coffeeLink:hover{ opacity: 1; }
 @media (max-width: 520px){
-  .coffeeLink{ left: 14px; top: 74px; font-size: 0.82rem; }
+  .coffeeLink{ right: 14px; top: 66px; font-size: 0.8rem; }
 }

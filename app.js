@@ -1284,5 +1284,14 @@ const YTA = (() => {
 
 // AUTO_INIT_YTA: ensure core init runs even on pages without inline bootstrapping
 document.addEventListener('DOMContentLoaded', () => {
-  try { YTA.init(); YTA.initKidModeUI(); } catch (e) { /* no-op */ }
+  try {
+    YTA.init();
+    YTA.initKidModeUI();
+    // If the header/footer are injected after init runs, re-bind nav controls.
+    document.addEventListener('yta:chrome:ready', () => {
+      try { YTA.init(); } catch (e) { /* no-op */ }
+    });
+    // Safety: one more bind shortly after load (covers slow JS execution on mobile)
+    setTimeout(() => { try { YTA.init(); } catch (e) {} }, 60);
+  } catch (e) { /* no-op */ }
 });
