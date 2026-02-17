@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Parent Dashboard | Young Tech Architect</title>
+  
+  <!-- Favicons -->
+  <link rel="icon" href="./assets/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="48x48" href="./assets/favicon-48.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png" />
+
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body data-subtitle="Parent dashboard">
+  <div id="site-chrome"></div>
+<main class="wrap stack">
+  <section class="card stack">
+    <h1 class="h1">Parent Dashboard</h1>
+
+    <div class="pillrow">
+      <span class="pill pill--static"><span class="pill__k">Active</span><span class="pill__v" id="who">—</span></span>
+      <span class="pill pill--static"><span class="pill__k">Info</span><span class="pill__v" id="meta">—</span></span>
+      <a class="pill" href="./profiles.html"><span class="pill__k">Change</span><span class="pill__v">profile</span></a>
+    </div>
+
+    <div class="grid3">
+      <div class="stat card card--soft">
+        <div class="stat__k">Overall</div>
+        <div class="stat__v" id="dOverall">0 / 72</div>
+        <div class="bar"><div id="dOverallBar"></div></div>
+        <div class="small muted" id="dOverallPct">0%</div>
+      </div>
+
+      <div class="stat card card--soft">
+        <div class="stat__k">Streak</div>
+        <div class="stat__v"><span id="dStreak">0</span> days 🔥</div>
+        <div class="small muted">Uses start date if set.</div>
+      </div>
+
+      <div class="stat card card--soft">
+        <div class="stat__k">Next step</div>
+        <div class="stat__v" id="dNext">Day 1</div>
+        <div class="small muted" id="dNextHint">Start with Month 1.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid2">
+    <article class="card stack">
+      <h2 class="h2">By month</h2>
+      <div class="monthRows" id="byMonth"></div>
+    </article>
+
+    <article class="card stack">
+      <h2 class="h2">By week</h2>
+      <div class="monthRows" id="byWeek"></div>
+    </article>
+  </section>
+
+  <section class="card stack">
+    <h2 class="h2">Quick actions</h2>
+    <div class="ctaRow">
+      <a class="btn" href="./certificates.html">Print a weekly certificate</a>
+      <a class="btn btn--soft" href="./print.html">Print the full plan</a>
+    </div>
+  </section>
+</main>
+<script src="./assets/site.js" defer></script>
+<script src="./app.js" defer></script>
+<div id="site-footer"></div>
+</body>
+</html>

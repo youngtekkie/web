@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Profiles | Young Tech Architect</title>
+  
+  <!-- Favicons -->
+  <link rel="icon" href="./assets/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="48x48" href="./assets/favicon-48.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png" />
+
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body data-subtitle="Profiles">
+  <div id="site-chrome"></div>
+<main class="wrap stack">
+    <section class="card stack">
+      <h1 class="h1">Child Profiles (Year 3–6)</h1>
+      <p class="muted">
+        Create one profile per child. The plan automatically adjusts to the year group:
+        <span class="lineMobile"><strong>Year 3–4</strong> = Foundation</span>
+        <span class="lineMobile"><strong>Year 5–6</strong> = Builder</span>
+      </p>
+
+      <div class="grid2">
+        <div class="card card--soft stack">
+          <h2 class="h2">Create a new profile</h2>
+
+          <label class="small muted" for="childName">Child name</label>
+          <input id="childName" class="input" placeholder="e.g., Alex" />
+
+          <label class="small muted" for="yearGroup">Year group</label>
+          <select id="yearGroup" class="input">
+            <option value="3">Year 3</option>
+            <option value="4">Year 4</option>
+            <option value="5" selected>Year 5</option>
+            <option value="6">Year 6</option>
+          </select>
+
+          <label class="small muted" for="startDate">Start date (pick a Monday if you can)</label>
+          <input id="startDate" class="input" type="date" />
+
+          <div class="ctaRow">
+            <button class="btn btn--primary" id="createProfileBtn" type="button">Create profile</button>
+            <button class="btn btn--soft" id="setNextMonBtn" type="button">Set start to next Monday</button>
+          </div>
+
+          <div class="quote small">
+            Start date makes week ranges & streaks work nicely (Mon–Sat). If you skip it, the plan still works.
+          </div>
+        </div>
+
+        <div class="card card--soft stack">
+          <h2 class="h2">Active profile</h2>
+          <div class="pillrow">
+            <span class="pill pill--static"><span class="pill__k">Name</span><span class="pill__v" id="activeName">—</span></span>
+            <span class="pill pill--static"><span class="pill__k">Year</span><span class="pill__v" id="activeYear">—</span></span>
+            <span class="pill pill--static"><span class="pill__k">Track</span><span class="pill__v" id="activeTrack">—</span></span>
+            <span class="pill pill--static"><span class="pill__k">Start</span><span class="pill__v" id="activeDate">—</span></span>
+          </div>
+          <div class="ctaRow">
+            <a class="btn" href="./certificates.html">Certificates</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card stack">
+      <h2 class="h2">All profiles</h2>
+      <div id="profilesList" class="monthRows"></div>
+    </section>
+  </main>
+<script src="./assets/site.js" defer></script>
+<script src="./app.js" defer></script>
+  <script>
+    // YTA auto-inits on DOMContentLoaded (see app.js)
+
+    const childName = document.getElementById("childName");
+    const yearGroup = document.getElementById("yearGroup");
+    const startDate = document.getElementById("startDate");
+    const createBtn = document.getElementById("createProfileBtn");
+    const profilesList = document.getElementById("profilesList");
+
+    function render(){
+      const active = YTA.getActiveProfile();
+      const curriculum = YTA.getActiveCurriculum();
+
+      document.getElementById("activeName").textContent = active ? active.name : "No profile";
+      document.getElementById("activeYear").textContent = active?.yearGroup ?? "—";
+      document.getElementById("activeTrack").textContent = curriculum?.name ?? "—";
+      document.getElementById("activeDate").textContent = active?.startDate ? YTA.fmtDate(active.startDate) : "Not set";
+
+      const profiles = YTA.getProfiles();
+      profilesList.innerHTML = profiles.map(p => {
+        const isActive = active && active.id === p.id;
+        const prog = YTA.computeOverallProgress(p.id);
+        const streak = YTA.computeStreak(p.id);
+        const trackLabel = (p.track === "foundation") ? "Foundation" : "Builder";
+
+        return `
+          <div class="row">
+            <div>
+              <div class="row__title">${p.name} ${isActive ? "• ✅ Active" : ""}</div>
+              <div class="row__meta">
+                Year ${p.yearGroup} • ${trackLabel} • Start: ${p.startDate ? YTA.fmtDate(p.startDate) : "Not set"}
+                • Progress: ${prog.completeDays}/${prog.totalDays} • Streak: ${streak}🔥
+              </div>
+            </div>
+            <div class="ctaRow">
+              <button class="btn btn--soft" data-act="set" data-id="${p.id}">Set Active</button>
+              <button class="btn" data-act="edit" data-id="${p.id}">Edit</button>
+              <button class="btn btn--danger" data-act="delete" data-id="${p.id}">Delete</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      profilesList.querySelectorAll("button[data-act]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const act = btn.getAttribute("data-act");
+          const id = btn.getAttribute("data-id");
+
+          if(act === "set"){
+            YTA.setActiveProfile(id);
+            render();
+            return;
+          }
+          if(act === "delete"){
+            YTA.deleteProfile(id);
+            render();
+            return;
+          }
+          if(act === "edit"){
+            const p = YTA.getProfileById(id);
+            if(!p) return;
+
+            const newName = prompt("Child name:", p.name) ?? p.name;
+            const newYear = prompt("Year group (3,4,5,6):", String(p.yearGroup)) ?? String(p.yearGroup);
+            const newStart = prompt("Start date (YYYY-MM-DD) or blank:", p.startDate || "") ?? (p.startDate || "");
+
+            const yg = [3,4,5,6].includes(Number(newYear)) ? Number(newYear) : p.yearGroup;
+
+            YTA.updateProfile(id, { name: newName.trim(), yearGroup: yg, startDate: (newStart || "").trim() });
+            render();
+          }
+        });
+      });
+    }
+
+    createBtn.addEventListener("click", () => {
+      const name = (childName.value || "").trim();
+      if(!name){
+        alert("Please enter a child name.");
+        return;
+      }
+      YTA.createProfile({
+        name,
+        yearGroup: yearGroup.value,
+        startDate: (startDate.value || "").trim()
+      });
+      childName.value = "";
+      startDate.value = "";
+      render();
+    });
+
+    document.getElementById("setNextMonBtn").addEventListener("click", () => {
+      startDate.value = YTA.nextMondayISO();
+    });
+
+    render();
+  </script>
+  <div id="site-footer"></div>
+</body>
+</html>
