@@ -1406,20 +1406,27 @@ body{ padding-top: 86px !important; }
 }
 
 
-/* ==============================
-   HOMEPAGE: BUY US A COFFEE LINK
-============================== */
-.coffeeLink{
-  position: fixed;
-  top: 64px; /* just below fixed header */
-  right: 18px;
-  font-size: 0.82rem;
-  color: var(--text);
-  text-decoration: underline;
-  z-index: 2000;
-  opacity: 0.9;
-}
 .coffeeLink:hover{ opacity: 1; }
 @media (max-width: 520px){
   .coffeeLink{ right: 14px; top: 66px; font-size: 0.8rem; }
 }
+
+
+/* ==============================
+   HEADER: BUY US A COFFEE (HOMEPAGE ONLY)
+============================== */
+.topbarCoffee{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 6px;
+}
+.topbarCoffee__link{
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-decoration: underline;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.topbarCoffee__link:hover{ color: var(--text); }

@@ -273,6 +273,29 @@ const YTA = (() => {
     if (!ok) alert("Incorrect password.\n\nForgot it? Press & hold the Parent button to reset on this device.");
     return ok;
   }
+function isProtectedParentPage() {
+  const p = location.pathname.toLowerCase();
+  return p.endsWith("dashboard.html") || p.endsWith("profiles.html");
+}
+
+async function guardParentPages() {
+  if (!isProtectedParentPage()) return;
+
+  // If Parent is locked (Kid Mode ON), require password to proceed.
+  if (getKidMode()) {
+    // Create password if none exists, otherwise prompt.
+    if (!hasParentPass()) {
+      const created = await promptForPass(true);
+      if (!created) { location.href = "./index.html"; return; }
+    } else {
+      const ok = await promptForPass(false);
+      if (!ok) { location.href = "./index.html"; return; }
+    }
+    // Unlock parent mode and continue
+    setKidMode(false);
+  }
+}
+
   function setKidMode(on) {
     localStorage.setItem(KIDMODE_KEY, on ? "1" : "0");
     document.body.classList.toggle("kidmode", on);
@@ -1216,13 +1239,17 @@ const YTA = (() => {
 
   // ---------- init ----------
   function init() {
-    if (__inited) return;
+  // Run one-time startup once
+  if (!__inited) {
     __inited = true;
     migrateProfilesIfNeeded();
-    initMobileNav();
-    initJourneyDropdown(); // ✅ added
-    initFooterYear();
   }
+  // These can safely re-run (they guard against double-binding)
+  initMobileNav();
+  initJourneyDropdown();
+  initFooterYear();
+  guardParentPages();
+}
 
   // If the shared header/nav/footer is injected after this script runs (non-defer pages),
   // run the UI initialisers again once chrome exists.
