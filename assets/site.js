@@ -60,8 +60,7 @@
           </nav>
 
           <div class="topbar__actions">
-            <a class="btn btn--soft topbarSupport" href="./support.html">Donate</a>
-            <a class="iconLink" href="${routes.certificates}" title="Certificates" aria-label="Certificates">🎓</a>
+<a class="iconLink" href="${routes.certificates}" title="Certificates" aria-label="Certificates">🎓</a>
             <a class="iconLink" href="${routes.print}" title="Print plan" aria-label="Print">🖨️</a>
             <a class="iconLink" href="${routes.dashboard}" title="Parent dashboard" aria-label="Parent Dashboard">👨‍👩‍👧</a>
 
@@ -104,12 +103,7 @@
       <footer class="siteFooter">
         <div class="wrap siteFooter__inner">
           <span>© <span data-yt="year"></span> youngtekkie</span>
-          <div class="footer-support">
-          <a href="./support.html" class="footer-support__link">
-            ☕ Support YoungTekkie
-          </a>
-        </div>
-        </div>
+</div>
 
       </footer>
     `;
