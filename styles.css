@@ -1230,3 +1230,160 @@ body.home .topbar{background:rgba(214,226,255,0.96);backdrop-filter:none;-webkit
   .supportSplit{ grid-template-columns: 1fr; }
   .btcQr{ width: 200px; height: 200px; }
 }
+
+
+/* ==============================
+   HEADER TUNING + SUPPORT LINK
+============================== */
+.topbar{ padding: 10px 0; }
+.topbar__inner{ min-height: 56px; }
+@media (min-width: 900px){ .topbar__inner{ min-height: 52px; } }
+
+/* Ensure content doesn't sit too close to fixed header */
+body{ padding-top: 82px; }
+@media (min-width: 900px){ body{ padding-top: 76px; } }
+
+.topbarSupport{
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 12px;
+}
+
+
+/* ==============================
+   FOOTER SUPPORT LINK (BUTTON)
+============================== */
+.footer-support__link{
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+.footer-support__link:hover{ opacity: 0.92; }
+
+
+/* ==============================
+   SUPPORT PAGE — BTC INLINE COPY
+============================== */
+.btcInline{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(0,0,0,0.03);
+}
+.btcIconBtn{
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+.btcIconBtn svg{ fill: var(--text); }
+.btcIconBtn:hover{ opacity: 0.85; }
+.btcAddress{
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.btcCopied{
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+
+/* ==============================
+   FIX: BUTTON VISIBILITY + LINK STYLES
+============================== */
+.btn-primary{
+  background: var(--accent) !important;
+  color: #fff !important;
+  border: 1px solid var(--accent) !important;
+}
+.btn-primary:hover{ opacity: 0.92; }
+
+.btn-secondary{
+  background: transparent;
+  border: 1px solid var(--border);
+}
+
+/* Make Donate button compact and not break desktop layout */
+.topbar__actions{ gap: 10px; flex-wrap: nowrap; }
+.topbarSupport{
+  padding: 8px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* Footer support button: ensure contrast */
+.footer-support__link{
+  background: var(--accent) !important;
+  color: #fff !important;
+  text-decoration: none !important;
+}
+
+/* Ensure hamburger is always clickable and visible */
+.menuBtn{
+  cursor: pointer;
+}
+
+
+/* ==============================
+   FIX: HEADER HEIGHT + CONTENT SPACING
+============================== */
+.topbar{ padding: 8px 0; }
+body{ padding-top: 88px; }
+@media (min-width: 900px){
+  body{ padding-top: 80px; }
+}
+
+
+/* ==============================
+   STABILISATION OVERRIDES
+   (ensures consistent contrast across the new theme)
+============================== */
+.btn-primary{
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #fff !important;
+}
+.btn-primary:hover{ filter: brightness(0.96); }
+
+.footer-support__link{
+  background: var(--primary) !important;
+  border-color: rgba(255,255,255,0.0) !important;
+  color: #fff !important;
+}
+
+.topbarSupport{
+  background: rgba(47, 109, 255, 0.10);
+  border-color: rgba(47, 109, 255, 0.25);
+  color: var(--text);
+}
+.topbarSupport:hover{ background: rgba(47, 109, 255, 0.14); }
+
+/* Drawer links should look tappable */
+.drawerLinks a{
+  display: block;
+  padding: 12px 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--text);
+}
+.drawerLinks a:hover{ background: rgba(15,23,42,0.06); }
+.drawerLinks a:active{ background: rgba(15,23,42,0.10); }
