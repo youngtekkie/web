@@ -1387,3 +1387,21 @@ body{ padding-top: 88px; }
 }
 .drawerLinks a:hover{ background: rgba(15,23,42,0.06); }
 .drawerLinks a:active{ background: rgba(15,23,42,0.10); }
+
+
+/* ==============================
+   HOMEPAGE: BUY US A COFFEE LINK
+============================== */
+.coffeeLink{
+  position: fixed;
+  top: 72px; /* just below fixed header */
+  left: 18px;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-decoration: underline;
+  z-index: 50;
+}
+.coffeeLink:hover{ color: var(--text); }
+@media (max-width: 520px){
+  .coffeeLink{ left: 14px; top: 74px; font-size: 0.82rem; }
+}
