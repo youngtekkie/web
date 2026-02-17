@@ -29,9 +29,7 @@
     if (!subtitle) subtitle = "Foundations for tomorrow’s tech leaders.";
     const kidMode = (localStorage.getItem("yta_kidmode_v2") === "1");
     const inJourney = ["month1.html","month2.html","month3.html"].includes(currentFile().toLowerCase());
-    const isHome = (currentFile().toLowerCase() === "index.html");
-
-    mount.innerHTML = `
+mount.innerHTML = `
       <header class="topbar">
         <div class="wrap topbar__inner">
           <a class="brand" href="${routes.home}" aria-label="Young Tech Architect Home">
@@ -59,14 +57,7 @@
               </div>
             </details>
           </nav>
-${isHome ? `
-<div class="topbarCoffee">
-  <a class="topbarCoffee__link" href="./support.html" aria-label="Buy us a coffee">
-    ☕ <span>buy us a coffee</span>
-  </a>
-</div>` : ``}
-
-          <div class="topbar__actions">
+<div class="topbar__actions">
 <a class="iconLink" href="${routes.certificates}" title="Certificates" aria-label="Certificates">🎓</a>
             <a class="iconLink" href="${routes.print}" title="Print plan" aria-label="Print">🖨️</a>
             <a class="iconLink" href="${routes.dashboard}" title="Parent dashboard" aria-label="Parent Dashboard">👨‍👩‍👧</a>
