@@ -59,80 +59,17 @@ const YTA = (() => {
   }
 
   function initMobileNav() {
-  const navBtns = Array.from(document.querySelectorAll('[data-yt="navbtn"]')); // supports ☰ and ✕
-  const drawer = document.querySelector('[data-yt="drawer"]');
-  const backdrop = document.querySelector('[data-yt="backdrop"]');
-  if (!navBtns.length || !drawer || !backdrop) return;
+    const navBtns = Array.from(document.querySelectorAll('[data-yt="navbtn"]')); // supports ☰ and ✕
+    const drawer = document.querySelector('[data-yt="drawer"]');
+    const backdrop = document.querySelector('[data-yt="backdrop"]');
+    if (!navBtns.length || !drawer || !backdrop) return;
 
-  // Prevent double-binding (can happen if nav is injected after app.js runs)
-  if (drawer.dataset.ytaNavBound === "1") return;
-  drawer.dataset.ytaNavBound = "1";
+    // Prevent double-binding (can happen if nav is injected after app.js runs)
+    if (drawer.dataset.ytaNavBound === "1") return;
+    drawer.dataset.ytaNavBound = "1";
 
-  const ui = loadUI();
-  let scrollY = 0;
-
-  function setExpanded(v) {
-    navBtns.forEach(btn => btn.setAttribute("aria-expanded", v ? "true" : "false"));
-  }
-
-  function open() {
-    scrollY = window.scrollY || 0;
-    drawer.classList.add("is-open");
-    backdrop.classList.add("is-open");
-    setExpanded(true);
-
-    // robust scroll-lock (no iOS jump on close)
-    document.body.classList.add("noScroll");
-    document.body.style.top = `-${scrollY}px`;
-
-    ui.drawerOpen = true;
-    saveUI(ui);
-  }
-
-  function close() {
-    drawer.classList.remove("is-open");
-    backdrop.classList.remove("is-open");
-    setExpanded(false);
-
-    document.body.classList.remove("noScroll");
-    const top = document.body.style.top;
-    document.body.style.top = "";
-    const restore = top ? Math.abs(parseInt(top, 10)) : scrollY;
-    window.scrollTo(0, restore);
-
-    ui.drawerOpen = false;
-    saveUI(ui);
-  }
-
-  function toggle() {
-    if (drawer.classList.contains("is-open")) close();
-    else open();
-  }
-
-  navBtns.forEach(btn => btn.addEventListener("click", (e) => {
-    e.preventDefault();
-    toggle();
-  }));
-
-  backdrop.addEventListener("click", close);
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") close();
-  });
-
-  // optional: persist open state across accidental reloads
-  if (ui.drawerOpen) {
-    // don’t force-open if desktop
-    if (window.matchMedia("(max-width: 899px)").matches) open();
-    else ui.drawerOpen = false, saveUI(ui);
-  }
-
-  // Close drawer if viewport becomes desktop
-  window.addEventListener("resize", () => {
-    if (!window.matchMedia("(max-width: 899px)").matches) close();
-  });
-}
-
-
+    const ui = loadUI();
+    let scrollY = 0;
 
     function setExpanded(v) {
       navBtns.forEach(btn => btn.setAttribute("aria-expanded", v ? "true" : "false"));
@@ -167,29 +104,16 @@ const YTA = (() => {
       saveUI(ui);
     }
 
-    navBtns.forEach(btn => btn.addEventListener("click", async () => {
-  const currentlyKid = getKidMode(); // true => Parent locked
-  if (currentlyKid) {
-    // Trying to unlock parent mode (turn Kid Mode OFF) — require password
-    if (!hasParentPass()) {
-      const created = await promptForPass(true);
-      if (!created) return;
-    } else {
-      const ok = await promptForPass(false);
-      if (!ok) return;
-    }
-    setKidMode(false);
-    btn.setAttribute("aria-pressed", "false");
-    btn.textContent = "Parent: Unlocked";
-    return;
-  }
+    navBtns.forEach(btn => btn.addEventListener("click", () => {
+      const isOpen = drawer.classList.contains("is-open");
+      isOpen ? close() : open();
+    }));
 
-  // Lock parent mode (turn Kid Mode ON) — no password needed
-  setKidMode(true);
-  btn.setAttribute("aria-pressed", "true");
-  btn.textContent = "Parent: Locked";
-});
-// optional: persist open state across accidental reloads
+    backdrop.addEventListener("click", close);
+    drawer.querySelectorAll("a").forEach(a => a.addEventListener("click", close));
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+
+    // optional: persist open state across accidental reloads
     if (ui.drawerOpen) {
       // don’t force-open if desktop
       if (window.matchMedia("(max-width: 899px)").matches) open();
@@ -241,38 +165,6 @@ const YTA = (() => {
 
   // ---------- kid mode ----------
   function getKidMode() { return localStorage.getItem(KIDMODE_KEY) === "1"; }
-  const PARENT_PASS_KEY = "yta_parent_pass_v1";
-  function hasParentPass() { return !!localStorage.getItem(PARENT_PASS_KEY); }
-  async function sha256(s) {
-    const enc = new TextEncoder();
-    const buf = await crypto.subtle.digest("SHA-256", enc.encode(String(s)));
-    const arr = Array.from(new Uint8Array(buf));
-    return arr.map(b => b.toString(16).padStart(2,"0")).join("");
-  }
-  async function setParentPass(pass) {
-    const h = await sha256(pass);
-    localStorage.setItem(PARENT_PASS_KEY, h);
-  }
-  async function checkParentPass(pass) {
-    const saved = localStorage.getItem(PARENT_PASS_KEY);
-    if (!saved) return false;
-    return (await sha256(pass)) === saved;
-  }
-  async function promptForPass(firstTime=false) {
-    if (firstTime) {
-      const p1 = prompt("Create a parent password to unlock Parent mode:\n\nTip: If you forget it, press & hold the Parent button to reset on this device.");
-      if (!p1) return false;
-      const p2 = prompt("Confirm password:");
-      if (!p2 || p2 !== p1) { alert("Passwords did not match."); return false; }
-      await setParentPass(p1);
-      return true;
-    }
-    const p = prompt("Enter parent password to unlock Parent mode:\n\nForgot it? Press & hold the Parent button to reset on this device.");
-    if (!p) return false;
-    const ok = await checkParentPass(p);
-    if (!ok) alert("Incorrect password.\n\nForgot it? Press & hold the Parent button to reset on this device.");
-    return ok;
-  }
   function setKidMode(on) {
     localStorage.setItem(KIDMODE_KEY, on ? "1" : "0");
     document.body.classList.toggle("kidmode", on);
@@ -288,75 +180,22 @@ const YTA = (() => {
     if (btn.dataset.ytaBound === "1") {
       const onNow = getKidMode();
       btn.setAttribute("aria-pressed", onNow ? "true" : "false");
-      btn.textContent = onNow ? "Parent: Locked" : "Parent: Unlocked";
+      btn.textContent = `Kid Mode: ${onNow ? "On" : "Off"}`;
       return;
     }
     btn.dataset.ytaBound = "1";
 
-// hold-to-reset (hidden): press & hold this button to reset the parent password on this device.
-// This keeps the site static (no email reset) while giving parents a recovery route.
-(function bindHoldToReset() {
-  let t = null;
-  const HOLD_MS = 2800;
-
-  function clearTimer() {
-    if (t) { clearTimeout(t); t = null; }
-  }
-
-  function startTimer() {
-    clearTimer();
-    t = setTimeout(() => {
-      clearTimer();
-      const ok = confirm("Reset Parent password on this device?\n\nThis will require you to create a new password next time you unlock Parent mode.");
-      if (!ok) return;
-      try { localStorage.removeItem("yta_parent_pass_v1"); } catch (e) { /* no-op */ }
-      // Keep Parent locked after reset for safety
-      setKidMode(true);
-      btn.setAttribute("aria-pressed", "true");
-      btn.textContent = "Parent: Locked";
-      try { document.dispatchEvent(new CustomEvent("yta:kidmode:change", { detail: { on: true } })); } catch (e) { /* no-op */ }
-      alert("Parent password reset. You can create a new one when unlocking Parent mode.");
-    }, HOLD_MS);
-  }
-
-  btn.addEventListener("mousedown", startTimer);
-  btn.addEventListener("touchstart", startTimer, { passive: true });
-  btn.addEventListener("mouseup", clearTimer);
-  btn.addEventListener("mouseleave", clearTimer);
-  btn.addEventListener("touchend", clearTimer);
-  btn.addEventListener("touchcancel", clearTimer);
-})();
-// end hold-to-reset
-
-
-
     const on = getKidMode();
     btn.setAttribute("aria-pressed", on ? "true" : "false");
-    btn.textContent = on ? "Parent: Locked" : "Parent: Unlocked";
+    btn.textContent = `Kid Mode: ${on ? "On" : "Off"}`;
 
-    btn.addEventListener("click", async () => {
-  const currentlyKid = getKidMode(); // true => Parent locked
-  if (currentlyKid) {
-    // Trying to unlock parent mode (turn Kid Mode OFF) — require password
-    if (!hasParentPass()) {
-      const created = await promptForPass(true);
-      if (!created) return;
-    } else {
-      const ok = await promptForPass(false);
-      if (!ok) return;
-    }
-    setKidMode(false);
-    btn.setAttribute("aria-pressed", "false");
-    btn.textContent = "Parent: Unlocked";
-    return;
+    btn.addEventListener("click", () => {
+      const now = !getKidMode();
+      setKidMode(now);
+      btn.setAttribute("aria-pressed", now ? "true" : "false");
+      btn.textContent = `Kid Mode: ${now ? "On" : "Off"}`;
+    });
   }
-
-  // Lock parent mode (turn Kid Mode ON) — no password needed
-  setKidMode(true);
-  btn.setAttribute("aria-pressed", "true");
-  btn.textContent = "Parent: Locked";
-});
-}
 
   // ---------- curriculum ----------
   function mkDay(num, week, month, dow, mainKey, mainTopic, buildTask, logicTask, typingTask, notes = "") {
