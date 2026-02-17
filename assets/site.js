@@ -29,6 +29,7 @@
     if (!subtitle) subtitle = "Foundations for tomorrow’s tech leaders.";
     const kidMode = (localStorage.getItem("yta_kidmode_v2") === "1");
     const inJourney = ["month1.html","month2.html","month3.html"].includes(currentFile().toLowerCase());
+    const isHome = (currentFile().toLowerCase() === "index.html");
 
     mount.innerHTML = `
       <header class="topbar">
