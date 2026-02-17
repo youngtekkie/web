@@ -1433,35 +1433,9 @@ body{ padding-top: 86px !important; }
 
 
 /* ==============================
-   HEADER LAYOUT: ALLOW 2-ROW HEADER (COFFEE LINK BELOW MENU)
-============================== */
-.topbar__inner{
-  flex-wrap: wrap;
-  row-gap: 6px;
-}
-.navRow{ order: 2; }
-.topbar__actions{ order: 2; }
-.topbarCoffee{
-  order: 3;
-  flex-basis: 100%;
-  margin-top: 0;
-  padding-bottom: 4px;
-}
-
-
-/* ==============================
    GLOBAL CONTENT SPACING BELOW HEADER
 ============================== */
-main,
-.page,
-section:first-of-type {
-  margin-top: 24px;
-}
-
+main.section{ padding-top: 18px; }
 @media (min-width: 900px){
-  main,
-  .page,
-  section:first-of-type {
-    margin-top: 32px;
-  }
+  main.section{ padding-top: 22px; }
 }
