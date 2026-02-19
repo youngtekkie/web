@@ -132,56 +132,6 @@ const YTA = (() => {
   });
 }
 
-
-
-    function setExpanded(v) {
-      navBtns.forEach(btn => btn.setAttribute("aria-expanded", v ? "true" : "false"));
-    }
-
-    function open() {
-      scrollY = window.scrollY || 0;
-      drawer.classList.add("is-open");
-      backdrop.classList.add("is-open");
-      setExpanded(true);
-
-      // robust scroll-lock (no iOS jump on close)
-      document.body.classList.add("noScroll");
-      document.body.style.top = `-${scrollY}px`;
-
-      ui.drawerOpen = true;
-      saveUI(ui);
-    }
-
-    function close() {
-      drawer.classList.remove("is-open");
-      backdrop.classList.remove("is-open");
-      setExpanded(false);
-
-      document.body.classList.remove("noScroll");
-      const top = document.body.style.top;
-      document.body.style.top = "";
-      const restore = top ? Math.abs(parseInt(top, 10)) : scrollY;
-      window.scrollTo(0, restore);
-
-      ui.drawerOpen = false;
-      saveUI(ui);
-    }
-
-    navBtns.forEach(btn => btn.addEventListener("click", () => {
-  const currentlyKid = getKidMode();
-  const now = !currentlyKid;
-  setKidMode(now);
-  btn.setAttribute("aria-pressed", now ? "true" : "false");
-  btn.textContent = now ? "Parent: Locked" : "Parent: Unlocked";
-});
-// optional: persist open state across accidental reloads
-    if (ui.drawerOpen) {
-      // don’t force-open if desktop
-      if (window.matchMedia("(max-width: 899px)").matches) open();
-      else ui.drawerOpen = false, saveUI(ui);
-    }
-  }
-
   // ---------- Journey dropdown (details.navDrop) ----------
   // Fix: close the dropdown after selecting a month, and close on outside click/Escape.
   function initJourneyDropdown() {
@@ -344,7 +294,89 @@ const YTA = (() => {
 });
 }
 
-  // ---------- curriculum ----------
+  
+  // ---------- Kid Mode enforcement ----------
+  // When Parent is locked (Kid Mode ON), hide parent-only UI and block protected pages.
+  function applyParentOnlyVisibility() {
+    const locked = getKidMode();
+    document.body.classList.toggle("kidmode", locked);
+
+    // Anything marked as parent-only disappears while locked
+    document.querySelectorAll("[data-parent-only]").forEach(el => {
+      el.style.display = locked ? "none" : "";
+    });
+
+    // Optional: if a page has parent-only sections, mark them too
+    document.querySelectorAll("[data-parent-only-block]").forEach(el => {
+      el.hidden = !!locked;
+    });
+  }
+
+  function isProtectedPage() {
+    const f = (location.pathname || "").split("/").pop() || "index.html";
+    const file = f.toLowerCase();
+
+    // Parent-only pages
+    const protectedFiles = new Set([
+      "dashboard.html",
+      "profiles.html",
+      "tracks.html",
+      "print.html",
+      "certificates.html"
+    ]);
+
+    return protectedFiles.has(file);
+  }
+
+  function showParentLockOverlay() {
+    // Avoid duplicates
+    if (document.getElementById("parentLockOverlay")) return;
+
+    const overlay = document.createElement("div");
+    overlay.id = "parentLockOverlay";
+    overlay.className = "parentLockOverlay";
+    overlay.innerHTML = `
+      <div class="parentLockCard" role="dialog" aria-modal="true" aria-label="Parent mode locked">
+        <div class="parentLockTitle">Parent mode is locked</div>
+        <p class="parentLockText">This area is for parents/guardians. Ask a parent to unlock access.</p>
+        <div class="parentLockActions">
+          <button type="button" class="btn" id="unlockParentBtn">Unlock</button>
+          <a class="btn btn--soft" href="./month1.html">Go to Journey</a>
+        </div>
+        <p class="parentLockHint">Tip: on mobile, the “Parent: Locked/Unlocked” button is in the top bar.</p>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    const unlockBtn = overlay.querySelector("#unlockParentBtn");
+    unlockBtn.addEventListener("click", async () => {
+      try {
+        if (!hasParentPass()) {
+          const created = await promptForPass(true);
+          if (!created) return;
+        } else {
+          const ok = await promptForPass(false);
+          if (!ok) return;
+        }
+        setKidMode(false);
+        applyParentOnlyVisibility();
+        // Reload so the page renders normally
+        location.reload();
+      } catch (e) { /* no-op */ }
+    });
+  }
+
+  function enforceKidModeGuards() {
+    applyParentOnlyVisibility();
+
+    // Block parent-only pages while locked
+    if (getKidMode() && isProtectedPage()) {
+      showParentLockOverlay();
+    }
+  }
+
+
+// ---------- curriculum ----------
   function mkDay(num, week, month, dow, mainKey, mainTopic, buildTask, logicTask, typingTask, notes = "") {
     return { num, week, month, dow, mainKey, mainTopic, buildTask, logicTask, typingTask, notes };
   }
@@ -1261,28 +1293,28 @@ function initFooterYear(){
 
   // ---------- init ----------
   function init() {
-  if (!__inited) {
-    __inited = true;
-    migrateProfilesIfNeeded();
+    if (!__inited) {
+      __inited = true;
+      migrateProfilesIfNeeded();
+    }
+
+    // UI wiring (safe to call multiple times; each function guards its bindings)
+    initMobileNav();
+    initJourneyDropdown();
+    initKidModeUI();
+    initProfilesPage();
+    initFooterYear();
+
+    // Enforce Parent lock on protected areas + hide parent-only chrome when locked
+    enforceKidModeGuards();
+
+    // Page renderers (guards inside)
+    renderMonthPage();
+    renderDashboard();
+    renderPrintPage();
   }
-  initMobileNav();
-  initJourneyDropdown();
-  initProfilesPage();
-  initFooterYear();
 
-  // Page renderers (safe guards inside)
-  renderMonthPage();
-  renderDashboard();
-  renderPrintPage();
-}
-  // These can safely re-run (they guard against double-binding)
-  initMobileNav();
-  initJourneyDropdown();
-  initFooterYear();
-  
-}
-
-  // If the shared header/nav/footer is injected after this script runs (non-defer pages),
+// If the shared header/nav/footer is injected after this script runs (non-defer pages),
   // run the UI initialisers again once chrome exists.
   document.addEventListener("yta:chrome:ready", () => {
     try {
