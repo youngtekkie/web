@@ -42,8 +42,8 @@ mount.innerHTML = `
 
           <nav class="navRow" aria-label="Primary">
             <a class="nav__link ${isActive(routes.home) ? "is-active" : ""}" href="${routes.home}">Home</a>
-            <a class="nav__link ${isActive(routes.tracks) ? "is-active" : ""}" href="${routes.tracks}">Tracks</a>
-            ${kidMode ? "" : `<a class="nav__link ${isActive(routes.profiles) ? "is-active" : ""}" href="${routes.profiles}">Profiles</a>`}
+            ${kidMode ? "" : `<a class="nav__link ${isActive(routes.tracks) ? "is-active" : ""}" href="${routes.tracks}" data-parent-only="1">Tracks</a>`}
+            ${kidMode ? "" : `<a class="nav__link ${isActive(routes.profiles) ? "is-active" : ""}" href="${routes.profiles}" data-parent-only="1">Profiles</a>`}
 
             <!-- Keep Journey dropdown closed on page-load (prevents it feeling "stuck" open after navigation) -->
             <details class="navDrop">
@@ -58,9 +58,9 @@ mount.innerHTML = `
             </details>
           </nav>
 <div class="topbar__actions">
-<a class="iconLink" href="${routes.certificates}" title="Certificates" aria-label="Certificates">🎓</a>
-            <a class="iconLink" href="${routes.print}" title="Print plan" aria-label="Print">🖨️</a>
-            <a class="iconLink" href="${routes.dashboard}" title="Parent dashboard" aria-label="Parent Dashboard">👨‍👩‍👧</a>
+${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certificates" aria-label="Certificates" data-parent-only="1">🎓</a>`}
+            ${kidMode ? "" : `<a class="iconLink" href="${routes.print}" title="Print plan" aria-label="Print" data-parent-only="1">🖨️</a>`}
+            ${kidMode ? "" : `<a class="iconLink" href="${routes.dashboard}" title="Parent dashboard" aria-label="Parent Dashboard" data-parent-only="1">👨‍👩‍👧</a>`}
 
             <button class="menuBtn" type="button" data-yt="navbtn" aria-expanded="false" aria-label="Open menu">☰</button>
             <button class="btn btn--soft" id="kidModeToggle" type="button" aria-pressed="false">Kid Mode: Off</button>
@@ -76,14 +76,14 @@ mount.innerHTML = `
         </div>
         <div class="drawerLinks">
           <a href="${routes.home}">Home</a>
-          <a href="${routes.tracks}">Tracks</a>
-          <a href="${routes.profiles}">Profiles</a>
+          ${kidMode ? "" : `<a href="${routes.tracks}" data-parent-only="1">Tracks</a>`}
+          ${kidMode ? "" : `<a href="${routes.profiles}" data-parent-only="1">Profiles</a>`}
           <a href="${routes.month1}">Month 1 (Scratch)</a>
           <a href="${routes.month2}">Month 2 (Roblox)</a>
           <a href="${routes.month3}">Month 3 (Python)</a>
-          <a href="${routes.certificates}">Certificates</a>
-          <a href="${routes.print}">Print</a>
-          <a href="${routes.dashboard}">Parent Dashboard</a>
+          ${kidMode ? "" : `<a href="${routes.certificates}" data-parent-only="1">Certificates</a>`}
+          ${kidMode ? "" : `<a href="${routes.print}" data-parent-only="1">Print</a>`}
+          ${kidMode ? "" : `<a href="${routes.dashboard}" data-parent-only="1">Parent Dashboard</a>`}
         </div>
       </aside>
     `;
