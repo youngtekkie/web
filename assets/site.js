@@ -90,8 +90,6 @@ ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certi
 
     // Let other scripts (e.g., app.js) know the header/nav/drawer now exist.
     // This matters on pages where site.js isn't loaded with `defer`.
-    setTopbarOffset();
-    setTopbarOffset();
     bindChromeNav();
     document.dispatchEvent(new CustomEvent("yta:chrome:ready"));
   }
@@ -110,8 +108,6 @@ ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certi
     `;
 
     // Footer injected; allow footer-year setters etc. to run reliably.
-    setTopbarOffset();
-    setTopbarOffset();
     bindChromeNav();
     document.dispatchEvent(new CustomEvent("yta:chrome:ready"));
   }
@@ -123,80 +119,6 @@ ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certi
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("\'", "&#39;");
-}
-
-
-function setTopbarOffset() {
-  const topbar = document.querySelector(".topbar");
-  if (!topbar) return;
-  const h = Math.ceil(topbar.getBoundingClientRect().height);
-  const safe = Math.max(64, h);
-  document.documentElement.style.setProperty("--topbar-h", safe + "px");
-}
-
-function bindChromeNav() {
-  // Idempotent binding (injectChrome can run multiple times)
-  if (window.__yt_chrome_bound) {
-    // Still refresh topbar offset when reinjecting
-    setTopbarOffset();
-    return;
-  }
-  window.__yt_chrome_bound = true;
-
-  const syncYear = () => {
-    document.querySelectorAll('[data-yt="year"]').forEach(el => {
-      el.textContent = String(new Date().getFullYear());
-    });
-  };
-
-  const closeDrawer = () => {
-    const drawer = document.querySelector('[data-yt="drawer"]');
-    if (drawer) drawer.classList.remove("is-open");
-    document.querySelectorAll('[data-yt="navbtn"]').forEach(b => b.setAttribute("aria-expanded", "false"));
-  };
-
-  const openDrawer = () => {
-    const drawer = document.querySelector('[data-yt="drawer"]');
-    if (drawer) drawer.classList.add("is-open");
-    // Mark the first button as expanded for accessibility (both buttons share selector)
-    document.querySelectorAll('[data-yt="navbtn"]').forEach(b => b.setAttribute("aria-expanded", "true"));
-  };
-
-  document.addEventListener("click", (e) => {
-    const btn = e.target && e.target.closest && e.target.closest('[data-yt="navbtn"]');
-    const drawer = document.querySelector('[data-yt="drawer"]');
-
-    if (btn) {
-      // Toggle
-      if (drawer && drawer.classList.contains("is-open")) closeDrawer();
-      else openDrawer();
-      return;
-    }
-
-    // Click outside drawer closes it
-    if (drawer && drawer.classList.contains("is-open")) {
-      const isInsideDrawer = e.target.closest && e.target.closest('[data-yt="drawer"]');
-      if (!isInsideDrawer) closeDrawer();
-    }
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeDrawer();
-  });
-
-  // Keep details dropdown tidy: close if clicked outside
-  document.addEventListener("click", (e) => {
-    document.querySelectorAll(".navDrop[open]").forEach(d => {
-      if (!d.contains(e.target)) d.removeAttribute("open");
-    });
-  });
-
-  // Keep the page offset correct (brand subtitle can wrap on mobile)
-  const onResize = () => setTopbarOffset();
-  window.addEventListener("resize", onResize, { passive: true });
-
-  syncYear();
-  setTopbarOffset();
 }
 
   if (document.readyState === "loading") {
