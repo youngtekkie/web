@@ -81,10 +81,6 @@ const YTA = (() => {
     backdrop.classList.add("is-open");
     setExpanded(true);
 
-    // robust scroll-lock (no iOS jump on close)
-    document.body.classList.add("noScroll");
-    document.body.style.top = `-${scrollY}px`;
-
     ui.drawerOpen = true;
     saveUI(ui);
   }
@@ -93,12 +89,6 @@ const YTA = (() => {
     drawer.classList.remove("is-open");
     backdrop.classList.remove("is-open");
     setExpanded(false);
-
-    document.body.classList.remove("noScroll");
-    const top = document.body.style.top;
-    document.body.style.top = "";
-    const restore = top ? Math.abs(parseInt(top, 10)) : scrollY;
-    window.scrollTo(0, restore);
 
     ui.drawerOpen = false;
     saveUI(ui);
@@ -115,6 +105,16 @@ const YTA = (() => {
   }));
 
   backdrop.addEventListener("click", close);
+
+  // Close on outside click (useful when backdrop is hidden on mobile dropdown)
+  document.addEventListener("click", (e) => {
+    if (!drawer.classList.contains("is-open")) return;
+    const target = e.target;
+    const onBtn = target && target.closest ? target.closest('[data-yt="navbtn"]') : null;
+    if (onBtn) return;
+    if (drawer.contains(target)) return;
+    close();
+  });
 
   // Close drawer when a menu item is selected.
   // We persist drawer state in localStorage; without closing here the next page can

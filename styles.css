@@ -666,6 +666,42 @@ a.btn, a.pill, .ctaRow a.btn, .ctaRow a.pill { text-decoration: none; }
 @media (max-width: 768px){
   .navRow{ display:none; }
   .menuBtn{ display:block; }
+
+  /* Mobile menu: use a compact dropdown rather than a full-height drawer */
+  .backdrop{ display:none; }
+
+  .drawer{
+    top: 74px; /* sits below the fixed topbar */
+    right: var(--pad);
+    left: auto;
+    width: min(340px, calc(100vw - (var(--pad) * 2)));
+    height: auto;
+    max-height: calc(100vh - 110px);
+    overflow: auto;
+    border-radius: var(--radius2);
+    padding: 14px;
+
+    /* Override slide-in panel behaviour */
+    transform: translateY(-10px);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .drawer.is-open{
+    right: var(--pad);
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .drawerHeader{ margin-bottom: 10px; }
+  .drawerTitle{ font-weight: 700; }
+
+  .drawerLinks a{
+    margin-bottom: 8px;
+    padding: 10px 12px;
+    border-radius: 14px;
+  }
 }
 
 /* =========================================================
@@ -709,8 +745,8 @@ a.btn, a.pill, .ctaRow a.btn, .ctaRow a.pill { text-decoration: none; }
   .brand__title{ font-size: 1rem; }
   .brand__subtitle{ display:none; }
 
-  /* Drawer: more usable on small screens */
-  .drawer{ width: 88%; padding: 22px; }
+  /* Drawer: keep the compact dropdown sizing on very small screens */
+  .drawer{ width: min(340px, calc(100vw - (var(--pad) * 2))); padding: 14px; }
   /* Header: prevent actions from falling off-screen on small mobiles */
   .topbar__inner{ flex-wrap: wrap; gap: 10px; }
   .topbar__actions{ gap: 8px; }
@@ -746,7 +782,8 @@ a.btn, a.pill, .ctaRow a.btn, .ctaRow a.pill { text-decoration: none; }
 
 
 @media (max-width: 520px){
-  .drawer{ width: 84%; padding: 28px; }
+  /* Drawer: keep compact dropdown sizing (avoid full-width overlay) */
+  .drawer{ width: min(320px, calc(100vw - (var(--pad) * 2))); padding: 14px; }
 }
 
 
@@ -1313,7 +1350,8 @@ main.section{ padding-top: 18px; }
 
 /* Ensure drawer is usable on small screens */
 @media (max-width: 520px){
-  .drawer{ width: 86%; padding: 26px; }
+  /* Drawer: keep compact dropdown sizing (avoid full-width overlay) */
+  .drawer{ width: min(320px, calc(100vw - (var(--pad) * 2))); padding: 14px; }
 }
 
 
