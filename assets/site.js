@@ -17,6 +17,54 @@
     dashboard: "./dashboard.html",
   };
 
+  function setTopbarHeight() {
+    const topbar = document.querySelector(".topbar");
+    if (!topbar) return;
+    const h = topbar.offsetHeight || 72;
+    document.documentElement.style.setProperty("--topbar-h", h + "px");
+  }
+
+  function bindChromeNav() {
+    // Ensure body content never sits under the fixed header (mobile + desktop).
+    setTopbarHeight();
+
+    // Recalculate on resize / orientation change.
+    window.addEventListener("resize", setTopbarHeight, { passive: true });
+    window.addEventListener("orientationchange", setTopbarHeight, { passive: true });
+
+    // Mobile drawer toggle (if present)
+    const btn = document.querySelector(".nav-toggle");
+    const drawer = document.getElementById("mobileDrawer");
+    const backdrop = document.querySelector(".drawer-backdrop");
+    const closeBtn = document.querySelector(".drawer-close");
+
+    const openDrawer = () => {
+      if (!drawer) return;
+      drawer.classList.add("is-open");
+      document.body.classList.add("drawer-open");
+      setTopbarHeight();
+    };
+
+    const closeDrawer = () => {
+      if (!drawer) return;
+      drawer.classList.remove("is-open");
+      document.body.classList.remove("drawer-open");
+      setTopbarHeight();
+    };
+
+    if (btn) btn.addEventListener("click", (e) => { e.preventDefault(); openDrawer(); });
+    if (backdrop) backdrop.addEventListener("click", closeDrawer);
+    if (closeBtn) closeBtn.addEventListener("click", closeDrawer);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeDrawer();
+    });
+
+    // Footer year (safe no-op if missing)
+    const y = document.querySelector("[data-year]");
+    if (y) y.textContent = String(new Date().getFullYear());
+  }
+
   function isActive(file) {
     return currentFile().toLowerCase() === file.replace("./","").toLowerCase();
   }
