@@ -7,6 +7,7 @@
    ROOT VARIABLES
 ========================================== */
 :root {
+  --topbar-h: 72px; /* set dynamically by JS */
   /* Light-blue theme */
   --bg: #f5f9ff;
   --bg2: #eaf2ff;
@@ -56,6 +57,8 @@ html, body {
   background: var(--bg);
   color: var(--text);
   font-family: 'Inter', sans-serif;
+
+  padding-top: var(--topbar-h);
 }
 
 /* ==========================================
@@ -513,7 +516,7 @@ body:not(.home){
   /* Ribbon colour (darker blue but still soft) */
   background: rgba(47,109,255,0.16);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(47,109,255,0.16);
   z-index: 2000;
 }
 
@@ -1150,7 +1153,9 @@ a.btn, a.pill, .btn, .pill{
 /* ==========================================
    HOMEPAGE HEADER OVERRIDE (avoid video darkening)
 ========================================== */
-body.home .topbar{background:rgba(214,226,255,0.96);backdrop-filter:none;-webkit-backdrop-filter:none;}
+body.home{padding-top:0;}
+
+body.home .topbar{background:rgba(47,109,255,0.16);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
 
 @media (max-width: 600px){
   .brand__mark{width:38px;height:38px;border-radius:12px;}
@@ -1387,18 +1392,3 @@ body{ padding-top: 92px !important; } /* more breathing room below ribbon */
   font-size: 0.9rem;
   margin-top: 6px;
 }
-
-
-/* ==========================================
-   MOBILE FIX: remove visible 'white line' under fixed header
-   The line was the 1px bottom border on .topbar which becomes
-   very noticeable over the dark hero video on small screens.
-========================================== */
-@media (max-width: 768px){
-  .topbar{
-    border-bottom: 0;
-    /* Keep separation without a hard 1px seam */
-    box-shadow: 0 10px 28px rgba(0,0,0,0.10);
-  }
-}
-
