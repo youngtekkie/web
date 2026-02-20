@@ -115,6 +115,17 @@ const YTA = (() => {
   }));
 
   backdrop.addEventListener("click", close);
+
+  // Close drawer when a menu item is selected.
+  // We persist drawer state in localStorage; without closing here the next page can
+  // re-open the drawer and block content on mobile.
+  drawer.addEventListener("click", (e) => {
+    const link = e.target && e.target.closest ? e.target.closest("a") : null;
+    if (!link) return;
+    // Let the browser navigate normally; just ensure the drawer state is closed first.
+    close();
+  });
+
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") close();
   });
