@@ -1019,6 +1019,12 @@ select.input{
 }
 .task__k{ font-size:.9em; color: var(--muted); font-weight: 850; }
 .task__v{ margin-top:6px; font-weight: 650; line-height:1.45; }
+.taskList{
+  margin: 10px 0 0;
+  padding-left: 18px;
+  font-weight: 650;
+}
+.taskList li{ margin: 6px 0; }
 
 /* Checkboxes */
 .checkRow{

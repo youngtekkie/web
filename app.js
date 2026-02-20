@@ -388,40 +388,622 @@ const YTA = (() => {
 
 
 // ---------- curriculum ----------
-  function mkDay(num, week, month, dow, mainKey, mainTopic, buildTask, logicTask, typingTask, notes = "") {
-    return { num, week, month, dow, mainKey, mainTopic, buildTask, logicTask, typingTask, notes };
+  function mkDay(
+    num,
+    week,
+    month,
+    dow,
+    mainKey,
+    mainTopic,
+    buildTask,
+    logicTask,
+    typingTask,
+    notes = "",
+    buildSteps = null,
+    logicSteps = null,
+    typingSteps = null,
+    outcomes = null,
+  ) {
+    return {
+      num,
+      week,
+      month,
+      dow,
+      mainKey,
+      mainTopic,
+      buildTask,
+      logicTask,
+      typingTask,
+      notes,
+      buildSteps,
+      logicSteps,
+      typingSteps,
+      outcomes,
+    };
   }
 
   // Base plan (builder-ish). We’ll derive Foundation (Y3–4) and Builder (Y5–6) from it.
   const baseDays = [
     // Month 1: Scratch (1–24)
-    mkDay(1,1,1,"Mon","scratch","Scratch basics + motion","Move sprite with arrow keys","Multi-step word problems","TypingClub lessons 1–5"),
-    mkDay(2,1,1,"Tue","scratch","Loops","Continuous movement + bounce off edges","Pattern puzzles","Continue lessons"),
-    mkDay(3,1,1,"Wed","scratch","Variables","Create a score counter","Arithmetic reasoning","Accuracy focus"),
-    mkDay(4,1,1,"Thu","scratch","Random numbers","Falling objects spawn randomly","Time problems","1-minute speed test"),
-    mkDay(5,1,1,"Fri","scratch","Lives + Game Over","Lose condition when lives reach zero","Brain teasers","Timed test"),
-    mkDay(6,1,1,"Sat","scratch","Build sprint","Project: Catch Game (score, lives, increasing speed)","Quick mixed puzzles (10 mins)","TypingClub quick review","Presentation: explain how it works"),
+    mkDay(
+      1,1,1,"Mon","scratch","Scratch basics + motion",
+      "Move a sprite with the arrow keys",
+      "Khan Academy: solve 8 multi-step word problems",
+      "TypingClub: lessons 1–5 (home row start)",
+      "",
+      [
+        "Open Scratch, click Create, name the project ‘Arrow Runner’",
+        "Add: when green flag clicked, go to x:0 y:0, point in direction 90",
+        "Add 4 scripts: when up/down/left/right key pressed, change x/y by 10",
+        "Test: can you move smoothly, without getting stuck?",
+      ],
+      [
+        "Go to Khan Academy Maths for your child’s year group",
+        "Choose a word problems lesson, complete 8 questions",
+        "Write down 1 mistake you made, then re-do that question",
+      ],
+      [
+        "TypingClub: do lessons 1–5 (F/J, space, D/K)",
+        "Aim for 90% accuracy, slow is fine",
+        "Do a 1-minute test at the end, note your WPM",
+      ],
+      ["Sprite moves with arrow keys", "Can explain what an event block does", "Accuracy target recorded"],
+    ),
+    mkDay(
+      2,1,1,"Tue","scratch","Loops",
+      "Continuous movement and bounce",
+      "Khan Academy: patterns, complete 10 questions",
+      "TypingClub: continue home row",
+      "",
+      [
+        "Add a script: when green flag clicked, forever move 5 steps",
+        "Add: if on edge, bounce",
+        "Add: when space key pressed, change direction by 15 degrees",
+        "Outcome: your sprite keeps moving and stays on screen",
+      ],
+      [
+        "Khan Academy: choose a patterns lesson (number patterns)",
+        "Complete 10 questions",
+        "Say out loud what the rule is for 3 of them",
+      ],
+      [
+        "TypingClub: next 5 lessons you see on the home row plan",
+        "Focus: keep fingers on F and J bumps",
+        "1-minute test, try to match or beat yesterday",
+      ],
+      ["Uses a forever loop", "Understands ‘if on edge, bounce’", "Pattern rule explained"],
+    ),
+    mkDay(
+      3,1,1,"Wed","scratch","Variables",
+      "Create a score counter",
+      "Khan Academy: arithmetic reasoning, 10 questions",
+      "TypingClub: accuracy focus",
+      "",
+      [
+        "Make a variable: score (for all sprites)",
+        "Set score to 0 when green flag clicked",
+        "When sprite touches a coin, change score by 1",
+        "Hide the coin and show it again somewhere else",
+      ],
+      [
+        "Khan Academy: arithmetic or number sense practice",
+        "Complete 10 questions",
+        "Check your working for the last 2 before you submit",
+      ],
+      [
+        "TypingClub: do 10 minutes of lessons",
+        "Accuracy target: 92% or better",
+        "If you dip below target, slow down and restart that lesson",
+      ],
+      ["Score variable updates", "Can reset score", "Knows what a variable is"],
+    ),
+    mkDay(
+      4,1,1,"Thu","scratch","Random numbers",
+      "Falling objects spawn randomly",
+      "Khan Academy: time problems, 8 questions",
+      "TypingClub: 1-minute speed test",
+      "",
+      [
+        "Create an ‘Apple’ sprite and start it at y:180",
+        "Set x to pick random -220 to 220",
+        "Forever: change y by -6, if y < -170 then go to y:180 and pick a new random x",
+        "Test: apples fall from different places each time",
+      ],
+      [
+        "Khan Academy: time or clocks lesson",
+        "Complete 8 questions",
+        "Say how you worked out 1 of the answers",
+      ],
+      [
+        "TypingClub: 10 minutes practice",
+        "Do a 1-minute test, note WPM and accuracy",
+        "Try to keep your eyes on the screen, not the keyboard",
+      ],
+      ["Uses random block", "Falling loop works", "WPM recorded"],
+    ),
+    mkDay(
+      5,1,1,"Fri","scratch","Lives + Game Over",
+      "Add a lose condition when lives reach zero",
+      "Khan Academy: brain teasers or challenge set",
+      "TypingClub: timed test",
+      "",
+      [
+        "Make variable: lives, set to 3 on green flag",
+        "If apple touches player, change score by 1 and reset apple",
+        "If apple hits ground, change lives by -1 and reset apple",
+        "If lives = 0 then stop all, show ‘Game Over’ message",
+      ],
+      [
+        "Khan Academy: pick a ‘challenge’ or ‘mastery’ quiz",
+        "Do 10 minutes, skip nothing, try your best",
+        "Pick 1 tricky question and explain it to a parent",
+      ],
+      [
+        "TypingClub: do a 2-minute test",
+        "Focus: accuracy first, then speed",
+        "Write down: WPM, accuracy, and 1 key that trips you up",
+      ],
+      ["Lives decrease correctly", "Game Over triggers", "Can explain one tricky question"],
+    ),
+    mkDay(
+      6,1,1,"Sat","scratch","Build sprint",
+      "Project: Catch Game (score, lives, increasing speed)",
+      "Khan Academy: quick mixed puzzles (10 mins)",
+      "TypingClub: quick review",
+      "Presentation: explain how it works",
+      [
+        "Start from your falling-object game",
+        "Add difficulty: every 5 points, make apples fall faster",
+        "Add a start screen with ‘Press space to begin’",
+        "Add a win condition: reach 20 points",
+      ],
+      [
+        "Set a 10-minute timer",
+        "Do a mixed practice set, focus on calm working",
+        "Check answers, then retry 2 mistakes",
+      ],
+      [
+        "TypingClub: 10 minutes review lessons",
+        "Do 1-minute test, compare to day 1",
+        "Stretch your hands, short break, then stop",
+      ],
+      ["Has a complete game loop", "Difficulty increases", "Can demo and explain the game"],
+    ),
 
-    mkDay(7,2,1,"Mon","scratch","If statements","Maze basics (walls + movement rules)","Fractions reasoning","TypingClub"),
-    mkDay(8,2,1,"Tue","scratch","Timer variable","Countdown challenge for maze","Word logic problems","TypingClub","Mini-present: what did you add?"),
-    mkDay(9,2,1,"Wed","scratch","Enemy logic","Enemy follows player (simple chase)","Pattern challenge","TypingClub"),
-    mkDay(10,2,1,"Thu","scratch","Win conditions + sound","Win/lose screens + sound effects","Multi-step puzzles","TypingClub"),
-    mkDay(11,2,1,"Fri","scratch","Debugging day","Break one thing, then fix it","Mixed challenge","TypingClub"),
-    mkDay(12,2,1,"Sat","scratch","Build sprint","Project: Maze Escape (timer, enemy, win/lose)","Quick mixed puzzles (10 mins)","TypingClub review","Presentation: show the full game"),
+    mkDay(
+      7,2,1,"Mon","scratch","If statements",
+      "Maze basics: walls and movement rules",
+      "Khan Academy: fractions, 10 questions",
+      "TypingClub: steady practice",
+      "",
+      [
+        "Create a maze backdrop (or draw a simple one)",
+        "Move with arrow keys",
+        "Add wall rule: if touching wall colour, go back to start",
+        "Add a goal: touching the star ends the run",
+      ],
+      [
+        "Khan Academy: fractions lesson",
+        "Complete 10 questions",
+        "Draw 1 fraction model (circle or bar) on paper",
+      ],
+      [
+        "TypingClub: 10 minutes",
+        "Accuracy target: 92%",
+        "Practise backspace with control, not panic",
+      ],
+      ["Maze resets on wall hit", "Goal works", "Fraction model drawn"],
+    ),
+    mkDay(
+      8,2,1,"Tue","scratch","Timer variable",
+      "Add a countdown timer to the maze",
+      "Khan Academy: word logic problems, 10 mins",
+      "TypingClub",
+      "Mini-present: what did you add?",
+      [
+        "Make variable: time",
+        "Set time to 30 when green flag clicked",
+        "Every 1 second, change time by -1",
+        "If time = 0 then show ‘Time up’ and stop all",
+      ],
+      [
+        "Pick a logic or word problem set on Khan Academy",
+        "Work for 10 minutes",
+        "Explain 1 solution in a clear sentence",
+      ],
+      [
+        "TypingClub: 10 minutes",
+        "Do a 1-minute test",
+        "Try not to look down at all",
+      ],
+      ["Timer counts down", "Understands seconds loop", "Can explain one solution"],
+    ),
+    mkDay(
+      9,2,1,"Wed","scratch","Enemy logic",
+      "Add a simple enemy that chases you",
+      "Khan Academy: pattern challenge, 10 questions",
+      "TypingClub",
+      "",
+      [
+        "Add an enemy sprite, place it in the maze",
+        "Forever: point towards player, move 2 steps",
+        "If enemy touches player, send ‘lose’ message",
+        "Add: when I receive lose, show lose screen",
+      ],
+      [
+        "Khan Academy: patterns set",
+        "Complete 10 questions",
+        "Spot 1 pattern rule and write it down",
+      ],
+      [
+        "TypingClub: 10 minutes",
+        "Focus on tricky keys you miss",
+        "Finish with 30 seconds of slow, perfect typing",
+      ],
+      ["Enemy follows player", "Lose condition works", "Pattern rule written"],
+    ),
+    mkDay(
+      10,2,1,"Thu","scratch","Win conditions + sound",
+      "Win and lose screens, plus sound effects",
+      "Khan Academy: multi-step puzzles, 8 questions",
+      "TypingClub",
+      "",
+      [
+        "Create 2 backdrops or costumes: ‘You Win’, ‘You Lose’",
+        "When player reaches goal, broadcast win",
+        "On win: play a sound, stop all",
+        "On lose: play a different sound, stop all",
+      ],
+      [
+        "Khan Academy: multi-step practice",
+        "Complete 8 questions",
+        "Check your answers before submitting the last 2",
+      ],
+      [
+        "TypingClub: 10 minutes",
+        "1-minute test",
+        "If accuracy < 90%, redo the test slowly",
+      ],
+      ["Win/lose screens show", "Uses broadcasts", "Two sounds added"],
+    ),
+    mkDay(
+      11,2,1,"Fri","scratch","Debugging day",
+      "Break one thing, then fix it",
+      "Khan Academy: mixed challenge, 10 mins",
+      "TypingClub",
+      "",
+      [
+        "Pick 1 thing to break on purpose (timer, enemy speed, wall colour)",
+        "Write what you changed",
+        "Fix it back, test again",
+        "Add 1 comment block saying what the bug was",
+      ],
+      [
+        "10-minute mixed practice",
+        "Try to get 3 in a row correct",
+        "If you miss one, explain why",
+      ],
+      [
+        "TypingClub: 10 minutes",
+        "Choose 1 lesson you struggled with, redo it",
+        "Quick stretch and stop",
+      ],
+      ["Can describe a bug and a fix", "Understands testing", "Improved on a weak lesson"],
+    ),
+    mkDay(
+      12,2,1,"Sat","scratch","Build sprint",
+      "Project: Maze Escape (timer, enemy, win/lose)",
+      "Khan Academy: quick mixed puzzles (10 mins)",
+      "TypingClub: review",
+      "Presentation: show the full game",
+      [
+        "Combine: maze, timer, enemy, win/lose screens",
+        "Add 3 coins to collect before the goal (score check)",
+        "Add instructions screen: controls and goal",
+        "Play-test: ask someone else to try it",
+      ],
+      [
+        "10 minutes mixed practice",
+        "Retry 2 mistakes",
+        "Say 1 thing you improved this week",
+      ],
+      [
+        "TypingClub: 10 minutes review",
+        "Do a 2-minute test",
+        "Note WPM, accuracy",
+      ],
+      ["Full maze game complete", "Instructions included", "Can explain what you built"],
+    ),
 
-    mkDay(13,3,1,"Mon","scratch","Cloning","Multiple falling objects using clones","Multiplication reasoning","TypingClub (target 35 wpm)"),
-    mkDay(14,3,1,"Tue","scratch","Difficulty scaling","Speed increases over time","Logic word problems","TypingClub"),
-    mkDay(15,3,1,"Wed","scratch","Levels","Create Level 2 (background switch)","Pattern puzzles","TypingClub"),
-    mkDay(16,3,1,"Thu","scratch","Restart system","Restart button / reset variables","Multi-step maths","TypingClub"),
-    mkDay(17,3,1,"Fri","scratch","Polish","Animations + sound polish","Brain teasers","TypingClub"),
-    mkDay(18,3,1,"Sat","scratch","Build sprint","Project: 2-Level Platformer","Quick mixed puzzles (10 mins)","TypingClub review","Presentation: explain levels + scoring"),
+    mkDay(
+      13,3,1,"Mon","scratch","Cloning",
+      "Use clones for multiple falling objects",
+      "Khan Academy: multiplication reasoning, 10 questions",
+      "TypingClub (target 35 wpm)",
+      "",
+      [
+        "Create one ‘Falling’ sprite",
+        "When green flag clicked: forever create clone, wait 1 second",
+        "When I start as a clone: go to random x, go to y:180, fall down",
+        "If touching player: change score by 1, delete this clone",
+      ],
+      [
+        "Khan Academy: multiplication practice",
+        "Complete 10 questions",
+        "Use a times-table you know to check one answer",
+      ],
+      [
+        "TypingClub: 12 minutes",
+        "Try a longer test, 2 minutes",
+        "If you hit 35 wpm once, celebrate quietly",
+      ],
+      ["Uses clones", "No copy-paste sprites needed", "Understands clone start"],
+    ),
+    mkDay(
+      14,3,1,"Tue","scratch","Difficulty scaling",
+      "Make speed increase over time",
+      "Khan Academy: logic word problems, 10 mins",
+      "TypingClub",
+      "",
+      [
+        "Make variable: speed",
+        "Set speed to 6 at start",
+        "Every 10 seconds, change speed by 1",
+        "Use speed in your falling loop instead of a fixed number",
+      ],
+      [
+        "10-minute logic / word problems set",
+        "Explain one answer using ‘because…’",
+        "Check your final answer makes sense",
+      ],
+      [
+        "TypingClub: 10 minutes",
+        "Focus: clean capitals if your lessons include them",
+        "Finish with a 1-minute test",
+      ],
+      ["Difficulty increases smoothly", "Uses a speed variable", "Explains a solution"],
+    ),
+    mkDay(
+      15,3,1,"Wed","scratch","Levels",
+      "Create Level 2 with a backdrop switch",
+      "Khan Academy: pattern puzzles, 10 questions",
+      "TypingClub",
+      "",
+      [
+        "Make variable: level",
+        "When score reaches 10, set level to 2",
+        "Switch backdrop for level 2",
+        "Increase speed or add a new obstacle in level 2",
+      ],
+      [
+        "Khan Academy: patterns",
+        "Complete 10 questions",
+        "Write 2 pattern rules as sentences",
+      ],
+      [
+        "TypingClub: 10 minutes",
+        "Pick 1 lesson to redo perfectly",
+        "Short test: 1 minute",
+      ],
+      ["Level changes trigger correctly", "Backdrops switch", "Level 2 is harder"],
+    ),
+    mkDay(
+      16,3,1,"Thu","scratch","Restart system",
+      "Add a restart button and reset variables",
+      "Khan Academy: multi-step maths, 8 questions",
+      "TypingClub",
+      "",
+      [
+        "Add a ‘Restart’ sprite button",
+        "When this sprite clicked: broadcast restart",
+        "On restart: set score, lives, time, level back to start values",
+        "Make sure sprites go back to start positions",
+      ],
+      [
+        "Khan Academy: multi-step practice",
+        "Complete 8 questions",
+        "Show your working for 2 of them",
+      ],
+      [
+        "TypingClub: 10 minutes",
+        "Focus on rhythm, not rushing",
+        "2-minute test if you feel ready",
+      ],
+      ["Restart works every time", "All variables reset", "Can explain broadcasts"],
+    ),
+    mkDay(
+      17,3,1,"Fri","scratch","Polish",
+      "Add animations and sound polish",
+      "Khan Academy: brain teasers, 10 mins",
+      "TypingClub",
+      "",
+      [
+        "Add a short animation when you collect an item",
+        "Add sound effects for win, lose, collect",
+        "Make the player sprite face the direction it moves",
+        "Add instructions text: goal, controls",
+      ],
+      [
+        "10 minutes brain teasers or challenge",
+        "Try not to guess, work it out",
+        "Explain one solution out loud",
+      ],
+      [
+        "TypingClub: 10 minutes",
+        "Redo 1 hard lesson",
+        "1-minute test",
+      ],
+      ["Game feels finished", "Instructions included", "Sound and visuals improved"],
+    ),
+    mkDay(
+      18,3,1,"Sat","scratch","Build sprint",
+      "Project: 2-Level Platformer",
+      "Khan Academy: quick mixed puzzles (10 mins)",
+      "TypingClub review",
+      "Presentation: explain levels and scoring",
+      [
+        "Use a simple platformer template (move, jump)",
+        "Add coins and a score counter",
+        "Level 1: easy jumps, Level 2: harder jumps",
+        "Add win screen after level 2",
+      ],
+      [
+        "10 minutes mixed set",
+        "Retry 2 mistakes",
+        "Say 1 thing you want to improve next week",
+      ],
+      [
+        "TypingClub: 10 minutes review",
+        "2-minute test",
+        "Note WPM, accuracy",
+      ],
+      ["Two playable levels", "Score works", "Can demo and explain choices"],
+    ),
 
-    mkDay(19,4,1,"Mon","scratch","Plan","Plan a final game on paper (goal, rules, scoring)","Reasoning puzzles","TypingClub"),
-    mkDay(20,4,1,"Tue","scratch","Build stage 1","Start screen + core movement","Word problems","TypingClub","Mini-present: what’s built so far?"),
-    mkDay(21,4,1,"Wed","scratch","Build stage 2","Add scoring + difficulty","Pattern puzzles","TypingClub"),
-    mkDay(22,4,1,"Thu","scratch","Build stage 3","Add lives + win/lose states","Logic puzzles","TypingClub"),
-    mkDay(23,4,1,"Fri","scratch","Bug fixing + polish","Fix issues + improve visuals/sound","Mixed challenge","TypingClub"),
-    mkDay(24,4,1,"Sat","scratch","Demo day","Final Scratch game presentation","Quick mixed puzzles (10 mins)","TypingClub check-in","Optional: share link to family"),
+    mkDay(
+      19,4,1,"Mon","scratch","Plan",
+      "Plan your final game (goal, rules, scoring)",
+      "Khan Academy: reasoning puzzles, 10 mins",
+      "TypingClub",
+      "",
+      [
+        "Choose your final game type: chase, platformer, clicker, maze",
+        "Write: goal, how to win, how to lose",
+        "Write: scoring and difficulty, what changes over time",
+        "Sketch your screens: start, play, win, lose",
+      ],
+      [
+        "10 minutes reasoning practice",
+        "Do not rush, show working",
+        "Pick 1 question and explain it clearly",
+      ],
+      [
+        "TypingClub: 10 minutes",
+        "Do 1-minute test",
+        "Try to beat your best accuracy score",
+      ],
+      ["Game plan written", "Screens sketched", "Knows win and lose rules"],
+    ),
+    mkDay(
+      20,4,1,"Tue","scratch","Build stage 1",
+      "Start screen and core movement",
+      "Khan Academy: word problems, 8 questions",
+      "TypingClub",
+      "Mini-present: what’s built so far?",
+      [
+        "Build the start screen with a ‘Start’ button",
+        "Set up your main character movement",
+        "Set up the play area and boundaries",
+        "Save, name the project clearly",
+      ],
+      [
+        "Khan Academy: word problems",
+        "Complete 8 questions",
+        "Check units, time, money, or measurement carefully",
+      ],
+      [
+        "TypingClub: 10 minutes",
+        "Focus on posture and gentle hands",
+        "1-minute test",
+      ],
+      ["Start screen works", "Movement works", "Can explain current progress"],
+    ),
+    mkDay(
+      21,4,1,"Wed","scratch","Build stage 2",
+      "Add scoring and difficulty",
+      "Khan Academy: pattern puzzles, 10 questions",
+      "TypingClub",
+      "",
+      [
+        "Add a score variable and update rules",
+        "Add difficulty scaling: speed, spawn rate, or enemy count",
+        "Add 1 new obstacle or power-up",
+        "Test: can you score points reliably?",
+      ],
+      [
+        "Khan Academy: patterns",
+        "Complete 10 questions",
+        "Write 1 pattern as a simple formula or rule",
+      ],
+      [
+        "TypingClub: 10 minutes",
+        "Redo 1 lesson with perfect accuracy",
+        "Short test: 1 minute",
+      ],
+      ["Score and difficulty added", "One new feature included", "Game is playable"],
+    ),
+    mkDay(
+      22,4,1,"Thu","scratch","Build stage 3",
+      "Add lives and win/lose states",
+      "Khan Academy: logic puzzles, 10 mins",
+      "TypingClub",
+      "",
+      [
+        "Add lives or health",
+        "Add win condition and lose condition",
+        "Add win and lose screens with sounds",
+        "Add restart button",
+      ],
+      [
+        "10 minutes logic practice",
+        "Explain one answer, step by step",
+        "Check your final answer makes sense",
+      ],
+      [
+        "TypingClub: 10 minutes",
+        "2-minute test if you feel ready",
+        "Note WPM and accuracy",
+      ],
+      ["Win/lose states work", "Restart works", "Can explain rules"],
+    ),
+    mkDay(
+      23,4,1,"Fri","scratch","Bug fixing + polish",
+      "Fix issues and improve visuals and sound",
+      "Khan Academy: mixed challenge, 10 mins",
+      "TypingClub",
+      "",
+      [
+        "Play your game 3 times and note anything odd",
+        "Fix at least 2 bugs",
+        "Improve visuals: neat layout, consistent fonts, readable text",
+        "Add a short instructions panel",
+      ],
+      [
+        "10 minutes mixed practice",
+        "Retry 2 mistakes",
+        "Tell a parent what you fixed today",
+      ],
+      [
+        "TypingClub: 10 minutes",
+        "Pick a tricky lesson and redo",
+        "1-minute test",
+      ],
+      ["Bugs fixed", "Game looks tidy", "Can explain improvements"],
+    ),
+    mkDay(
+      24,4,1,"Sat","scratch","Demo day",
+      "Final Scratch game presentation",
+      "Khan Academy: quick mixed puzzles (10 mins)",
+      "TypingClub: check-in",
+      "Optional: share link to family",
+      [
+        "Final play-test, fix any last issues",
+        "Add credits: ‘Made by…’",
+        "Share your project link with a parent",
+        "Present: what you built, what broke, what you fixed",
+      ],
+      [
+        "10 minutes mixed set",
+        "Retry 2 mistakes",
+        "Say 1 skill you improved this month",
+      ],
+      [
+        "TypingClub: 1-minute test",
+        "Compare to day 1",
+        "High-five your keyboard politely",
+      ],
+      ["Project shared", "Can present clearly", "Typing progress compared"],
+    ),
 
     // Month 2: Roblox (25–48)
     mkDay(25,5,2,"Mon","roblox","Studio basics","Learn interface: Explorer, Properties, parts","Reasoning puzzles","TypingClub"),
@@ -792,6 +1374,11 @@ const YTA = (() => {
     `;
   }
 
+  function renderBulletList(items) {
+    if (!items || !Array.isArray(items) || items.length === 0) return "";
+    return `<ul class="taskList">${items.map(it => `<li>${esc(it)}</li>`).join("")}</ul>`;
+  }
+
   function renderDayCard(d, profileId, { expandedDefault = false } = {}) {
     const done = dayIsComplete(d.num, profileId);
     const statusClass = done ? "kidTag kidTag--done" : "kidTag";
@@ -811,19 +1398,33 @@ const YTA = (() => {
         <div class="dayGrid">
           <div class="task">
             <div class="task__k">Main platform</div>
-            <div class="task__v">${linkFor(d.mainKey)} — <strong>${esc(d.mainTopic)}</strong><br><span class="muted">Task:</span> ${esc(d.buildTask)}</div>
+            <div class="task__v">
+              ${linkFor(d.mainKey)}: <strong>${esc(d.mainTopic)}</strong>
+              <div class="muted small" style="margin-top:6px">Task: ${esc(d.buildTask)}</div>
+              ${d.buildSteps ? renderBulletList(d.buildSteps) : ""}
+            </div>
           </div>
           <div class="task">
             <div class="task__k">Logic</div>
-            <div class="task__v">${linkFor("logic")}<br>${esc(d.logicTask)}</div>
+            <div class="task__v">
+              ${linkFor("logic")}
+              <div class="muted small" style="margin-top:6px">Task: ${esc(d.logicTask)}</div>
+              ${d.logicSteps ? renderBulletList(d.logicSteps) : ""}
+            </div>
           </div>
           <div class="task">
             <div class="task__k">Typing</div>
-            <div class="task__v">${linkFor("typing")}<br>${esc(d.typingTask)}</div>
+            <div class="task__v">
+              ${linkFor("typing")}
+              <div class="muted small" style="margin-top:6px">Task: ${esc(d.typingTask)}</div>
+              ${d.typingSteps ? renderBulletList(d.typingSteps) : ""}
+            </div>
           </div>
           <div class="task">
-            <div class="task__k">Tip</div>
-            <div class="task__v">Finish a small version first, then upgrade it.</div>
+            <div class="task__k">Outcomes</div>
+            <div class="task__v">
+              ${d.outcomes ? renderBulletList(d.outcomes) : "<div class=\"muted\">Finish a small version first, then upgrade it.</div>"}
+            </div>
           </div>
         </div>
 
@@ -916,7 +1517,13 @@ const YTA = (() => {
         .filter(d => d.month === month)
         .filter(d => {
           if (!q) return true;
-          const hay = `${d.mainTopic} ${d.buildTask} ${d.logicTask} ${d.typingTask} ${d.notes}`.toLowerCase();
+          const extra = [
+            ...(Array.isArray(d.buildSteps) ? d.buildSteps : []),
+            ...(Array.isArray(d.logicSteps) ? d.logicSteps : []),
+            ...(Array.isArray(d.typingSteps) ? d.typingSteps : []),
+            ...(Array.isArray(d.outcomes) ? d.outcomes : []),
+          ].join(" ");
+          const hay = `${d.mainTopic} ${d.buildTask} ${d.logicTask} ${d.typingTask} ${d.notes} ${extra}`.toLowerCase();
           return hay.includes(q);
         });
 
