@@ -56,6 +56,9 @@ html, body {
   background: var(--bg);
   color: var(--text);
   font-family: 'Inter', sans-serif;
+  /* Offset fixed header so page content never sits underneath it */
+  padding-top: var(--topbar-h, 84px);
+  scroll-padding-top: var(--topbar-h, 84px);
 }
 
 /* ==========================================
