@@ -73,6 +73,9 @@
     </section>
   </main>
 <script src="./assets/site.js" defer></script>
+  <!-- Use the specialised inline profiles script on this page.
+       app.js checks this flag to avoid double-binding the create button. -->
+  <script>window.__USE_INLINE_PROFILES__ = true;</script>
 <script src="./app.js" defer></script>
   <script>
     // YTA auto-inits on DOMContentLoaded (see app.js)

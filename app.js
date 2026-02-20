@@ -1234,6 +1234,10 @@ const YTA = (() => {
   
 function initProfilesPage() {
   if (!location.pathname.toLowerCase().endsWith("profiles.html")) return;
+  // profiles.html contains its own inline UI logic (rendering + create/update/delete).
+  // Avoid double-binding the "Create profile" button, which can cause misleading
+  // validation alerts even when a profile is created successfully.
+  if (window.__USE_INLINE_PROFILES__ === true) return;
 
   const nameEl = document.getElementById("childName");
   const yearEl = document.getElementById("yearGroup");
