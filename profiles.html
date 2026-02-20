@@ -158,11 +158,23 @@
         alert("Please enter a child name.");
         return;
       }
+
+      // Warn on duplicate names (case-insensitive) to prevent accidental repeats.
+      const norm = name.toLowerCase();
+      const existing = (YTA.getProfiles() || []).find(p => (p.name || "").trim().toLowerCase() === norm);
+      if (existing) {
+        const ok = confirm(
+          `A profile named "${name}" already exists.\n\nDo you want to create another profile with the same name?`
+        );
+        if (!ok) return;
+      }
       YTA.createProfile({
         name,
         yearGroup: yearGroup.value,
         startDate: (startDate.value || "").trim()
       });
+
+      alert(`Profile created for ${name}.`);
       childName.value = "";
       startDate.value = "";
       render();
