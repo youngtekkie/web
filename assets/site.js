@@ -101,7 +101,8 @@ ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certi
     mount.innerHTML = `
       <footer class="siteFooter">
         <div class="wrap siteFooter__inner">
-          <span>© <span data-yt="year"></span> youngtekkie</span>
+          <span>© <span data-yt="year"></span> Youngtekkie</span>
+          <a class="siteFooter__coffee" href="./support.html" aria-label="Support Youngtekkie">☕ Buy me a coffee</a>
 </div>
 
       </footer>
