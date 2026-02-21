@@ -401,6 +401,29 @@ const YTA = (() => {
     if (weekSelect.dataset.ytBound === "1") return;
     weekSelect.dataset.ytBound = "1";
 
+    // If there are no profiles at all, this feature can't work.
+    // Show a clear message rather than leaving the controls in a broken state.
+    const allProfiles = getProfiles();
+    if (!allProfiles.length) {
+      mount.innerHTML = `
+        <section class="card card--soft stack">
+          <h2 class="h2">Please create at least one child profile to use this feature</h2>
+          <p class="muted">Certificates are generated from a child profile’s progress.</p>
+          <div class="ctaRow">
+            <a class="btn btn--primary" href="./profiles.html">Create a profile</a>
+            <a class="btn" href="./tracks.html">View tracks</a>
+          </div>
+        </section>
+      `;
+
+      // Disable controls to avoid confusing UX
+      weekSelect.disabled = true;
+      if (genBtn) genBtn.disabled = true;
+      if (genAllBtn) genAllBtn.disabled = true;
+      if (printBtn) printBtn.disabled = true;
+      return;
+    }
+
     const safeSetText = (id, txt) => {
       const el = document.getElementById(id);
       if (el) el.textContent = txt;
@@ -2414,22 +2437,44 @@ const YTA = (() => {
     if (!mount) return;
 
     try {
-      const profileId = getActiveProfileId();
-      const days = getDays(profileId);
+      const profiles = getProfiles();
+      const saved = localStorage.getItem(ACTIVE_PROFILE_KEY);
+      const hasSaved = !!(saved && profiles.some(p => p.id === saved));
+      const profileId = hasSaved ? saved : null;
+
+      if (!profiles.length) {
+        // No profiles at all
+        mount.innerHTML = `
+          <section class="card card--soft stack">
+            <h2 class="h2">Please create at least one child profile to use this feature</h2>
+            <p class="muted">Printable Plans are generated from a child profile’s track and progress.</p>
+            <div class="ctaRow">
+              <a class="btn btn--primary" href="./profiles.html">Create a profile</a>
+              <a class="btn" href="./tracks.html">View tracks</a>
+            </div>
+          </section>
+        `;
+        if (meta) meta.textContent = "—";
+        return;
+      }
 
       if (!profileId) {
-      mount.innerHTML = `
-        <section class="card card--soft stack">
-          <h2 class="h2">No child profile yet</h2>
-          <p class="muted">Create a profile first so the print view matches your child’s year group.</p>
-          <div class="ctaRow">
-            <a class="btn btn--primary" href="./profiles.html">Create a profile</a>
-            <a class="btn" href="./tracks.html">View tracks</a>
-          </div>
-        </section>
-      `;
-      return;
+        // Profiles exist, but none has been explicitly selected as "active".
+        mount.innerHTML = `
+          <section class="card card--soft stack">
+            <h2 class="h2">No active profile selected; please select a child profile to print</h2>
+            <p class="muted">Go to Profiles and pick a child, then come back to print their plan.</p>
+            <div class="ctaRow">
+              <a class="btn btn--primary" href="./profiles.html">Select a child profile</a>
+              <a class="btn" href="./tracks.html">View tracks</a>
+            </div>
+          </section>
+        `;
+        if (meta) meta.textContent = "—";
+        return;
       }
+
+      const days = getDays(profileId);
 
       const p = getActiveProfile();
       const cur = getActiveCurriculum();
@@ -2519,6 +2564,32 @@ const YTA = (() => {
         </section>
       `;
     }
+  }
+
+  // Extra safety: on some mobile browsers + BFCache restores, a page can appear
+  // without re-running all scripts exactly as expected. This ensures Print Plan
+  // always re-renders when the page is shown.
+  function initPrintPage() {
+    const f = (location.pathname || "").split("/").pop() || "";
+    if (f.toLowerCase() !== "print.html") return;
+
+    const mount = document.getElementById("printList");
+    if (!mount) return;
+
+    if (mount.dataset.ytBound === "1") return;
+    mount.dataset.ytBound = "1";
+
+    const rerender = () => {
+      try { renderPrintPage(); } catch (e) { /* no-op */ }
+    };
+
+    // Re-render when returning via back/forward cache
+    window.addEventListener("pageshow", rerender);
+
+    // If something prevented the first render, try once more shortly after load.
+    setTimeout(() => {
+      if (mount.innerHTML.trim() === "") rerender();
+    }, 120);
   }
 
   function weekDateRange(week, profileId) {
@@ -2857,6 +2928,7 @@ function initFooterYear(){
     initKidModeUI();
     initProfilesPage();
     initCertificatesPage();
+    initPrintPage();
     initFooterYear();
 
     // Enforce Parent lock on protected areas + hide parent-only chrome when locked
@@ -2922,6 +2994,7 @@ function initFooterYear(){
 
     resetActiveChildTicks,
     initCertificatesPage,
+    initPrintPage,
     initFooterYear
   };
 })();

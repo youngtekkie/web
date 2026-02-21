@@ -655,6 +655,30 @@ a.btn, a.pill, .ctaRow a.btn, .ctaRow a.pill { text-decoration: none; }
   font-size: 0.9rem;
 }
 
+.siteFooter__inner{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.siteFooter__coffee{
+  display:inline-flex;
+  align-items:center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.6);
+  color: inherit;
+  text-decoration: none;
+}
+
+.siteFooter__coffee:hover{
+  filter: brightness(0.98);
+}
+
 /* no-scroll class (injected toggle) */
 .noScroll{
   position: fixed;

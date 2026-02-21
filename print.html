@@ -31,7 +31,18 @@
     <p class="muted" id="printMeta">—</p>
   </section>
 
-  <section id="printList" class="stack"></section>
+  <section id="printList" class="stack">
+    <section class="card card--soft stack">
+      <h2 class="h2">Loading…</h2>
+      <p class="muted">If this stays blank, open <a href="./debug.html">debug.html</a> to run checks.</p>
+    </section>
+    <noscript>
+      <section class="card card--soft stack">
+        <h2 class="h2">JavaScript is required</h2>
+        <p class="muted">Printable Plans are generated in your browser. Please enable JavaScript and reload.</p>
+      </section>
+    </noscript>
+  </section>
 </main>
 <script src="./assets/site.js" defer></script>
 <script src="./app.js" defer></script>
