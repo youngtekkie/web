@@ -9,9 +9,9 @@
     home: "./index.html",
     tracks: "./tracks.html",
     profiles: "./profiles.html",
-    month1: "./month1.html",
-    month2: "./month2.html",
-    month3: "./month3.html",
+    phase1: "./phase1.html",
+    phase2: "./phase2.html",
+    phase3: "./phase3.html",
     certificates: "./certificates.html",
     print: "./print.html",
     dashboard: "./dashboard.html",
@@ -28,7 +28,7 @@
     let subtitle = (document.body.getAttribute("data-subtitle") || "").trim();
     if (!subtitle) subtitle = "Foundations for tomorrow’s tech leaders.";
     const kidMode = (localStorage.getItem("yta_kidmode_v2") === "1");
-    const inJourney = ["month1.html","month2.html","month3.html"].includes(currentFile().toLowerCase());
+    const inJourney = ["phase1.html","phase2.html","phase3.html","month1.html","month2.html","month3.html"].includes(currentFile().toLowerCase());
 mount.innerHTML = `
       <header class="topbar">
         <div class="wrap topbar__inner">
@@ -50,10 +50,10 @@ mount.innerHTML = `
               <summary class="nav__link nav__link--btn ${inJourney ? "is-active" : ""}">
                 Journey <span class="navDrop__chev" aria-hidden="true">▾</span>
               </summary>
-              <div class="navDrop__menu" role="menu" aria-label="Journey months">
-                <a class="navDrop__item ${isActive(routes.month1) ? "is-active" : ""}" role="menuitem" href="${routes.month1}">Month 1 <span class="navDrop__hint">Scratch</span></a>
-                <a class="navDrop__item ${isActive(routes.month2) ? "is-active" : ""}" role="menuitem" href="${routes.month2}">Month 2 <span class="navDrop__hint">Roblox</span></a>
-                <a class="navDrop__item ${isActive(routes.month3) ? "is-active" : ""}" role="menuitem" href="${routes.month3}">Month 3 <span class="navDrop__hint">Python</span></a>
+              <div class="navDrop__menu" role="menu" aria-label="Journey phases">
+                <a class="navDrop__item ${isActive(routes.phase1) ? "is-active" : ""}" role="menuitem" href="${routes.phase1}">Phase 1 <span class="navDrop__hint">Scratch</span></a>
+                <a class="navDrop__item ${isActive(routes.phase2) ? "is-active" : ""}" role="menuitem" href="${routes.phase2}">Phase 2 <span class="navDrop__hint">Roblox</span></a>
+                <a class="navDrop__item ${isActive(routes.phase3) ? "is-active" : ""}" role="menuitem" href="${routes.phase3}">Phase 3 <span class="navDrop__hint">Python</span></a>
               </div>
             </details>
           </nav>
@@ -78,9 +78,9 @@ ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certi
           <a href="${routes.home}">Home</a>
           ${kidMode ? "" : `<a href="${routes.tracks}" data-parent-only="1">Tracks</a>`}
           ${kidMode ? "" : `<a href="${routes.profiles}" data-parent-only="1">Profiles</a>`}
-          <a href="${routes.month1}">Month 1 (Scratch)</a>
-          <a href="${routes.month2}">Month 2 (Roblox)</a>
-          <a href="${routes.month3}">Month 3 (Python)</a>
+          <a href="${routes.phase1}">Phase 1 (Scratch)</a>
+          <a href="${routes.phase2}">Phase 2 (Roblox)</a>
+          <a href="${routes.phase3}">Phase 3 (Python)</a>
           ${kidMode ? "" : `<a href="${routes.certificates}" data-parent-only="1">Certificates</a>`}
           ${kidMode ? "" : `<a href="${routes.print}" data-parent-only="1">Print</a>`}
           ${kidMode ? "" : `<a href="${routes.dashboard}" data-parent-only="1">Parent Dashboard</a>`}
