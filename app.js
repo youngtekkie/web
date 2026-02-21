@@ -154,7 +154,7 @@ const YTA = (() => {
       if (d.dataset.ytaBound === "1") return;
       d.dataset.ytaBound = "1";
 
-      // Close when clicking a link inside (Month 1/2/3 etc.)
+      // Close when clicking a link inside (Phase 1/2/3 etc.)
       d.querySelectorAll("a").forEach(a => {
         a.addEventListener("click", () => {
           d.removeAttribute("open");
@@ -352,7 +352,7 @@ const YTA = (() => {
         <p class="parentLockText">This area is for parents/guardians. Ask a parent to unlock access.</p>
         <div class="parentLockActions">
           <button type="button" class="btn" id="unlockParentBtn">Unlock</button>
-          <a class="btn btn--soft" href="./month1.html">Go to Journey</a>
+          <a class="btn btn--soft" href="./phase1.html">Go to Journey</a>
         </div>
         <p class="parentLockHint">Tip: on mobile, tap the “🔒 Parent” button in the top bar to unlock.</p>
       </div>
@@ -995,7 +995,7 @@ const YTA = (() => {
       [
         "10 minutes mixed set",
         "Retry 2 mistakes",
-        "Say 1 skill you improved this month",
+        "Say 1 skill you improved this phase",
       ],
       [
         "TypingClub: 1-minute test",
@@ -1005,63 +1005,791 @@ const YTA = (() => {
       ["Project shared", "Can present clearly", "Typing progress compared"],
     ),
 
-    // Month 2: Roblox (25–48)
-    mkDay(25,5,2,"Mon","roblox","Studio basics","Learn interface: Explorer, Properties, parts","Reasoning puzzles","TypingClub"),
-    mkDay(26,5,2,"Tue","roblox","Parts + anchoring","Build a simple obby path","Pattern puzzles","TypingClub"),
-    mkDay(27,5,2,"Wed","roblox","Terrain tools","Add terrain + obstacles","Word problems","TypingClub"),
-    mkDay(28,5,2,"Thu","roblox","Level design","Design full obstacle course layout","Logic puzzles","TypingClub"),
-    mkDay(29,5,2,"Fri","roblox","Refinement","Improve spacing, fairness, reset points","Brain teasers","TypingClub"),
-    mkDay(30,5,2,"Sat","roblox","Build sprint","Project: Full Obby + checkpoints","Quick mixed puzzles (10 mins)","TypingClub","Presentation: show course flow"),
+    // Phase 2: Roblox (25–48)
+    mkDay(
+      25,5,2,"Mon","roblox","Studio basics",
+      "Learn interface: Explorer, Properties, parts",
+      "Khan Academy: reasoning puzzles (10–15 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Open Roblox Studio → New → Baseplate, then Save as ‘Phase2_Obby’",
+        "Turn on Explorer + Properties (View tab)",
+        "Insert 5 Parts and practise move/scale/rotate",
+        "Press Play (F5) and confirm you spawn correctly",
+      ],
+      [
+        "Pick 1 reasoning/pattern set",
+        "Work for 10–15 minutes",
+        "Explain 1 answer out loud in full sentences",
+      ],
+      [
+        "TypingClub: 10 minutes",
+        "Accuracy target: 90%+",
+        "Finish with a 1-minute test (optional)",
+      ],
+      ["Can find Explorer/Properties", "Saved a new place", "Basic parts placed and tested"],
+    ),
+    mkDay(
+      26,5,2,"Tue","roblox","Parts + anchoring",
+      "Build a simple obby path",
+      "Khan Academy: pattern puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Build a straight path: 8–12 platforms",
+        "Anchor platforms so they don’t fall",
+        "Add 1 moving part (tween/manual script is optional)",
+        "Play-test twice and adjust gaps so it feels fair",
+      ],
+      ["Do a pattern set", "Complete 10 minutes", "Write the rule for 2 patterns"],
+      ["TypingClub: 10 minutes", "Slow down on mistakes", "Aim 90%+ accuracy"],
+      ["Obby path is playable", "Anchoring understood", "Gaps feel fair"],
+    ),
+    mkDay(
+      27,5,2,"Wed","roblox","Terrain tools",
+      "Add terrain + obstacles",
+      "Khan Academy: word problems (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Open Terrain Editor and add 1 hill or platform area",
+        "Add 2 obstacles (e.g., lava floor, spinning bar, narrow beam)",
+        "Add a safe zone (a big flat platform) between hard bits",
+        "Play-test and note 1 improvement to make tomorrow",
+      ],
+      ["Pick 1 word-problem set", "Work 10 minutes", "Show working for 2 questions"],
+      ["TypingClub: 10 minutes", "Do 1-minute test", "Note WPM + accuracy"],
+      ["Terrain used once", "2 obstacles added", "1 improvement note written"],
+    ),
+    mkDay(
+      28,5,2,"Thu","roblox","Level design",
+      "Design a full obstacle course layout",
+      "Khan Academy: logic puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Sketch your obby in 60 seconds: start → middle → finish",
+        "Build 3 sections (easy/medium/hard)",
+        "Add a clear finish marker (flag/sign/portal)",
+        "Play-test and time how long it takes",
+      ],
+      ["Do a logic set", "10 minutes", "Explain 1 solution step-by-step"],
+      ["TypingClub: 10 minutes", "Accuracy target: 92%", "Redo one weak lesson"],
+      ["Obby has 3 sections", "Finish is clear", "Time to complete recorded"],
+    ),
+    mkDay(
+      29,5,2,"Fri","roblox","Refinement",
+      "Improve spacing, fairness, and reset points",
+      "Khan Academy: brain teasers (10 mins)",
+      "TypingClub: timed test",
+      "",
+      [
+        "Add 3 checkpoints (SpawnLocation parts) along the course",
+        "Make sure players can’t cheat around walls (add guard rails)",
+        "Fix 2 frustrating jumps by adjusting spacing",
+        "Play-test like a new player (no shortcuts)",
+      ],
+      ["Brain teasers for 10 minutes", "Pick the hardest one", "Explain your reasoning"],
+      ["TypingClub: 10 minutes", "2-minute test", "Write down WPM + accuracy"],
+      ["Checkpoints work", "2 frustrations fixed", "Course feels fairer"],
+    ),
+    mkDay(
+      30,5,2,"Sat","roblox","Build sprint",
+      "Project: Full obby + checkpoints",
+      "Khan Academy: quick mixed puzzles (10 mins)",
+      "TypingClub: quick review",
+      "Presentation: show course flow",
+      [
+        "Do a full play-through start → finish",
+        "Add 1 ‘wow’ moment (big jump, moving platform, secret path)",
+        "Add instructions at the start (a sign)",
+        "Show a parent: what’s easy, what’s tricky, and why",
+      ],
+      ["10-minute mixed set", "Retry 2 mistakes", "Say 1 skill you practised"],
+      ["TypingClub: 10 minutes", "1-minute test", "Stop when hands feel tired"],
+      ["Full obby playable", "Has checkpoints + instructions", "Can explain difficulty choices"],
+    ),
 
-    mkDay(31,6,2,"Mon","roblox","Lua variables","Create a variable + print output","Reasoning puzzles","TypingClub (target 40 wpm)"),
-    mkDay(32,6,2,"Tue","roblox","If statements","Trigger: if player touches → do action","Word logic problems","TypingClub"),
-    mkDay(33,6,2,"Wed","roblox","Functions","Make a reusable function for an action","Pattern puzzles","TypingClub"),
-    mkDay(34,6,2,"Thu","roblox","Triggers","Door opens when item collected","Logic puzzles","TypingClub"),
-    mkDay(35,6,2,"Fri","roblox","Timers","Add countdown / time limit concept","Brain teasers","TypingClub"),
-    mkDay(36,6,2,"Sat","roblox","Build sprint","Project: Door unlock system + timer","Quick mixed puzzles (10 mins)","TypingClub","Presentation: show script working"),
+    mkDay(
+      31,6,2,"Mon","roblox","Lua variables",
+      "Create a variable + print output",
+      "Khan Academy: reasoning puzzles (10 mins)",
+      "TypingClub (target ~40 WPM)",
+      "",
+      [
+        "Insert a Script and print 'Hello from Roblox'",
+        "Create a variable like coins = 0",
+        "Print the variable and change it to 10",
+        "Run and confirm Output shows your values",
+      ],
+      ["Reasoning set for 10 minutes", "Do not rush", "Explain 1 answer"],
+      ["TypingClub: 10 minutes", "Try a 1-minute test", "Aim for calm accuracy"],
+      ["Can read Output", "Understands variables", "Can change and re-run"],
+    ),
+    mkDay(
+      32,6,2,"Tue","roblox","If statements",
+      "Trigger: if player touches → do action",
+      "Khan Academy: word logic problems (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Add a Part named 'WinPad'",
+        "Use .Touched to detect a player",
+        "If it's a player, print 'You win!' or change a variable",
+        "Test by walking onto the pad",
+      ],
+      ["10 minutes word logic", "Write down 1 tricky question", "Explain why your answer works"],
+      ["TypingClub: 10 minutes", "Accuracy 90%+", "Redo 1 lesson if below"],
+      ["Touch trigger works", "Used an if statement", "Can explain condition"],
+    ),
+    mkDay(
+      33,6,2,"Wed","roblox","Functions",
+      "Make a reusable function for an action",
+      "Khan Academy: pattern puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Write a function like givePoints(player, amount)",
+        "Call it from a touch trigger",
+        "Print a message showing points awarded",
+        "Change amount in one place and re-test",
+      ],
+      ["Patterns for 10 minutes", "Write the rule for 2 patterns", "Check 1 answer twice"],
+      ["TypingClub: 10 minutes", "1-minute test", "Note WPM"],
+      ["Understands functions", "Reused code once", "Can explain inputs/outputs"],
+    ),
+    mkDay(
+      34,6,2,"Thu","roblox","Triggers",
+      "Door opens when item collected",
+      "Khan Academy: logic puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Build a simple door (a Part) blocking a path",
+        "Add a collectible item (coin/key part)",
+        "When collected: set hasKey = true and remove the item",
+        "If hasKey then door becomes CanCollide = false (or moves away)",
+      ],
+      ["Logic set for 10 minutes", "Explain 1 solution", "Check final answer makes sense"],
+      ["TypingClub: 10 minutes", "Accuracy target: 92%", "Redo one weak row"],
+      ["Collectible works", "Door opens correctly", "Can explain game state"],
+    ),
+    mkDay(
+      35,6,2,"Fri","roblox","Timers",
+      "Add a time limit concept",
+      "Khan Academy: brain teasers (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Create a timer value (e.g., timeLeft = 60)",
+        "Use a loop to count down once per second",
+        "When time runs out, print 'Time up' or reset the player",
+        "Test: does it reach zero smoothly?",
+      ],
+      ["Brain teasers for 10 minutes", "Pick 1 hardest", "Explain your reasoning"],
+      ["TypingClub: 10 minutes", "2-minute test", "Accuracy first"],
+      ["Timer counts down", "Understands waiting/looping", "Time-up behaviour works"],
+    ),
+    mkDay(
+      36,6,2,"Sat","roblox","Build sprint",
+      "Project: Door unlock + timer",
+      "Khan Academy: quick mixed puzzles (10 mins)",
+      "TypingClub: review",
+      "Presentation: show script working",
+      [
+        "Combine: key/coin unlock + door + timer",
+        "Add a reset button or restart zone",
+        "Write 2 comments in your script explaining the logic",
+        "Demo to a parent: what happens if you’re fast vs slow",
+      ],
+      ["10-minute mixed set", "Retry 2 mistakes", "Say 1 thing you improved"],
+      ["TypingClub: 10 minutes", "1-minute test", "Compare to Monday"],
+      ["Full mini-game loop works", "Script has comments", "Can explain the rules"],
+    ),
 
-    mkDay(37,7,2,"Mon","roblox","Points system","Award points for actions","Reasoning puzzles","TypingClub"),
-    mkDay(38,7,2,"Tue","roblox","Currency","Create coin/currency variable","Word problems","TypingClub"),
-    mkDay(39,7,2,"Wed","roblox","Shop basics","Simple shop UI concept (buy power-up)","Pattern puzzles","TypingClub"),
-    mkDay(40,7,2,"Thu","roblox","Leaderboard","Track best score/time","Logic puzzles","TypingClub"),
-    mkDay(41,7,2,"Fri","roblox","Power-ups","Speed boost / jump boost","Brain teasers","TypingClub"),
-    mkDay(42,7,2,"Sat","roblox","Build sprint","Project: Economy + power-ups","Quick mixed puzzles (10 mins)","TypingClub","Presentation: explain economy rules"),
+    mkDay(
+      37,7,2,"Mon","roblox","Points system",
+      "Award points for actions",
+      "Khan Academy: reasoning puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Create a points variable per player (leaderstats is ideal)",
+        "Give points when touching a target",
+        "Print or show the points updating",
+        "Test with Play and repeat the action 3 times",
+      ],
+      ["Reasoning set 10 minutes", "Explain 1 answer", "Check your work"],
+      ["TypingClub: 10 minutes", "Accuracy 90%+", "Slow is fine"],
+      ["Points increase reliably", "Understands per-player vs global", "Tested 3 times"],
+    ),
+    mkDay(
+      38,7,2,"Tue","roblox","Currency",
+      "Create a coin/currency variable",
+      "Khan Academy: word problems (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Add coins you can collect",
+        "On collect: increase currency and remove coin",
+        "Respawn coin after 5 seconds (optional)",
+        "Make a simple sign: ‘Coins: …’ (or output prints)",
+      ],
+      ["Word problems 10 minutes", "Show working for 2", "Explain 1 answer"],
+      ["TypingClub: 10 minutes", "1-minute test", "Note WPM"],
+      ["Coins can be collected", "Currency increases", "Can explain what state is"],
+    ),
+    mkDay(
+      39,7,2,"Wed","roblox","Shop basics",
+      "Simple shop idea: buy 1 power-up",
+      "Khan Academy: pattern puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Create a shop pad/button",
+        "If player has enough coins, subtract cost",
+        "Give a reward (speed boost or jump boost)",
+        "If not enough coins, show a message (print is fine)",
+      ],
+      ["Patterns 10 minutes", "Write 2 rules", "Recheck last 2"],
+      ["TypingClub: 10 minutes", "Accuracy target: 92%", "Redo a weak lesson"],
+      ["Shop checks coins", "Cost subtracts correctly", "Reward applies"],
+    ),
+    mkDay(
+      40,7,2,"Thu","roblox","Leaderboard",
+      "Track best score/time",
+      "Khan Academy: logic puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Add a visible stat (Coins or BestTime)",
+        "Update it when a run finishes",
+        "If the new score is better, save/update the best",
+        "Test with 2 runs (one worse, one better)",
+      ],
+      ["Logic set 10 minutes", "Explain 1 solution", "Check your final answer"],
+      ["TypingClub: 10 minutes", "2-minute test if ready", "Note results"],
+      ["Stat displays", "Best score logic works", "Tested with 2 runs"],
+    ),
+    mkDay(
+      41,7,2,"Fri","roblox","Power-ups",
+      "Speed boost / jump boost",
+      "Khan Academy: brain teasers (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Create a power-up pickup (glowing part)",
+        "On touch: increase WalkSpeed or JumpPower for 10 seconds",
+        "After 10 seconds: reset back to normal",
+        "Play-test and check it feels noticeable but not unfair",
+      ],
+      ["Brain teasers 10 minutes", "Pick 1 hardest", "Explain your reasoning"],
+      ["TypingClub: 10 minutes", "1-minute test", "Aim for steady accuracy"],
+      ["Power-up applies and resets", "Understands temporary effects", "Balancing note made"],
+    ),
+    mkDay(
+      42,7,2,"Sat","roblox","Build sprint",
+      "Project: Economy + power-ups",
+      "Khan Academy: quick mixed puzzles (10 mins)",
+      "TypingClub: review",
+      "Presentation: explain economy rules",
+      [
+        "Combine coins + shop + power-up into your obby",
+        "Add 2 prices (cheap + expensive) and 2 rewards (optional)",
+        "Add a short instructions sign",
+        "Explain to a parent: how to earn coins and what to spend them on",
+      ],
+      ["10-minute mixed set", "Retry 2 mistakes", "Say 1 skill you improved"],
+      ["TypingClub: 10 minutes", "1-minute test", "Stop when tired"],
+      ["Economy loop works", "At least 1 power-up purchasable", "Can explain rules clearly"],
+    ),
 
-    mkDay(43,8,2,"Mon","roblox","Bug fixing","Test and fix issues","Reasoning puzzles","TypingClub"),
-    mkDay(44,8,2,"Tue","roblox","UI improvement","Add instructions screen / signage","Word logic problems","TypingClub"),
-    mkDay(45,8,2,"Wed","roblox","Polish","Better layout, pacing, visuals","Pattern puzzles","TypingClub"),
-    mkDay(46,8,2,"Thu","roblox","Testing","Play-test like a new player","Logic puzzles","TypingClub"),
-    mkDay(47,8,2,"Fri","roblox","Final checks","Final bugs + reset systems","Brain teasers","TypingClub"),
-    mkDay(48,8,2,"Sat","roblox","Publish day","Publish Roblox game (with supervision)","Quick mixed puzzles (10 mins)","TypingClub","Presentation: ‘What makes my game fun?’"),
+    mkDay(
+      43,8,2,"Mon","roblox","Bug fixing",
+      "Test and fix issues",
+      "Khan Academy: reasoning puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Play your game 3 times and write down anything odd",
+        "Fix 2 bugs (coins not counting, door stuck, etc.)",
+        "Add 1 comment to explain each fix",
+        "Re-test and confirm the bug is gone",
+      ],
+      ["Reasoning set 10 minutes", "Explain 1 answer", "Stay calm"],
+      ["TypingClub: 10 minutes", "Accuracy 92%+", "Redo one weak lesson"],
+      ["2 bugs fixed", "Comments added", "Re-tested successfully"],
+    ),
+    mkDay(
+      44,8,2,"Tue","roblox","UI improvement",
+      "Add instructions screen / signage",
+      "Khan Academy: word logic problems (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Add a start sign: how to play in 3 bullet points",
+        "Add labels near shop/power-ups",
+        "Make the finish obvious (big sign/flag)",
+        "Ask someone else to play-test without explaining",
+      ],
+      ["Word logic 10 minutes", "Write down 1 tricky question", "Explain the answer"],
+      ["TypingClub: 10 minutes", "1-minute test", "Note WPM"],
+      ["Instructions are clear", "Finish is obvious", "Feedback from play-test collected"],
+    ),
+    mkDay(
+      45,8,2,"Wed","roblox","Polish",
+      "Better layout, pacing, visuals",
+      "Khan Academy: pattern puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Choose a theme (space, jungle, neon, castle)",
+        "Apply consistent colours/materials",
+        "Improve pacing: add 1 rest platform after a hard section",
+        "Remove clutter and align parts neatly",
+      ],
+      ["Patterns 10 minutes", "Write 2 rules", "Double-check last 2"],
+      ["TypingClub: 10 minutes", "Accuracy target: 92%", "Redo 1 lesson"],
+      ["Theme is consistent", "Course pacing improved", "Parts aligned neatly"],
+    ),
+    mkDay(
+      46,8,2,"Thu","roblox","Testing",
+      "Play-test like a new player",
+      "Khan Academy: logic puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Turn your camera and pretend you’ve never seen the game",
+        "Check: can you always tell where to go next?",
+        "Fix 1 confusing section",
+        "Time a full run and try to beat it",
+      ],
+      ["Logic set 10 minutes", "Explain 1 solution", "Check final answer"],
+      ["TypingClub: 10 minutes", "2-minute test if ready", "Note accuracy"],
+      ["1 confusion fixed", "Run time recorded", "Navigation feels clearer"],
+    ),
+    mkDay(
+      47,8,2,"Fri","roblox","Final checks",
+      "Final bugs + reset systems",
+      "Khan Academy: brain teasers (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Check spawn, checkpoints, and finish all work",
+        "Reset coins/power-ups correctly between runs",
+        "Fix 1 last bug",
+        "Add credits: ‘Made by…’",
+      ],
+      ["Brain teasers 10 minutes", "Pick 1 hardest", "Explain reasoning"],
+      ["TypingClub: 10 minutes", "1-minute test", "Compare to Monday"],
+      ["Reset systems reliable", "Credits added", "Ready to publish/share"],
+    ),
+    mkDay(
+      48,8,2,"Sat","roblox","Publish day",
+      "Publish Roblox game (with supervision)",
+      "Khan Academy: quick mixed puzzles (10 mins)",
+      "TypingClub: check-in",
+      "Presentation: ‘What makes my game fun?’",
+      [
+        "With a parent: review settings and safety options",
+        "Publish or save a final version",
+        "Write 3 sentences: what’s fun, what’s challenging, what you’d add next",
+        "Demo to family and collect 1 piece of feedback",
+      ],
+      ["10-minute mixed set", "Retry 2 mistakes", "Say 1 skill you improved"],
+      ["TypingClub: 10 minutes", "Final 1-minute test", "High-five politely"],
+      ["Published/saved final build", "Can explain why it’s fun", "Has feedback for next version"],
+    ),
 
-    // Month 3: Python (49–72)
-    mkDay(49,9,3,"Mon","replit","Print + variables","Hello world + variables","Reasoning puzzles","TypingClub (target 45–50 wpm)"),
-    mkDay(50,9,3,"Tue","replit","Input","Ask questions, store answers","Word problems","TypingClub"),
-    mkDay(51,9,3,"Wed","replit","If statements","Quiz: correct/incorrect logic","Pattern puzzles","TypingClub"),
-    mkDay(52,9,3,"Thu","replit","Loops","Repeat questions / attempts","Logic puzzles","TypingClub"),
-    mkDay(53,9,3,"Fri","replit","Mini challenge","5-question quiz with score","Brain teasers","TypingClub"),
-    mkDay(54,9,3,"Sat","replit","Build sprint","Project: Interactive Quiz (score + replay)","Quick mixed puzzles (10 mins)","TypingClub","Presentation: demo quiz"),
+    // Phase 3: Python (49–72)
+    mkDay(
+      49,9,3,"Mon","replit","Print + variables",
+      "Hello world + variables",
+      "Khan Academy: reasoning puzzles (10 mins)",
+      "TypingClub (target ~45–50 WPM)",
+      "",
+      [
+        "Open Replit → create a new Python repl called ‘Phase3_Python’",
+        "print('Hello world!') then run",
+        "Create variables: name, age (or favourite game)",
+        "Print a sentence using your variables",
+      ],
+      ["Reasoning set 10 minutes", "Explain 1 answer", "Check your work"],
+      ["TypingClub: 10 minutes", "1-minute test", "Aim for calm accuracy"],
+      ["Can run a Python program", "Understands variables", "Printed a full sentence"],
+    ),
+    mkDay(
+      50,9,3,"Tue","replit","Input",
+      "Ask questions, store answers",
+      "Khan Academy: word problems (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Use input() to ask for a name",
+        "Store the answer in a variable",
+        "Ask 2 more questions (age, favourite food, etc.)",
+        "Print a friendly summary back",
+      ],
+      ["Word problems 10 minutes", "Show working for 2", "Explain 1 answer"],
+      ["TypingClub: 10 minutes", "Accuracy 90%+", "Slow is fine"],
+      ["Uses input()", "Stores answers", "Outputs a summary"],
+    ),
+    mkDay(
+      51,9,3,"Wed","replit","If statements",
+      "Quiz: correct/incorrect logic",
+      "Khan Academy: pattern puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Make a 3-question quiz",
+        "If answer is correct: add 1 to score",
+        "Else: print the correct answer",
+        "Print final score",
+      ],
+      ["Patterns 10 minutes", "Write 2 rules", "Recheck last 2"],
+      ["TypingClub: 10 minutes", "1-minute test", "Note WPM"],
+      ["Uses if/else", "Score updates", "Gives feedback on wrong answers"],
+    ),
+    mkDay(
+      52,9,3,"Thu","replit","Loops",
+      "Repeat questions / attempts",
+      "Khan Academy: logic puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Add a loop so the quiz can repeat",
+        "Ask the player ‘play again? (y/n)’",
+        "Reset score on a new run",
+        "Test: can you play twice without restarting the program?",
+      ],
+      ["Logic set 10 minutes", "Explain 1 solution", "Check final answer"],
+      ["TypingClub: 10 minutes", "Accuracy target: 92%", "Redo 1 weak lesson"],
+      ["Uses a loop", "Replay works", "Knows when to reset variables"],
+    ),
+    mkDay(
+      53,9,3,"Fri","replit","Mini challenge",
+      "5-question quiz with score",
+      "Khan Academy: brain teasers (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Upgrade your quiz to 5 questions",
+        "Add a 'perfect score' message",
+        "Add one funny/bonus question",
+        "Run and play-test yourself",
+      ],
+      ["Brain teasers 10 minutes", "Pick 1 hardest", "Explain reasoning"],
+      ["TypingClub: 10 minutes", "2-minute test", "Accuracy first"],
+      ["5 questions added", "Score messaging works", "Bonus question included"],
+    ),
+    mkDay(
+      54,9,3,"Sat","replit","Build sprint",
+      "Project: Interactive quiz (score + replay)",
+      "Khan Academy: quick mixed puzzles (10 mins)",
+      "TypingClub: review",
+      "Presentation: demo quiz",
+      [
+        "Clean up text (capital letters, spacing)",
+        "Add at least 2 comments explaining tricky bits",
+        "Make sure replay works reliably",
+        "Demo to a parent: what did you add and why?",
+      ],
+      ["10-minute mixed set", "Retry 2 mistakes", "Say 1 skill you improved"],
+      ["TypingClub: 10 minutes", "1-minute test", "Stop when tired"],
+      ["Quiz feels polished", "Has comments", "Can explain program flow"],
+    ),
 
-    mkDay(55,10,3,"Mon","replit","Random","Use random numbers","Reasoning puzzles","TypingClub"),
-    mkDay(56,10,3,"Tue","replit","Guess the number","Build base game loop","Word problems","TypingClub"),
-    mkDay(57,10,3,"Wed","replit","Scoring","Score based on attempts","Pattern puzzles","TypingClub"),
-    mkDay(58,10,3,"Thu","replit","Difficulty levels","Easy/medium/hard ranges","Logic puzzles","TypingClub"),
-    mkDay(59,10,3,"Fri","replit","Input safety","Handle bad input (letters, blanks)","Brain teasers","TypingClub"),
-    mkDay(60,10,3,"Sat","replit","Build sprint","Project: Improved guessing game","Quick mixed puzzles (10 mins)","TypingClub","Presentation: explain difficulty design"),
+    mkDay(
+      55,10,3,"Mon","replit","Random",
+      "Use random numbers",
+      "Khan Academy: reasoning puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Import random",
+        "Generate a random number 1–10",
+        "Print it (for now) and re-run 5 times",
+        "Explain what ‘random’ means in your own words",
+      ],
+      ["Reasoning 10 minutes", "Explain 1 answer", "Check work"],
+      ["TypingClub: 10 minutes", "Accuracy 90%+", "Slow is fine"],
+      ["Can import a module", "Can generate random numbers", "Understands randomness concept"],
+    ),
+    mkDay(
+      56,10,3,"Tue","replit","Guess the number",
+      "Build base game loop",
+      "Khan Academy: word problems (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Pick a secret number 1–20",
+        "Ask the player to guess",
+        "If too high/low, give a hint",
+        "Loop until correct",
+      ],
+      ["Word problems 10 minutes", "Show working for 2", "Explain 1"],
+      ["TypingClub: 10 minutes", "1-minute test", "Note WPM"],
+      ["Game loop works", "Hints correct", "Stops on correct guess"],
+    ),
+    mkDay(
+      57,10,3,"Wed","replit","Scoring",
+      "Score based on attempts",
+      "Khan Academy: pattern puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Add an attempts counter",
+        "Print attempts when the player wins",
+        "Add a simple score: 100 - (attempts * 10)",
+        "Try 2 runs and compare scores",
+      ],
+      ["Patterns 10 minutes", "Write 2 rules", "Recheck last 2"],
+      ["TypingClub: 10 minutes", "Accuracy target: 92%", "Redo 1 weak lesson"],
+      ["Attempts counted", "Score calculated", "Can explain the formula"],
+    ),
+    mkDay(
+      58,10,3,"Thu","replit","Difficulty levels",
+      "Easy/medium/hard ranges",
+      "Khan Academy: logic puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Ask player for difficulty (easy/medium/hard)",
+        "Set range: 1–10, 1–50, 1–100",
+        "Pick secret number using that range",
+        "Test each difficulty once",
+      ],
+      ["Logic 10 minutes", "Explain 1 solution", "Check answer"],
+      ["TypingClub: 10 minutes", "2-minute test if ready", "Note results"],
+      ["Difficulty selection works", "Range changes", "Tested all 3 levels"],
+    ),
+    mkDay(
+      59,10,3,"Fri","replit","Input safety",
+      "Handle bad input (letters, blanks)",
+      "Khan Academy: brain teasers (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Use try/except to catch non-number input",
+        "If input is bad, print a friendly message",
+        "Keep the game running (don’t crash)",
+        "Test with: letters, blank, huge numbers",
+      ],
+      ["Brain teasers 10 minutes", "Pick 1 hardest", "Explain reasoning"],
+      ["TypingClub: 10 minutes", "1-minute test", "Aim for steady accuracy"],
+      ["Program doesn’t crash", "Friendly error message", "Tested 3 bad inputs"],
+    ),
+    mkDay(
+      60,10,3,"Sat","replit","Build sprint",
+      "Project: Improved guessing game",
+      "Khan Academy: quick mixed puzzles (10 mins)",
+      "TypingClub: review",
+      "Presentation: explain difficulty design",
+      [
+        "Polish your game text and add comments",
+        "Add replay (y/n)",
+        "Add a ‘best score’ for this run (optional)",
+        "Demo to a parent and explain how difficulty changes the experience",
+      ],
+      ["10-minute mixed set", "Retry 2 mistakes", "Say 1 skill improved"],
+      ["TypingClub: 10 minutes", "1-minute test", "Compare to Tuesday"],
+      ["Game feels complete", "Replay works", "Can explain design choices"],
+    ),
 
-    mkDay(61,11,3,"Mon","replit","Lists","Store items in a list","Reasoning puzzles","TypingClub"),
-    mkDay(62,11,3,"Tue","replit","Inventory","Add/remove items (inventory)","Word logic problems","TypingClub"),
-    mkDay(63,11,3,"Wed","replit","Functions","Reusable actions (look, take, move)","Pattern puzzles","TypingClub"),
-    mkDay(64,11,3,"Thu","replit","Multiple endings","Win/lose paths based on choices","Logic puzzles","TypingClub"),
-    mkDay(65,11,3,"Fri","replit","Refactoring","Clean code + comments","Brain teasers","TypingClub"),
-    mkDay(66,11,3,"Sat","replit","Build sprint","Project: Text adventure (chapter 1)","Quick mixed puzzles (10 mins)","TypingClub","Presentation: show choices branching"),
+    mkDay(
+      61,11,3,"Mon","replit","Lists",
+      "Store items in a list",
+      "Khan Academy: reasoning puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Create a list of items (e.g., backpack = [])",
+        "Append 3 items",
+        "Print the list",
+        "Remove 1 item and print again",
+      ],
+      ["Reasoning 10 minutes", "Explain 1 answer", "Check work"],
+      ["TypingClub: 10 minutes", "Accuracy 90%+", "Slow is fine"],
+      ["Understands lists", "Can add/remove items", "Printed list contents"],
+    ),
+    mkDay(
+      62,11,3,"Tue","replit","Inventory",
+      "Add/remove items (inventory)",
+      "Khan Academy: word logic problems (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Make commands: take, drop, inventory",
+        "Use the list to store items",
+        "Print helpful messages (e.g., 'You took the key')",
+        "Test each command at least once",
+      ],
+      ["Word logic 10 minutes", "Write down 1 tricky one", "Explain answer"],
+      ["TypingClub: 10 minutes", "1-minute test", "Note WPM"],
+      ["Inventory commands work", "List updates", "Messages are clear"],
+    ),
+    mkDay(
+      63,11,3,"Wed","replit","Functions",
+      "Reusable actions (look, take, move)",
+      "Khan Academy: pattern puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Create functions: show_room(), handle_command()",
+        "Move repeated code into functions",
+        "Call the functions from your main loop",
+        "Test: does everything still work?",
+      ],
+      ["Patterns 10 minutes", "Write 2 rules", "Recheck last 2"],
+      ["TypingClub: 10 minutes", "Accuracy target: 92%", "Redo 1 weak lesson"],
+      ["Used functions", "Code is shorter/clearer", "Program still works"],
+    ),
+    mkDay(
+      64,11,3,"Thu","replit","Multiple endings",
+      "Win/lose paths based on choices",
+      "Khan Academy: logic puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Add at least 2 endings (win/lose)",
+        "Make endings depend on inventory or choices",
+        "Print an ending message",
+        "Test both endings",
+      ],
+      ["Logic 10 minutes", "Explain 1 solution", "Check final answer"],
+      ["TypingClub: 10 minutes", "2-minute test if ready", "Note results"],
+      ["2 endings exist", "Choices affect outcome", "Tested both endings"],
+    ),
+    mkDay(
+      65,11,3,"Fri","replit","Refactoring",
+      "Clean code + comments",
+      "Khan Academy: brain teasers (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Rename variables so they make sense",
+        "Add 5 helpful comments",
+        "Remove duplicate code",
+        "Run through a full play-test",
+      ],
+      ["Brain teasers 10 minutes", "Pick 1 hardest", "Explain reasoning"],
+      ["TypingClub: 10 minutes", "1-minute test", "Accuracy first"],
+      ["Code reads clearly", "Has comments", "Play-test completed"],
+    ),
+    mkDay(
+      66,11,3,"Sat","replit","Build sprint",
+      "Project: Text adventure (chapter 1)",
+      "Khan Academy: quick mixed puzzles (10 mins)",
+      "TypingClub: review",
+      "Presentation: show choices branching",
+      [
+        "Write a short story: start → 2 choices → result",
+        "Make at least 3 rooms/locations",
+        "Use inventory for 1 meaningful decision",
+        "Demo to a parent: show two different paths",
+      ],
+      ["10-minute mixed set", "Retry 2 mistakes", "Say 1 skill improved"],
+      ["TypingClub: 10 minutes", "1-minute test", "Stop when tired"],
+      ["Chapter 1 playable", "Has branching", "Can explain structure"],
+    ),
 
-    mkDay(67,12,3,"Mon","replit","Plan capstone","Map story, rooms, inventory, endings","Reasoning puzzles","TypingClub"),
-    mkDay(68,12,3,"Tue","replit","Build section 1","Intro + first choices","Word problems","TypingClub","Mini-present: progress update"),
-    mkDay(69,12,3,"Wed","replit","Build section 2","Add random events + score","Pattern puzzles","TypingClub"),
-    mkDay(70,12,3,"Thu","replit","Build section 3","Add endings + replay option","Logic puzzles","TypingClub"),
-    mkDay(71,12,3,"Fri","replit","Testing + polish","Fix bugs, improve text, clean code","Brain teasers","TypingClub"),
-    mkDay(72,12,3,"Sat","replit","Demo day","Capstone: full text adventure demo","Quick mixed puzzles (10 mins)","TypingClub final check-in","Optional: share with family/friends"),
+    mkDay(
+      67,12,3,"Mon","replit","Plan capstone",
+      "Map story, rooms, inventory, endings",
+      "Khan Academy: reasoning puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Draw a quick map of rooms and connections",
+        "List 5 items and what they do",
+        "Define 2 endings (win/lose) and how to reach them",
+        "Write a checklist for the next 4 lessons",
+      ],
+      ["Reasoning 10 minutes", "Explain 1 answer", "Check work"],
+      ["TypingClub: 10 minutes", "Accuracy 90%+", "Slow is fine"],
+      ["Capstone plan exists", "Items + endings planned", "Checklist written"],
+    ),
+    mkDay(
+      68,12,3,"Tue","replit","Build section 1",
+      "Intro + first choices",
+      "Khan Academy: word problems (10 mins)",
+      "TypingClub: 10 minutes",
+      "Mini-present: progress update",
+      [
+        "Build intro text and starting room",
+        "Add at least 2 choices",
+        "Make sure invalid commands get a friendly message",
+        "Run a short play-test",
+      ],
+      ["Word problems 10 minutes", "Show working for 2", "Explain 1"],
+      ["TypingClub: 10 minutes", "1-minute test", "Note WPM"],
+      ["Intro works", "First choices exist", "Friendly invalid-command handling"],
+    ),
+    mkDay(
+      69,12,3,"Wed","replit","Build section 2",
+      "Add random events + score",
+      "Khan Academy: pattern puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Add a random event in 1 room (50/50 outcome)",
+        "Add a score or 'luck' variable",
+        "Make score change based on choices",
+        "Test the random event 5 times",
+      ],
+      ["Patterns 10 minutes", "Write 2 rules", "Recheck last 2"],
+      ["TypingClub: 10 minutes", "Accuracy target: 92%", "Redo 1 weak lesson"],
+      ["Random event works", "Score updates", "Tested multiple runs"],
+    ),
+    mkDay(
+      70,12,3,"Thu","replit","Build section 3",
+      "Add endings + replay option",
+      "Khan Academy: logic puzzles (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Implement win ending and lose ending",
+        "Add replay (y/n) at the end",
+        "Reset inventory/score on replay",
+        "Test: reach both endings",
+      ],
+      ["Logic 10 minutes", "Explain 1 solution", "Check final answer"],
+      ["TypingClub: 10 minutes", "2-minute test if ready", "Note results"],
+      ["Endings trigger correctly", "Replay works", "Resets happen properly"],
+    ),
+    mkDay(
+      71,12,3,"Fri","replit","Testing + polish",
+      "Fix bugs, improve text, clean code",
+      "Khan Academy: brain teasers (10 mins)",
+      "TypingClub: 10 minutes",
+      "",
+      [
+        "Play-test start → ending and write down 3 issues",
+        "Fix at least 2 issues",
+        "Improve writing: clearer choices, less clutter",
+        "Add comments where future-you will thank you",
+      ],
+      ["Brain teasers 10 minutes", "Pick 1 hardest", "Explain reasoning"],
+      ["TypingClub: 10 minutes", "1-minute test", "Accuracy first"],
+      ["2 issues fixed", "Text reads clearly", "Code is tidy"],
+    ),
+    mkDay(
+      72,12,3,"Sat","replit","Demo day",
+      "Capstone: full text adventure demo",
+      "Khan Academy: quick mixed puzzles (10 mins)",
+      "TypingClub final check-in",
+      "Optional: share with family/friends",
+      [
+        "Do a full run, then a different run",
+        "Ask someone to try it and watch where they get stuck",
+        "Write 3 improvements you’d make next week",
+        "Celebrate: you built a whole program!",
+      ],
+      ["10-minute mixed set", "Retry 2 mistakes", "Say 1 skill you improved"],
+      ["TypingClub: 10 minutes", "Final 1-minute test", "Compare to Phase 1"],
+      ["Capstone demo works", "Has feedback + next steps", "Typing progress recorded"],
+    ),
   ];
 
   function buildCurriculum(track) {
@@ -1236,7 +1964,16 @@ const YTA = (() => {
   function getDays(profileId) {
     const p = profileId ? getProfileById(profileId) : getActiveProfile();
     const track = p?.track || trackFromYearGroup(p?.yearGroup || 5);
-    return (curricula[track] || curricula.builder).days;
+    // Backwards/forwards compatible alias: internally we used "month" but the UI calls it "phase".
+    // We expose both properties so older saved data and newer content can coexist safely.
+    return (curricula[track] || curricula.builder).days.map(d => ({
+      ...d,
+      phase: (d.phase ?? d.month)
+    }));
+  }
+
+  function phaseOf(day) {
+    return (day && (day.phase ?? day.month)) || 0;
   }
 
   // ---------- state per profile ----------
@@ -1312,7 +2049,7 @@ const YTA = (() => {
 
   function computeMonthProgress(month, profileId) {
     const days = getDays(profileId);
-    const monthDays = days.filter(d => d.month === month);
+    const monthDays = days.filter(d => phaseOf(d) === month);
     const total = monthDays.length;
     const complete = monthDays.filter(d => dayIsComplete(d.num, profileId)).length;
     const pct = Math.round((complete / total) * 100);
@@ -1388,8 +2125,8 @@ const YTA = (() => {
       <article class="dayCard" id="day-${d.num}">
         <div class="dayCard__top">
           <div class="stack gap8">
-            <h3 class="dayTitle">Day ${d.num} — ${esc(d.dow)}</h3>
-            <div class="dayMeta">Week ${d.week} • Month ${d.month} • Main: ${esc(platforms[d.mainKey].name)}</div>
+            <h3 class="dayTitle">Lesson ${d.num} — ${esc(d.dow)}</h3>
+            <div class="dayMeta">Week ${d.week} • Phase ${phaseOf(d)} • Main: ${esc(platforms[d.mainKey].name)}</div>
             ${d.notes ? `<div class="dayMeta">${esc(d.notes)}</div>` : ""}
           </div>
           <div class="${statusClass}">${done ? "🏅 Completed" : "In progress"}</div>
@@ -1465,6 +2202,27 @@ const YTA = (() => {
 
   // ---------- page renderers ----------
   function renderMonthPage(opts) {
+    // Allow a no-arg call: auto-detect the current Journey page.
+    if (!opts) {
+      const file = (location.pathname || "").split("/").pop()?.toLowerCase() || "";
+      const phase = file.includes("phase1") || file.includes("month1") ? 1 :
+                    file.includes("phase2") || file.includes("month2") ? 2 :
+                    file.includes("phase3") || file.includes("month3") ? 3 : null;
+      if (!phase) return;
+      opts = {
+        month: phase,
+        dayListId: "dayList",
+        searchInputId: "search",
+        progressTextId: "mProgressText",
+        progressBarId: "mProgressBar",
+        streakId: "mStreak",
+        jumpBtnId: "jumpToday",
+        expandBtnId: "expandAll",
+        collapseBtnId: "collapseAll",
+        headerTrackId: "trackLine"
+      };
+    }
+
     const {
       month, dayListId, searchInputId,
       progressTextId, progressBarId, streakId,
@@ -1490,7 +2248,7 @@ const YTA = (() => {
         mount.innerHTML = `
           <div class="card card--soft stack">
             <h2 class="h2">No active child profile</h2>
-            <p class="muted">Create a child profile first, then come back to start ticking off days.</p>
+            <p class="muted">Create a child profile first, then come back to start ticking off lessons.</p>
             <div class="ctaRow">
               <a class="btn btn--primary" href="./profiles.html">Create a profile</a>
               <a class="btn" href="./tracks.html">View tracks</a>
@@ -1514,7 +2272,7 @@ const YTA = (() => {
       const q = (search?.value || "").trim().toLowerCase();
 
       const monthDays = days
-        .filter(d => d.month === month)
+        .filter(d => phaseOf(d) === month)
         .filter(d => {
           if (!q) return true;
           const extra = [
@@ -1531,7 +2289,7 @@ const YTA = (() => {
       wireCheckboxes(mount, profileId);
 
       const mp = computeMonthProgress(month, profileId);
-      document.getElementById(progressTextId).textContent = `${mp.complete} / ${mp.total} days`;
+      document.getElementById(progressTextId).textContent = `${mp.complete} / ${mp.total} lessons`;
       document.getElementById(progressBarId).style.width = `${mp.pct}%`;
       document.getElementById(streakId).textContent = computeStreak(profileId);
     }
@@ -1544,8 +2302,9 @@ const YTA = (() => {
       const next = nextIncompleteDay(profileId);
       if (!next) return;
 
-      if (next.month !== month) {
-        const target = next.month === 1 ? "./month1.html" : next.month === 2 ? "./month2.html" : "./month3.html";
+      const nextPhase = phaseOf(next);
+      if (nextPhase !== month) {
+        const target = nextPhase === 1 ? "./phase1.html" : nextPhase === 2 ? "./phase2.html" : "./phase3.html";
         window.location.href = `${target}#day-${next.num}`;
         return;
       }
@@ -1558,10 +2317,15 @@ const YTA = (() => {
     document.getElementById(collapseBtnId)?.addEventListener("click", () => draw(false));
   }
 
-  function renderPrintPage({ mountId }) {
+  function renderPrintPage({ mountId } = {}) {
+    const mid = mountId || "printList";
     const profileId = getActiveProfileId();
     const days = getDays(profileId);
-    const mount = document.getElementById(mountId);
+    const mount = document.getElementById(mid);
+    const meta = document.getElementById("printMeta");
+
+    // Not on print page (or mount missing)
+    if (!mount) return;
 
     if (!profileId) {
       mount.innerHTML = `
@@ -1577,18 +2341,81 @@ const YTA = (() => {
       return;
     }
 
-    mount.innerHTML = days.map(d => `
-      <article class="card dayCard">
-        <h3 class="dayTitle">Day ${d.num} — ${esc(d.dow)} (Week ${d.week}, Month ${d.month})</h3>
-        <div class="muted small">Main: ${esc(platforms[d.mainKey].name)} • Topic: ${esc(d.mainTopic)}</div>
-        <div class="dayGrid">
-          <div class="task"><div class="task__k">Main task</div><div class="task__v">${esc(d.buildTask)}</div></div>
-          <div class="task"><div class="task__k">Logic</div><div class="task__v">${esc(d.logicTask)}</div></div>
-          <div class="task"><div class="task__k">Typing</div><div class="task__v">${esc(d.typingTask)}</div></div>
-          <div class="task"><div class="task__k">Completed?</div><div class="task__v">${dayIsComplete(d.num, profileId) ? "Yes ✓" : "No"}</div></div>
-        </div>
-      </article>
-    `).join("");
+      const p = getActiveProfile();
+      const cur = getActiveCurriculum();
+      if (meta) {
+        meta.textContent = `${p?.name || ""} • ${cur?.name || ""} • Start: ${p?.startDate ? fmtDate(p.startDate) : "Not set"}`.trim();
+      }
+
+      const phaseName = (m) => m === 1 ? "Phase 1 — Scratch" : m === 2 ? "Phase 2 — Roblox Studio" : "Phase 3 — Python";
+
+      // Group as Phase → Week for a cleaner printout.
+      const phases = [1, 2, 3].map(phase => {
+        const phaseDays = days.filter(d => phaseOf(d) === phase);
+        const weeks = Array.from(new Set(phaseDays.map(d => d.week))).sort((a, b) => a - b);
+
+        const weekBlocks = weeks.map(week => {
+          const label = weekLabel(week, profileId);
+          const wp = weekProgress(week, profileId);
+          const rows = phaseDays
+            .filter(d => d.week === week)
+            .sort((a, b) => a.num - b.num)
+            .map(d => {
+              const done = dayIsComplete(d.num, profileId);
+              return `
+                <tr class="printRow">
+                  <td class="printChk">${done ? "☑" : "☐"}</td>
+                  <td class="printLesson">
+                    <div class="printLesson__t">Lesson ${d.num} • ${esc(d.dow)}</div>
+                    <div class="printLesson__m muted small">Main: ${esc(platforms[d.mainKey].name)} • ${esc(d.mainTopic)}</div>
+                  </td>
+                  <td class="printTasks">
+                    <div><span class="printK">Build:</span> ${esc(d.buildTask)}</div>
+                    <div><span class="printK">Logic:</span> ${esc(d.logicTask)}</div>
+                    <div><span class="printK">Typing:</span> ${esc(d.typingTask)}</div>
+                  </td>
+                </tr>
+              `;
+            }).join("");
+
+          return `
+            <section class="card card--soft printWeek">
+              <div class="printWeek__head">
+                <div class="printWeek__title">${esc(label)}</div>
+                <div class="muted small">${wp.complete}/${wp.total} lessons completed • ${wp.pct}%</div>
+              </div>
+              <div class="tableWrap">
+                <table class="printTable">
+                  <thead>
+                    <tr>
+                      <th class="printChk">Done</th>
+                      <th>Lesson</th>
+                      <th>Tasks</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${rows}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          `;
+        }).join("");
+
+        return `
+          <section class="stack">
+            <h2 class="h2">${phaseName(phase)}</h2>
+            ${weekBlocks || `<p class="muted">No lessons in this phase for this child profile.</p>`}
+          </section>
+        `;
+      }).join("");
+
+      mount.innerHTML = `
+        <section class="card printTips noPrint">
+          <div class="muted">Tip: tick lessons on the main plan pages — this printout will automatically reflect progress.</div>
+        </section>
+        ${phases}
+      `;
   }
 
   function weekDateRange(week, profileId) {
@@ -1701,7 +2528,7 @@ const YTA = (() => {
       const done = dayIsComplete(d.num, pid);
       return `<div class="row row--compact">
         <div>
-          <div class="row__title">Day ${d.num} — ${esc(d.dow)}</div>
+          <div class="row__title">Lesson ${d.num} — ${esc(d.dow)}</div>
           <div class="row__meta">${esc(platforms[d.mainKey].name)} • ${esc(d.mainTopic)}</div>
         </div>
         <div class="row__meta row__meta--strong">${done ? "✓ Done" : "—"}</div>
@@ -1784,9 +2611,10 @@ const YTA = (() => {
     document.getElementById(ids.streakId).textContent = streak;
 
     if (next) {
-      document.getElementById(ids.nextId).textContent = `Day ${next.num}`;
-      const hint = next.month === 1 ? "Scratch building." : next.month === 2 ? "Roblox build + scripting." : "Python projects.";
-      document.getElementById(ids.nextHintId).textContent = `Next: Month ${next.month} • ${hint}`;
+      document.getElementById(ids.nextId).textContent = `Lesson ${next.num}`;
+      const pnum = phaseOf(next);
+      const hint = pnum === 1 ? "Scratch building." : pnum === 2 ? "Roblox build + scripting." : "Python projects.";
+      document.getElementById(ids.nextHintId).textContent = `Next: Phase ${pnum} • ${hint}`;
     } else {
       document.getElementById(ids.nextId).textContent = "All done 🎉";
       document.getElementById(ids.nextHintId).textContent = "Completed the full plan.";
@@ -1795,12 +2623,12 @@ const YTA = (() => {
     const byMonth = document.getElementById(ids.byMonthId);
     byMonth.innerHTML = [1, 2, 3].map(m => {
       const mp = computeMonthProgress(m, profileId);
-      const name = m === 1 ? "Month 1 — Scratch" : m === 2 ? "Month 2 — Roblox Studio" : "Month 3 — Python";
+      const name = m === 1 ? "Phase 1 — Scratch" : m === 2 ? "Phase 2 — Roblox Studio" : "Phase 3 — Python";
       return `
         <div class="row">
           <div>
             <div class="row__title">${name}</div>
-            <div class="row__meta">${mp.complete} / ${mp.total} days completed</div>
+            <div class="row__meta">${mp.complete} / ${mp.total} lessons completed</div>
           </div>
           <div class="row__right">
             <div class="bar"><div style="width:${mp.pct}%; height:100%"></div></div>
@@ -1818,7 +2646,7 @@ const YTA = (() => {
         <div class="row">
           <div>
             <div class="row__title">${esc(label)}</div>
-            <div class="row__meta">${wp.complete} / ${wp.total} days completed</div>
+            <div class="row__meta">${wp.complete} / ${wp.total} lessons completed</div>
           </div>
           <div class="row__right">
             <div class="bar"><div style="width:${wp.pct}%; height:100%"></div></div>

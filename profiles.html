@@ -78,17 +78,17 @@
   <script>window.__USE_INLINE_PROFILES__ = true;</script>
 <script src="./app.js" defer></script>
   <script>
-    // YTA auto-inits on DOMContentLoaded (see app.js)
+    // Profiles UI: run after app.js has loaded (defer) and re-render on back/forward cache restores.
+    window.addEventListener("DOMContentLoaded", () => {
+      const childName = document.getElementById("childName");
+      const yearGroup = document.getElementById("yearGroup");
+      const startDate = document.getElementById("startDate");
+      const createBtn = document.getElementById("createProfileBtn");
+      const profilesList = document.getElementById("profilesList");
 
-    const childName = document.getElementById("childName");
-    const yearGroup = document.getElementById("yearGroup");
-    const startDate = document.getElementById("startDate");
-    const createBtn = document.getElementById("createProfileBtn");
-    const profilesList = document.getElementById("profilesList");
-
-    function render(){
-      const active = YTA.getActiveProfile();
-      const curriculum = YTA.getActiveCurriculum();
+      function render(){
+        const active = YTA.getActiveProfile();
+        const curriculum = YTA.getActiveCurriculum();
 
       document.getElementById("activeName").textContent = active ? active.name : "No profile";
       document.getElementById("activeYear").textContent = active?.yearGroup ?? "—";
@@ -150,9 +150,9 @@
           }
         });
       });
-    }
+      }
 
-    createBtn.addEventListener("click", () => {
+      createBtn.addEventListener("click", () => {
       const name = (childName.value || "").trim();
       if(!name){
         alert("Please enter a child name.");
@@ -180,11 +180,16 @@
       render();
     });
 
-    document.getElementById("setNextMonBtn").addEventListener("click", () => {
-      startDate.value = YTA.nextMondayISO();
-    });
+      document.getElementById("setNextMonBtn").addEventListener("click", () => {
+        startDate.value = YTA.nextMondayISO();
+      });
 
-    render();
+      // Initial render
+      render();
+
+      // If the page is restored from BFCache, the DOM can be stale — force a re-render.
+      window.addEventListener("pageshow", () => { try { render(); } catch(e) {} });
+    });
   </script>
   <div id="site-footer"></div>
 </body>

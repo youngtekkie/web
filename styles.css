@@ -1053,6 +1053,24 @@ select.input{
 .check input{ width:20px; height:20px; accent-color: var(--good); }
 
 /* Controls row used on month pages */
+
+/* Printable plan */
+.printTips{ padding:12px 14px; }
+.printWeek{ padding:14px; }
+.printWeek__head{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.printWeek__title{ font-weight:700; }
+.tableWrap{ width:100%; overflow:auto; }
+.printTable{ width:100%; border-collapse:collapse; font-size:14px; }
+.printTable th, .printTable td{ border:1px solid rgba(0,0,0,.12); padding:10px; vertical-align:top; }
+.printTable thead th{ background:rgba(0,0,0,.04); font-weight:700; }
+.printChk{ width:54px; text-align:center; font-size:18px; }
+.printLesson__t{ font-weight:700; }
+.printK{ font-weight:700; }
+
+@media (max-width: 720px){
+  .printTable{ font-size:13px; }
+  .printTable th:nth-child(3), .printTable td:nth-child(3){ min-width:240px; }
+}
 .controlsRow{
   display:flex;
   gap:12px;
