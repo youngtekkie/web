@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YoungTekkie — Self‑Test / Debug</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <style>
+    .debug-wrap{max-width:980px;margin:24px auto;padding:0 16px}
+    .debug-head{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+    .debug-head h1{margin:0;font-size:22px}
+    .debug-head p{margin:6px 0 0 0;opacity:.85}
+    .debug-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:16px}
+    .dbg-card{border:1px solid rgba(0,0,0,.1);border-radius:14px;padding:14px;background:#fff}
+    .dbg-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .dbg-badge{font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid rgba(0,0,0,.12)}
+    .ok{background:rgba(0,128,0,.08)}
+    .warn{background:rgba(255,165,0,.10)}
+    .bad{background:rgba(255,0,0,.08)}
+    .dbg-details{margin:10px 0 0 0;padding-left:18px;opacity:.9}
+    .dbg-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .dbg-actions a,.dbg-actions button{border-radius:12px;padding:10px 12px;border:1px solid rgba(0,0,0,.15);background:#fff;cursor:pointer}
+    .dbg-actions button:hover,.dbg-actions a:hover{filter:brightness(.97)}
+    code{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+    .dbg-note{margin-top:14px;opacity:.85}
+  </style>
+</head>
+<body>
+  <script src="./assets/site.js"></script>
+
+  <main class="debug-wrap">
+    <div class="debug-head">
+      <div>
+        <h1>Self‑Test / Debug</h1>
+        <p>This page runs quick checks to catch “blank page” or “missing data” issues before you deploy.</p>
+      </div>
+      <div>
+        <div class="dbg-badge" id="overallBadge">Running…</div>
+        <div class="dbg-note"><small>Tip: run via a local web server (not <code>file://</code>) for full checks.</small></div>
+      </div>
+    </div>
+
+    <div class="dbg-actions">
+      <button id="runBtn" type="button">Run tests again</button>
+      <button id="clearBtn" type="button">Clear demo child + progress</button>
+      <a href="./profiles.html">Go to Profiles</a>
+      <a href="./print.html">Go to Printable Plan</a>
+      <a href="./phase1.html">Go to Phase 1</a>
+    </div>
+
+    <section class="debug-grid" id="results"></section>
+
+    <p class="dbg-note">
+      If a test fails, expand its details for the likely cause and fix.
+      This tool is safe to ship (it’s not linked in the main nav), but you can remove it any time.
+    </p>
+  </main>
+
+  <!-- Load app logic AFTER DOM is present -->
+  <script src="./app.js"></script>
+  <script>
+    (function(){
+      const $results = document.getElementById('results');
+      const $overall = document.getElementById('overallBadge');
+      const $runBtn = document.getElementById('runBtn');
+      const $clearBtn = document.getElementById('clearBtn');
+
+      function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+      function badgeClass(level){ return level === 'ok' ? 'ok' : level === 'warn' ? 'warn' : 'bad'; }
+      function mkCard(name, level, summary, details){
+        const cls = badgeClass(level);
+        const det = (details && details.length) ? ('<ul class="dbg-details">' + details.map(d => '<li>' + esc(d) + '</li>').join('') + '</ul>') : '';
+        return `
+          <div class="dbg-card">
+            <div class="dbg-row">
+              <div><strong>${esc(name)}</strong><div style="opacity:.85;margin-top:4px">${esc(summary||'')}</div></div>
+              <div class="dbg-badge ${cls}">${level.toUpperCase()}</div>
+            </div>
+            ${det}
+          </div>
+        `;
+      }
+
+      async function testLocalStorage(){
+        const key = '__yta_selftest__';
+        try{
+          localStorage.setItem(key, '1');
+          const v = localStorage.getItem(key);
+          localStorage.removeItem(key);
+          if(v !== '1') return {level:'bad', summary:'localStorage read/write failed', details:['Browser may be blocking storage (private mode / strict settings).']};
+          return {level:'ok', summary:'localStorage available', details:[]};
+        }catch(e){
+          return {level:'bad', summary:'localStorage threw an error', details:[String(e)]};
+        }
+      }
+
+      function testAppGlobals(){
+        const missing = [];
+        if(!window.YTA) missing.push('window.YTA missing (app.js did not initialise)');
+        if(!window.renderProfilesPage) missing.push('renderProfilesPage missing');
+        if(!window.renderMonthPage) missing.push('renderMonthPage missing');
+        if(!window.renderPrintPage) missing.push('renderPrintPage missing');
+
+        if(missing.length) return {level:'bad', summary:'Core app functions not available', details:missing.concat(['Check app.js is loading without errors (open DevTools Console).'])};
+
+        return {level:'ok', summary:'Core app functions present', details:[]};
+      }
+
+      function testDataShape(){
+        try{
+          const kids = window.YTA?.getKids?.() ?? [];
+          if(!Array.isArray(kids)) return {level:'bad', summary:'Kids store returned non-array', details:['YTA.getKids() should return an array.']};
+          return {level:'ok', summary:`Kids store OK (${kids.length} child profile${kids.length===1?'':'s'})`, details: kids.length ? [] : ['No children found. Create one in Profiles to test journey + print rendering.']};
+        }catch(e){
+          return {level:'bad', summary:'Kids store access failed', details:[String(e)]};
+        }
+      }
+
+      async function testHtmlHasIds(file, requiredIds){
+        // Best-effort: works on http(s). On file:// it may be blocked.
+        try{
+          const res = await fetch(file, {cache:'no-store'});
+          if(!res.ok) return {level:'warn', summary:`Cannot fetch ${file} (${res.status})`, details:['Run via a local web server to enable HTML checks.']};
+          const html = await res.text();
+          const missing = requiredIds.filter(id => !html.includes(`id="${id}"`) && !html.includes(`id='${id}'`));
+          if(missing.length){
+            return {level:'bad', summary:`${file} missing expected mount IDs`, details: missing.map(m => `Missing: #${m}`).concat(['This can cause blank pages if renderers can’t find mount points.'])};
+          }
+          return {level:'ok', summary:`${file} contains required mount IDs`, details:[]};
+        }catch(e){
+          return {level:'warn', summary:`Cannot fetch ${file} (likely file:// or blocked)`, details:['Run via a local web server (e.g. VS Code Live Server) for full checks.', String(e)]};
+        }
+      }
+
+      function testPhaseAliases(){
+        try{
+          // Build a tiny sample by calling curriculum getter if present
+          const days = (window.getDays && window.getDays()) || [];
+          if(!Array.isArray(days) || !days.length){
+            return {level:'warn', summary:'Curriculum list not detected', details:['If getDays() is not global in your build, ignore this warning.']};
+          }
+          const anyHasMonth = days.some(d => d && (d.month != null));
+          const anyHasPhase = days.some(d => d && (d.phase != null));
+          if(anyHasMonth && !anyHasPhase){
+            return {level:'bad', summary:'Phase alias not applied to curriculum', details:['Days have month but not phase.', 'Ensure getDays() sets day.phase = day.phase ?? day.month']};
+          }
+          return {level:'ok', summary:'Phase alias present in curriculum', details:[]};
+        }catch(e){
+          return {level:'warn', summary:'Could not verify curriculum aliases', details:[String(e)]};
+        }
+      }
+
+      function overallFrom(results){
+        const levels = results.map(r => r.level);
+        if(levels.includes('bad')) return 'bad';
+        if(levels.includes('warn')) return 'warn';
+        return 'ok';
+      }
+
+      function setOverall(level){
+        $overall.classList.remove('ok','warn','bad');
+        $overall.classList.add(badgeClass(level));
+        $overall.textContent = level === 'ok' ? 'All checks passed' : level === 'warn' ? 'Passed with warnings' : 'Failures detected';
+      }
+
+      async function run(){
+        $results.innerHTML = '';
+        setOverall('warn');
+
+        const cards = [];
+
+        const ls = await testLocalStorage();
+        cards.push({name:'Storage', ...ls});
+
+        const g = testAppGlobals();
+        cards.push({name:'App init', ...g});
+
+        const ds = testDataShape();
+        cards.push({name:'Profiles data', ...ds});
+
+        const phase = testPhaseAliases();
+        cards.push({name:'Phase / lesson mapping', ...phase});
+
+        // HTML mount points
+        const mounts = [
+          {file:'./profiles.html', ids:['profileList','kidSelect']},
+          {file:'./print.html', ids:['printMeta','printList']},
+          {file:'./certificates.html', ids:['weekSelect','genBtn','genAllBtn','printBtn','certMount']},
+          {file:'./phase1.html', ids:['monthHeader','monthList']},
+          {file:'./phase2.html', ids:['monthHeader','monthList']},
+          {file:'./phase3.html', ids:['monthHeader','monthList']},
+          {file:'./dashboard.html', ids:['dashboardKidSelect','dashSummary','dashToday','dashWeek']},
+        ];
+        for(const m of mounts){
+          const r = await testHtmlHasIds(m.file, m.ids);
+          cards.push({name:`HTML mounts: ${m.file.replace('./','')}`, ...r});
+        }
+
+        // Render output
+        $results.innerHTML = cards.map(c => mkCard(c.name, c.level, c.summary, c.details)).join('');
+
+        setOverall(overallFrom(cards));
+      }
+
+      $runBtn.addEventListener('click', run);
+
+      $clearBtn.addEventListener('click', function(){
+        try{
+          // conservative: only clears keys used by this app
+          // (If you later change key names, update here.)
+          localStorage.removeItem('yta_profiles_v2');
+          localStorage.removeItem('yta_active_profile_v2');
+          // Remove all per-profile state keys
+          Object.keys(localStorage).forEach(k=>{ if(/^yta_state_.*_v2$/.test(k)) localStorage.removeItem(k); });
+          localStorage.removeItem('yta_ui_v1');
+          localStorage.removeItem('yta_kidmode_v2');
+          localStorage.removeItem('yta_parent_pass_v1');
+          alert('Cleared app data (profiles, active profile, per-profile state, and UI prefs).');
+        }catch(e){
+          alert('Could not clear storage: ' + e);
+        }
+      });
+
+      // Initial run
+      if(document.readyState === 'loading'){
+        document.addEventListener('DOMContentLoaded', run);
+      }else{
+        run();
+      }
+    })();
+  </script>
+</body>
+</html>

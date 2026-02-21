@@ -386,6 +386,94 @@ const YTA = (() => {
     }
   }
 
+  // ---------- certificates page ----------
+  function initCertificatesPage() {
+    const weekSelect = document.getElementById("weekSelect");
+    const genBtn = document.getElementById("genBtn");
+    const genAllBtn = document.getElementById("genAllBtn");
+    const printBtn = document.getElementById("printBtn");
+    const mount = document.getElementById("certMount");
+
+    // Not on certificates page
+    if (!weekSelect || !mount) return;
+
+    // Prevent double-binding when init() runs multiple times
+    if (weekSelect.dataset.ytBound === "1") return;
+    weekSelect.dataset.ytBound = "1";
+
+    const safeSetText = (id, txt) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = txt;
+    };
+
+    const renderHeader = () => {
+      const active = getActiveProfile();
+      const cur = getActiveCurriculum();
+      safeSetText("pName", active?.name ?? "No profile");
+      safeSetText("pYear", (active?.yearGroup != null && !Number.isNaN(active?.yearGroup)) ? String(active.yearGroup) : "—");
+      safeSetText("pTrack", cur?.name ?? "—");
+    };
+
+    const fillWeeks = () => {
+      // Keep any existing selection if possible.
+      const current = weekSelect.value;
+      weekSelect.innerHTML = "";
+      for (let w = 1; w <= 12; w++) {
+        const opt = document.createElement("option");
+        opt.value = String(w);
+        opt.textContent = weekLabel(w, getActiveProfileId());
+        weekSelect.appendChild(opt);
+      }
+      if (current) weekSelect.value = current;
+    };
+
+    const generateOne = (w) => {
+      try {
+        mount.innerHTML = renderCertificateHTML({ week: w });
+      } catch (e) {
+        console.error(e);
+        mount.innerHTML = `
+          <section class="card card--soft stack">
+            <h2 class="h2">Couldn’t generate the certificate</h2>
+            <p class="muted">Open <a href="./debug.html">debug.html</a> to run checks, then try again.</p>
+          </section>
+        `;
+      }
+    };
+
+    const generateAll = () => {
+      try {
+        mount.innerHTML = Array.from({ length: 12 }, (_, i) => renderCertificateHTML({ week: i + 1 })).join("");
+      } catch (e) {
+        console.error(e);
+        mount.innerHTML = `
+          <section class="card card--soft stack">
+            <h2 class="h2">Couldn’t generate all certificates</h2>
+            <p class="muted">Open <a href="./debug.html">debug.html</a> to run checks, then try again.</p>
+          </section>
+        `;
+      }
+    };
+
+    // Bind UI
+    genBtn?.addEventListener("click", () => generateOne(Number(weekSelect.value || "1")));
+    genAllBtn?.addEventListener("click", generateAll);
+    printBtn?.addEventListener("click", () => window.print());
+
+    // Initial render
+    renderHeader();
+    fillWeeks();
+    const suggested = suggestWeek();
+    weekSelect.value = String(suggested);
+    generateOne(suggested);
+
+    // BFCache restore: re-render header + options
+    window.addEventListener("pageshow", () => {
+      renderHeader();
+      fillWeeks();
+    });
+  }
+
 
 // ---------- curriculum ----------
   function mkDay(
@@ -2319,15 +2407,17 @@ const YTA = (() => {
 
   function renderPrintPage({ mountId } = {}) {
     const mid = mountId || "printList";
-    const profileId = getActiveProfileId();
-    const days = getDays(profileId);
     const mount = document.getElementById(mid);
     const meta = document.getElementById("printMeta");
 
     // Not on print page (or mount missing)
     if (!mount) return;
 
-    if (!profileId) {
+    try {
+      const profileId = getActiveProfileId();
+      const days = getDays(profileId);
+
+      if (!profileId) {
       mount.innerHTML = `
         <section class="card card--soft stack">
           <h2 class="h2">No child profile yet</h2>
@@ -2339,7 +2429,7 @@ const YTA = (() => {
         </section>
       `;
       return;
-    }
+      }
 
       const p = getActiveProfile();
       const cur = getActiveCurriculum();
@@ -2416,6 +2506,19 @@ const YTA = (() => {
         </section>
         ${phases}
       `;
+    } catch (e) {
+      console.error(e);
+      mount.innerHTML = `
+        <section class="card card--soft stack">
+          <h2 class="h2">Printable Plan couldn’t load</h2>
+          <p class="muted">Something went wrong while building the print view. Open <a href="./debug.html">debug.html</a> to run checks.</p>
+          <div class="ctaRow">
+            <a class="btn" href="./profiles.html">Profiles</a>
+            <button class="btn btn--soft" type="button" onclick="location.reload()">Reload</button>
+          </div>
+        </section>
+      `;
+    }
   }
 
   function weekDateRange(week, profileId) {
@@ -2459,7 +2562,7 @@ const YTA = (() => {
     const weekDays = days.filter(d => d.week === week);
     const total = weekDays.length;
     const complete = weekDays.filter(d => dayIsComplete(d.num, pid)).length;
-    const pct = Math.round((complete / total) * 100);
+    const pct = total ? Math.round((complete / total) * 100) : 0;
     return { total, complete, pct, fullyComplete: complete === total };
   }
 
@@ -2544,7 +2647,7 @@ const YTA = (() => {
               <h2 class="cert__title">${esc(title)}</h2>
               <div class="certMeta">
                 <span class="pill pill--static"><span class="pill__k">Week</span><span class="pill__v">${esc(label)}</span></span>
-                <span class="pill pill--static"><span class="pill__k">Progress</span><span class="pill__v">${wp.complete}/${wp.total} days (${wp.pct}%)</span></span>
+                <span class="pill pill--static"><span class="pill__k">Progress</span><span class="pill__v">${wp.complete}/${wp.total} lessons (${wp.pct}%)</span></span>
                 <span class="pill pill--static"><span class="pill__k">Track</span><span class="pill__v">${esc(profile?.track === "foundation" ? "Foundation" : "Builder")}</span></span>
                 <span class="pill pill--static"><span class="pill__k">Year</span><span class="pill__v">${esc(profile?.yearGroup ?? "—")}</span></span>
               </div>
@@ -2753,6 +2856,7 @@ function initFooterYear(){
     initJourneyDropdown();
     initKidModeUI();
     initProfilesPage();
+    initCertificatesPage();
     initFooterYear();
 
     // Enforce Parent lock on protected areas + hide parent-only chrome when locked
@@ -2817,6 +2921,7 @@ function initFooterYear(){
     suggestWeek,
 
     resetActiveChildTicks,
+    initCertificatesPage,
     initFooterYear
   };
 })();
