@@ -1606,7 +1606,46 @@ body{ padding-top: 92px !important; } /* more breathing room below ribbon */
 }
 
 
-/* Debug page – extra top offset so content never sits under the fixed header */
-.page-debug .debug-main{
-  padding-top: calc(var(--topbar-h, 96px) + 10px) !important;
+/* Debug page helpers */
+.debugErrors{
+  margin: 14px 0 18px 0;
+  padding: 12px 14px;
+  border: 1px solid var(--border, #e9e6e1);
+  border-radius: 14px;
+  background: rgba(255, 199, 199, 0.22);
 }
+.debugErrors__title{ font-weight: 700; margin-bottom: 8px; }
+.debugErrors pre{
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 12px;
+  line-height: 1.35;
+}
+.debugHint{
+  margin: 10px 0 14px 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border, #e9e6e1);
+  border-radius: 14px;
+  background: rgba(47,109,255,0.08);
+  font-size: 14px;
+}
+
+
+/* Regression test UI (debug page) */
+.rtSection{ margin-top: 26px; padding-top: 10px; border-top: 1px solid var(--border, #e9e6e1); }
+.rtH2{ margin: 6px 0 8px 0; }
+.rtControls{ display:flex; gap:10px; flex-wrap:wrap; margin: 10px 0 12px 0; }
+.rtSummary{ padding: 10px 12px; border-radius: 14px; border: 1px solid var(--border, #e9e6e1); margin-bottom: 12px; }
+.rtSummary--pass{ background: rgba(92, 214, 140, 0.12); }
+.rtSummary--warn{ background: rgba(255, 205, 90, 0.18); }
+.rtSummary--fail{ background: rgba(255, 130, 130, 0.18); }
+.rtResults{ display:flex; flex-direction:column; gap:10px; }
+.rtCard{ padding: 12px 14px; border-radius: 16px; border: 1px solid var(--border, #e9e6e1); background: rgba(255,255,255,0.7); }
+.rtRow{ display:flex; justify-content:space-between; gap: 12px; align-items:flex-start; }
+.rtTitle{ font-weight: 700; }
+.rtBadge{ font-weight: 800; font-size: 12px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border, #e9e6e1); }
+.rtBadge.rt-pass{ background: rgba(92,214,140,.18); }
+.rtBadge.rt-warn{ background: rgba(255,205,90,.22); }
+.rtBadge.rt-fail{ background: rgba(255,130,130,.22); }
+.rtDetails{ margin-top: 8px; font-size: 14px; color: var(--muted, #6b6b6b); }
+.miniLink{ font-size: 13px; }

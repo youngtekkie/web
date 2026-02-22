@@ -25,15 +25,22 @@
     .dbg-note{margin-top:14px;opacity:.85}
   </style>
 </head>
-<body class="page-debug" data-subtitle="Debug">
+<body data-subtitle="Debug">
   <div id="site-chrome"></div>
   <script src="./assets/site.js" defer></script>
 
-  <main class="debug-wrap debug-main">
+  <main class="debug-wrap">
     <div class="debug-head">
       <div>
         <h1>Self‑Test / Debug</h1>
-        <p>This page runs quick checks to catch “blank page” or “missing data” issues before you deploy.</p>
+  <p><a class="miniLink" href="#regression" aria-label="Jump to regression test">Regression test</a></p>
+        
+  <p class="muted">If you see “Passed with warnings” but no details, scroll down and check the error panel below.</p>
+  <div id="debugErrors" class="debugErrors" hidden>
+    <div class="debugErrors__title">Debug errors</div>
+    <pre id="debugErrorsPre"></pre>
+  </div>
+<p>This page runs quick checks to catch “blank page” or “missing data” issues before you deploy.</p>
       </div>
       <div>
         <div class="dbg-badge" id="overallBadge">Running…</div>
@@ -55,7 +62,19 @@
       If a test fails, expand its details for the likely cause and fix.
       This tool is safe to ship (it’s not linked in the main nav), but you can remove it any time.
     </p>
-  </main>
+  
+  <section id="regression" class="rtSection">
+    <h2 class="rtH2">Website regression test</h2>
+    <p class="muted">Runs quick checks across all pages: loads, injection mounts, internal link targets, and basic content presence. Produces a numbered PASS/WARN/FAIL list.</p>
+    <div class="rtControls">
+      <button id="runRegressionBtn" class="btn" type="button">Run regression test</button>
+      <button id="copyRegressionBtn" class="btn btn-ghost" type="button">Copy results</button>
+    </div>
+    <div id="rtSummary" class="rtSummary" hidden></div>
+    <div id="rtResults" class="rtResults"></div>
+  </section>
+
+</main>
 
   <!-- Load app logic AFTER DOM is present -->
   <script src="./app.js"></script>
@@ -172,8 +191,6 @@
 
         const ls = await testLocalStorage();
         cards.push({name:'Storage', ...ls});
-        cards.push({ ...testHeaderOffset() });
-
 
         const g = testAppGlobals();
         cards.push({name:'App init', ...g});
@@ -234,5 +251,125 @@
   </script>
 
   <div id="site-footer"></div>
+
+<script>
+(function(){
+  function showErr(title, err){
+    var box = document.getElementById('debugErrors');
+    var pre = document.getElementById('debugErrorsPre');
+    if(!box || !pre) return;
+    box.hidden = false;
+    var msg = '[' + title + '] ' + (err && (err.stack || err.message) ? (err.stack || err.message) : String(err));
+    pre.textContent = (pre.textContent ? (pre.textContent + "
+
+") : "") + msg;
+  }
+  window.addEventListener('error', function(e){
+    showErr('window.error', e.error || e.message || e);
+  });
+  window.addEventListener('unhandledrejection', function(e){
+    showErr('unhandledrejection', e.reason || e);
+  });
+
+  // If results never populate, show a helpful hint after 1s
+  setTimeout(function(){
+    var r = document.getElementById('results');
+    var hasContent = r && r.textContent && r.textContent.trim().length > 0;
+    var running = document.body && document.body.innerText && /Running/.test(document.body.innerText);
+    if(r && !hasContent){
+      var hint = document.createElement('div');
+      hint.className = 'debugHint';
+      hint.innerHTML = '<strong>Heads up:</strong> No test output detected. This usually means a script failed to load (cache or path issue). Try a hard refresh or open DevTools Console.';
+      r.prepend(hint);
+    }
+  }, 1000);
+})();
+</script>
+
+
+<script>
+(function(){
+  const btn = document.getElementById('runRegressionBtn');
+  const copyBtn = document.getElementById('copyRegressionBtn');
+  const out = document.getElementById('rtResults');
+  const summary = document.getElementById('rtSummary');
+  if(!btn || !out || !summary) return;
+
+  function esc(s){
+    return String(s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  }
+
+  function render(res){
+    out.innerHTML = '';
+    const s = res.summary;
+    summary.hidden = false;
+    summary.className = 'rtSummary rtSummary--' + s.status;
+    summary.innerHTML = '<strong>Summary:</strong> ' + s.pass + ' pass, ' + s.warn + ' warn, ' + s.fail + ' fail — <strong>' + s.status.toUpperCase() + '</strong> — ' + s.durationMs + 'ms';
+
+    res.results.forEach(r => {
+      const card = document.createElement('div');
+      card.className = 'rtCard rt-' + r.status;
+      const badge = r.status === 'pass' ? 'PASS' : (r.status === 'warn' ? 'WARN' : 'FAIL');
+      card.innerHTML =
+        '<div class="rtRow">' +
+          '<div class="rtTitle">' + esc(r.id) + '. ' + esc(r.title) + '</div>' +
+          '<div class="rtBadge rt-' + r.status + '">' + badge + '</div>' +
+        '</div>' +
+        (r.details ? '<div class="rtDetails">' + r.details + '</div>' : '');
+      out.appendChild(card);
+    });
+  }
+
+  async function run(){
+    btn.disabled = true;
+    btn.textContent = 'Running…';
+    try{
+      const res = await window.YTRegression.run();
+      render(res);
+      window.__lastRegression = res;
+    }catch(e){
+      summary.hidden = false;
+      summary.className = 'rtSummary rtSummary--fail';
+      summary.textContent = 'Regression runner failed: ' + (e && (e.stack || e.message) ? (e.stack || e.message) : String(e));
+    }finally{
+      btn.disabled = false;
+      btn.textContent = 'Run regression test';
+    }
+  }
+
+  btn.addEventListener('click', run);
+
+  copyBtn.addEventListener('click', async () => {
+    const res = window.__lastRegression;
+    if(!res){ alert('Run the regression test first.'); return; }
+    const lines = [];
+    lines.push('YoungTekkie regression results — ' + new Date().toISOString());
+    lines.push('Summary: ' + res.summary.pass + ' pass, ' + res.summary.warn + ' warn, ' + res.summary.fail + ' fail — ' + res.summary.status.toUpperCase() + ' — ' + res.summary.durationMs + 'ms');
+    lines.push('');
+    res.results.forEach(r => {
+      lines.push(r.id + '. [' + r.status.toUpperCase() + '] ' + r.title);
+      if(r.details){
+        const tmp = document.createElement('div'); tmp.innerHTML = r.details;
+        const txt = (tmp.textContent || tmp.innerText || '').trim();
+        if(txt) lines.push('   ' + txt.replace(/\s+/g,' ').slice(0,240));
+      }
+    });
+    const text = lines.join('\n');
+    try{
+      await navigator.clipboard.writeText(text);
+      alert('Regression results copied.');
+    }catch(e){
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      alert('Regression results copied.');
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
