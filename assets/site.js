@@ -57,13 +57,14 @@ mount.innerHTML = `
               </div>
             </details>
           </nav>
-<div class="topbar__actions">
+          <div class="topbar__actions">
+            <a class="tipJarLink" href="./support.html">Our tip jar</a>
 ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certificates" aria-label="Certificates" data-parent-only="1">🎓</a>`}
             ${kidMode ? "" : `<a class="iconLink" href="${routes.print}" title="Print plan" aria-label="Print" data-parent-only="1">🖨️</a>`}
             ${kidMode ? "" : `<a class="iconLink" href="${routes.dashboard}" title="Parent dashboard" aria-label="Parent Dashboard" data-parent-only="1">👨‍👩‍👧</a>`}
 
             <button class="menuBtn" type="button" data-yt="navbtn" aria-expanded="false" aria-label="Open menu">☰</button>
-            <button class="mode-toggle mode-toggle--sm" id="kidModeToggle" type="button" aria-pressed="false">${kidMode ? "🔒 Parent" : "🧒 Kid"}</button>
+            <button class="mode-toggle mode-toggle--sm" id="kidModeToggle" type="button" aria-pressed="false">${kidMode ? "Kid mode on" : "Parent mode"}</button>
           </div>
         </div>
       </header>
@@ -84,6 +85,7 @@ ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certi
           ${kidMode ? "" : `<a href="${routes.certificates}" data-parent-only="1">Certificates</a>`}
           ${kidMode ? "" : `<a href="${routes.print}" data-parent-only="1">Print</a>`}
           ${kidMode ? "" : `<a href="${routes.dashboard}" data-parent-only="1">Parent Dashboard</a>`}
+          <a href="./support.html">Our tip jar</a>
         </div>
       </aside>
     `;
@@ -101,10 +103,12 @@ ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certi
     mount.innerHTML = `
       <footer class="siteFooter">
         <div class="wrap siteFooter__inner">
-          <span>© <span data-yt="year"></span> Youngtekkie</span>
-          <a class="siteFooter__coffee" href="./support.html" aria-label="Support Youngtekkie">☕ Buy me a coffee</a>
-</div>
-
+          <div class="siteFooter__left">© <span data-yt="year"></span> Youngtekkie</div>
+          <div class="siteFooter__right">
+            <a class="siteFooter__link" href="./data-policy.html">Data policy</a>
+            <a class="siteFooter__coffee" href="./support.html" aria-label="Support Youngtekkie">☕ Buy me a coffee</a>
+          </div>
+        </div>
       </footer>
     `;
 
