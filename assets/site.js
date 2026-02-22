@@ -66,7 +66,7 @@ ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certi
             ${kidMode ? "" : `<a class="iconLink" href="${routes.dashboard}" title="Parent dashboard" aria-label="Parent Dashboard" data-parent-only="1">👨‍👩‍👧</a>`}
 
             <button class="menuBtn" type="button" data-yt="navbtn" aria-expanded="false" aria-label="Open menu">☰</button>
-            <button class="mode-toggle mode-toggle--sm" id="kidModeToggle" type="button" aria-pressed="false">${kidMode ? "Kid mode on" : "Parent mode"}</button>
+            <button class="mode-toggle mode-toggle--sm" id="kidModeToggle" type="button" aria-pressed="false">${kidMode ? "Kid mode on" : labelForParentOff()}</button>
           </div>
         </div>
       </header>
@@ -149,6 +149,10 @@ ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certi
       if (btn.__ytBound) return;
       btn.__ytBound = true;
       btn.addEventListener("click", () => {
+
+  function labelForParentOff(){
+    return window.matchMedia && window.matchMedia("(max-width: 420px)").matches ? "Parent" : labelForParentOff();
+  }
         const isOpen = drawer ? drawer.classList.contains("is-open") : false;
         setOpen(!isOpen);
       });
