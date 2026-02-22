@@ -384,8 +384,8 @@ const YTA = (() => {
         }
         setKidMode(false);
         applyParentOnlyVisibility();
-        // Reload so the page renders normally
-        location.reload();
+        // No full-page reload needed; UI updates are handled live
+
       } catch (e) { /* no-op */ }
     });
   }
@@ -2916,7 +2916,8 @@ function initProfilesPage() {
   });
 }
 
-function initFooterYear(){
+function initFooterYear,
+    initMobileNav(){
     const apply = () => {
       const y = String(new Date().getFullYear());
       document.querySelectorAll('[data-yt="year"]').forEach(el => { el.textContent = y; });
@@ -2942,7 +2943,8 @@ function initFooterYear(){
     initProfilesPage();
     initCertificatesPage();
     initPrintPage();
-    initFooterYear();
+    initFooterYear,
+    initMobileNav();
 
     // Enforce Parent lock on protected areas + hide parent-only chrome when locked
     enforceKidModeGuards();
@@ -2955,16 +2957,6 @@ function initFooterYear(){
 
 // If the shared header/nav/footer is injected after this script runs (non-defer pages),
   // run the UI initialisers again once chrome exists.
-  document.addEventListener("yta:chrome:ready", () => {
-    try {
-      retryInitMobileNav();
-      initJourneyDropdown();
-      initKidModeUI();
-      initFooterYear();
-    } catch (e) {
-      /* no-op */
-    }
-  });
 
   // ---------- public API ----------
   return {
@@ -3008,7 +3000,8 @@ function initFooterYear(){
     resetActiveChildTicks,
     initCertificatesPage,
     initPrintPage,
-    initFooterYear
+    initFooterYear,
+    initMobileNav
   };
 })();
 
@@ -3018,11 +3011,10 @@ document.addEventListener('DOMContentLoaded', () => {
   try {
     YTA.init();
     YTA.initKidModeUI();
+    // Bind mobile nav again shortly after load in case header/drawer injected slightly later
+    setTimeout(() => { try { YTA.initMobileNav && YTA.initMobileNav(); } catch (e) {} }, 150);
+
     // If the header/footer are injected after init runs, re-bind nav controls.
-    document.addEventListener('yta:chrome:ready', () => {
-      try { YTA.init(); } catch (e) { /* no-op */ }
-    });
     // Safety: one more bind shortly after load (covers slow JS execution on mobile)
-    setTimeout(() => { try { YTA.init(); } catch (e) {} }, 60);
-  } catch (e) { /* no-op */ }
+} catch (e) { /* no-op */ }
 });
