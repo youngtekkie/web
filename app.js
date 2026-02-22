@@ -235,7 +235,7 @@ const YTA = (() => {
       // When Kid Mode is ON, Parent is locked (button should offer Parent unlock)
       const locked = getKidMode();
       btn.setAttribute("aria-pressed", locked ? "true" : "false");
-      btn.textContent = locked ? "🔒 Parent" : "🧒 Kid";
+      btn.textContent = locked ? "Kid mode on" : "Parent mode";
     }
 
     // prevent duplicate listeners if pages call this more than once
@@ -354,7 +354,7 @@ const YTA = (() => {
           <button type="button" class="btn" id="unlockParentBtn">Unlock</button>
           <a class="btn btn--soft" href="./phase1.html">Go to Journey</a>
         </div>
-        <p class="parentLockHint">Tip: on mobile, tap the “🔒 Parent” button in the top bar to unlock.</p>
+        <p class="parentLockHint">Tip: on mobile, tap the “Kid mode on” button in the top bar to unlock.</p>
       </div>
     `;
     document.body.appendChild(overlay);

@@ -584,6 +584,16 @@ a.btn, a.pill, .ctaRow a.btn, .ctaRow a.pill { text-decoration: none; }
   gap: 12px;
 }
 
+/* Small header link (kept subtle so it doesn't squeeze smaller screens) */
+.tipJarLink{
+  font-size: 0.78rem;
+  color: var(--muted);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  white-space: nowrap;
+}
+.tipJarLink:hover{ border-bottom-color: currentColor; }
+
 .iconLink{
   text-decoration: none;
   color: var(--text);
@@ -658,10 +668,27 @@ a.btn, a.pill, .ctaRow a.btn, .ctaRow a.pill { text-decoration: none; }
 .siteFooter__inner{
   display:flex;
   align-items:center;
-  justify-content:center;
+  justify-content: space-between;
   gap: 14px;
   flex-wrap: wrap;
 }
+
+.siteFooter__left{ white-space: nowrap; }
+
+.siteFooter__right{
+  display:flex;
+  gap: 12px;
+  align-items:center;
+  justify-content:center;
+  flex-wrap: wrap;
+}
+
+.siteFooter__link{
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.siteFooter__link:hover{ border-bottom-color: currentColor; }
 
 .siteFooter__coffee{
   display:inline-flex;
@@ -778,6 +805,13 @@ a.btn, a.pill, .ctaRow a.btn, .ctaRow a.pill { text-decoration: none; }
   .topbar__actions .iconLink{ display: none; } /* drawer already contains these links */
   #kidModeToggle{ display: inline-flex; }
 
+  .siteFooter__inner{ justify-content: center; }
+
+}
+
+/* Only hide the header "Our tip jar" link on extremely narrow screens */
+@media (max-width: 360px){
+  .tipJarLink{ display:none; }
 }
 
 
@@ -900,7 +934,7 @@ a.btn, a.pill, .ctaRow a.btn, .ctaRow a.pill { text-decoration: none; }
   outline-offset: 2px;
 }
 .mode-toggle--sm{
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   padding: 4px 8px;
 }
 
