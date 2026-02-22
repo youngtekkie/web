@@ -2923,102 +2923,24 @@ function initFooterYear,
       document.querySelectorAll('[data-yt="year"]').forEach(el => { el.textContent = y; });
     };
     if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", apply, { once: true });
-    } else {
-      apply();
-    }
-  }
-
-  // ---------- init ----------
-  function init() {
-    if (!__inited) {
-      __inited = true;
-      migrateProfilesIfNeeded();
-    }
-
-    // UI wiring (safe to call multiple times; each function guards its bindings)
-    retryInitMobileNav();
-    initJourneyDropdown();
-    initKidModeUI();
-    initProfilesPage();
-    initCertificatesPage();
-    initPrintPage();
-    initFooterYear,
-    initMobileNav();
-
-    // Enforce Parent lock on protected areas + hide parent-only chrome when locked
-    enforceKidModeGuards();
-
-    // Page renderers (guards inside)
-    renderMonthPage();
-    renderDashboard();
-    renderPrintPage();
-  }
-
-// If the shared header/nav/footer is injected after this script runs (non-defer pages),
-  // run the UI initialisers again once chrome exists.
-
-  // ---------- public API ----------
-  return {
-    init,
-    platforms,
-    curricula,
-
-    initKidModeUI,
-    setKidMode,
-    getKidMode,
-
-    getProfiles,
-    getProfileById,
-    getActiveProfileId,
-    getActiveProfile,
-    setActiveProfile,
-    createProfile,
-    updateProfile,
-    deleteProfile,
-
-    getActiveCurriculum,
-    getDays,
-
-    fmtDate,
-    nextMondayISO,
-
-    computeOverallProgress,
-    computeMonthProgress,
-    computeStreak,
-    nextIncompleteDay,
-
-    renderMonthPage,
-    renderPrintPage,
-    renderDashboard,
-
-    weekLabel,
-    weekProgress,
-    renderCertificateHTML,
-    suggestWeek,
-
-    resetActiveChildTicks,
-    initCertificatesPage,
-    initPrintPage,
-    initFooterYear,
-    initMobileNav
-  };
-})();
 
 
-// AUTO_INIT_YTA: ensure core init runs even on pages without inline bootstrapping
 document.addEventListener('DOMContentLoaded', () => {
   try {
+    // Core init for all pages
     YTA.init();
-    YTA.initKidModeUI();
-    // Bind mobile nav again shortly after load in case header/drawer injected slightly later
-    setTimeout(() => { try { YTA.initMobileNav && YTA.initMobileNav(); } catch (e) {} }, 150);
 
-    // If the header/footer are injected after init runs, re-bind nav controls.
-    // Safety: one more bind shortly after load (covers slow JS execution on mobile)
-} catch (e) { /* no-op */ }
+    // Optional page inits
+    try { YTA.initKidModeUI(); } catch (e) {}
+    try { YTA.initMobileNav(); } catch (e) {}
+
+    // One delayed re-bind for mobile nav only (covers slow header injection)
+    setTimeout(() => { try { YTA.initMobileNav(); } catch (e) {} }, 200);
+  } catch (e) {
+    console.error('YTA bootstrap failed', e);
+  }
 });
-
 
 // Expose for debug/regression tooling and external test runners
 try { window.YTA = YTA; } catch(e) { /* no-op */ }
+
