@@ -3018,3 +3018,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Safety: one more bind shortly after load (covers slow JS execution on mobile)
 } catch (e) { /* no-op */ }
 });
+
+
+// Expose for debug/regression tooling and external test runners
+try { window.YTA = YTA; } catch(e) { /* no-op */ }
