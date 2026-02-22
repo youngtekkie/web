@@ -1,16 +1,17 @@
 /* FILE: app.js — Track-based (Year 3–6) + multi-child profiles + start date + mobile nav + certificates */
 
 const YTA = (() => {
-
-  function labelForParentOff(){
-    return window.matchMedia && window.matchMedia("(max-width: 420px)").matches ? "Parent" : labelForParentOff();
-  }
   let __inited = false;
 
   // ---------- storage keys ----------
   const PROFILES_KEY = "yta_profiles_v2";
   const ACTIVE_PROFILE_KEY = "yta_active_profile_v2";
   const KIDMODE_KEY = "yta_kidmode_v2";
+// Responsive label for Kid/Parent toggle (keep header tidy on small screens)
+  function labelForParentOff(){
+    return (window.matchMedia && window.matchMedia("(max-width: 420px)").matches) ? "Parent" : "Parent mode";
+  }
+
   const UI_KEY = "yta_ui_v1";
   const stateKey = (profileId) => `yta_state_${profileId}_v2`;
 
