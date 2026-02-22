@@ -60,7 +60,7 @@ mount.innerHTML = `
             </details>
           </nav>
           <div class="topbar__actions">
-            <a class="tipJarLink" href="./support.html">Our tip jar</a>
+            <a class="tipJarLink" href="./support.html"><span class="tipJarText tipJarText--long">Our tip jar</span><span class="tipJarText tipJarText--short">Tip jar</span></a>
 ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certificates" aria-label="Certificates" data-parent-only="1">🎓</a>`}
             ${kidMode ? "" : `<a class="iconLink" href="${routes.print}" title="Print plan" aria-label="Print" data-parent-only="1">🖨️</a>`}
             ${kidMode ? "" : `<a class="iconLink" href="${routes.dashboard}" title="Parent dashboard" aria-label="Parent Dashboard" data-parent-only="1">👨‍👩‍👧</a>`}
@@ -87,13 +87,16 @@ ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certi
           ${kidMode ? "" : `<a href="${routes.certificates}" data-parent-only="1">Certificates</a>`}
           ${kidMode ? "" : `<a href="${routes.print}" data-parent-only="1">Print</a>`}
           ${kidMode ? "" : `<a href="${routes.dashboard}" data-parent-only="1">Parent Dashboard</a>`}
-          <a href="./support.html">Our tip jar</a>
+          <a href="./support.html">Tip jar</a>
         </div>
       </aside>
     `;
 
     bindChromeNav();
     syncHeaderOffset();
+    // Re-check after layout/fonts settle
+    setTimeout(syncHeaderOffset, 120);
+    requestAnimationFrame(syncHeaderOffset);
     document.dispatchEvent(new CustomEvent("yta:chrome:ready"));
   }
 
@@ -184,6 +187,16 @@ ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certi
       });
     }
   }
+
+    // Observe header size changes (e.g., subtitle wraps, font loads)
+    if (!window.__ytHeaderRO) {
+      const header = document.querySelector(".topbar");
+      if (header && "ResizeObserver" in window) {
+        window.__ytHeaderRO = new ResizeObserver(() => syncHeaderOffset());
+        window.__ytHeaderRO.observe(header);
+      }
+      window.addEventListener("load", () => syncHeaderOffset(), { once: true });
+    }
 
   function escapeHtml(str) {
   return String(str ?? "")
