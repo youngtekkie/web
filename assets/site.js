@@ -1,5 +1,7 @@
 /* FILE: assets/site.js — inject shared nav + mobile drawer + footer (auto-year) */
 (function () {
+  const KIDMODE_KEY = "yta_kidmode_v2";
+
   function currentFile() {
     const p = (location.pathname || "").split("/").pop();
     return (p && p.length) ? p : "index.html";
@@ -27,7 +29,7 @@
 
     let subtitle = (document.body.getAttribute("data-subtitle") || "").trim();
     if (!subtitle) subtitle = "Foundations for tomorrow’s tech leaders.";
-    const kidMode = (localStorage.getItem("yta_kidmode_v2") === "1");
+    const kidMode = (localStorage.getItem(KIDMODE_KEY) === "1");
     const inJourney = ["phase1.html","phase2.html","phase3.html","month1.html","month2.html","month3.html"].includes(currentFile().toLowerCase());
 mount.innerHTML = `
       <header class="topbar">
@@ -90,9 +92,8 @@ ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certi
       </aside>
     `;
 
-    // Let other scripts (e.g., app.js) know the header/nav/drawer now exist.
-    // This matters on pages where site.js isn't loaded with `defer`.
     bindChromeNav();
+    syncHeaderOffset();
     document.dispatchEvent(new CustomEvent("yta:chrome:ready"));
   }
 
@@ -112,9 +113,76 @@ ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certi
       </footer>
     `;
 
-    // Footer injected; allow footer-year setters etc. to run reliably.
     bindChromeNav();
     document.dispatchEvent(new CustomEvent("yta:chrome:ready"));
+  }
+
+  function syncHeaderOffset() {
+    const header = document.querySelector(".topbar");
+    if (!header) return;
+    const h = Math.ceil(header.getBoundingClientRect().height || 0);
+    if (h > 0) document.documentElement.style.setProperty("--topbar-h", `${h}px`);
+  }
+
+  function bindChromeNav() {
+    // Set footer year
+    const y = document.querySelector('[data-yt="year"]');
+    if (y) y.textContent = String(new Date().getFullYear());
+
+    // Drawer open/close
+    const drawer = document.querySelector('[data-yt="drawer"]');
+    const backdrop = document.querySelector('[data-yt="backdrop"]');
+    const btns = Array.from(document.querySelectorAll('[data-yt="navbtn"]'));
+
+    function setOpen(open) {
+      if (!drawer) return;
+      drawer.classList.toggle("is-open", !!open);
+      if (backdrop) backdrop.classList.toggle("is-open", !!open);
+      btns.forEach(b => b.setAttribute("aria-expanded", String(!!open)));
+      document.body.classList.toggle("noScroll", !!open);
+    }
+
+    btns.forEach(btn => {
+      if (btn.__ytBound) return;
+      btn.__ytBound = true;
+      btn.addEventListener("click", () => {
+        const isOpen = drawer ? drawer.classList.contains("is-open") : false;
+        setOpen(!isOpen);
+      });
+    });
+
+    if (backdrop && !backdrop.__ytBound) {
+      backdrop.__ytBound = true;
+      backdrop.addEventListener("click", () => setOpen(false));
+    }
+
+    if (drawer && !drawer.__ytBoundLinks) {
+      drawer.__ytBoundLinks = true;
+      drawer.addEventListener("click", (e) => {
+        const a = e.target && e.target.closest ? e.target.closest("a") : null;
+        if (a) setOpen(false);
+      });
+    }
+
+    // Kid / Parent mode toggle
+    const kidBtn = document.getElementById("kidModeToggle");
+    if (kidBtn && !kidBtn.__ytBound) {
+      kidBtn.__ytBound = true;
+      kidBtn.addEventListener("click", () => {
+        const isKid = (localStorage.getItem(KIDMODE_KEY) === "1");
+        localStorage.setItem(KIDMODE_KEY, isKid ? "0" : "1");
+        document.dispatchEvent(new CustomEvent("yta:kidmode:change"));
+      });
+    }
+
+    // Recompute header height on resize
+    if (!window.__ytHeaderResizeBound) {
+      window.__ytHeaderResizeBound = true;
+      window.addEventListener("resize", () => {
+        clearTimeout(window.__ytHeaderResizeT);
+        window.__ytHeaderResizeT = setTimeout(syncHeaderOffset, 50);
+      });
+    }
   }
 
   function escapeHtml(str) {
