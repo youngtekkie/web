@@ -148,6 +148,14 @@ const YTA = (() => {
   });
 }
 
+
+  // Retry mobile nav binding in case the header/drawer is injected after app.js initialises.
+  function retryInitMobileNav() {
+    // try a few times; harmless if already bound
+    const delays = [0, 30, 120, 300, 700];
+    delays.forEach(d => setTimeout(() => { try { retryInitMobileNav(); } catch (e) {} }, d));
+  }
+
   // ---------- Journey dropdown (details.navDrop) ----------
   // Fix: close the dropdown after selecting a month, and close on outside click/Escape.
   function initJourneyDropdown() {
@@ -2928,7 +2936,7 @@ function initFooterYear(){
     }
 
     // UI wiring (safe to call multiple times; each function guards its bindings)
-    initMobileNav();
+    retryInitMobileNav();
     initJourneyDropdown();
     initKidModeUI();
     initProfilesPage();
@@ -2949,7 +2957,7 @@ function initFooterYear(){
   // run the UI initialisers again once chrome exists.
   document.addEventListener("yta:chrome:ready", () => {
     try {
-      initMobileNav();
+      retryInitMobileNav();
       initJourneyDropdown();
       initKidModeUI();
       initFooterYear();
