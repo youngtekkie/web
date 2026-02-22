@@ -173,17 +173,25 @@ ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certi
     }
 
     // Kid / Parent mode toggle
-    const kidBtn = document.getElementById("kidModeToggle");
-    if (kidBtn && !kidBtn.__ytBound) {
-      kidBtn.__ytBound = true;
-      kidBtn.addEventListener("click", () => {
-        const isKid = (localStorage.getItem(KIDMODE_KEY) === "1");
-        localStorage.setItem(KIDMODE_KEY, isKid ? "0" : "1");
-        document.dispatchEvent(new CustomEvent("yta:kidmode:change"));
-      });
+    // NOTE: app.js owns the click behaviour (password prompt). site.js only keeps label in sync.
+    function syncKidBtnLabel() {
+      const btn = document.getElementById("kidModeToggle");
+      if (!btn) return;
+      const on = (localStorage.getItem(KIDMODE_KEY) === "1");
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+      btn.textContent = on ? "Kid mode on" : labelForParentOff();
+    }
+    // Initial label sync (in case app.js hasn't run yet)
+    syncKidBtnLabel();
+    // Keep in sync when app.js broadcasts mode changes
+    if (!window.__ytKidModeSyncBound) {
+      window.__ytKidModeSyncBound = true;
+      document.addEventListener("yta:kidmode:change", () => syncKidBtnLabel());
+      window.addEventListener("resize", () => syncKidBtnLabel());
     }
 
     // Recompute header height on resize
+
     if (!window.__ytHeaderResizeBound) {
       window.__ytHeaderResizeBound = true;
       window.addEventListener("resize", () => {
