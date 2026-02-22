@@ -558,8 +558,132 @@
   }
 
   function initProfilesPage() {
-    // profiles.html already has inline UI; we only need to ensure toggle label and overlay
-    // (Keeping core methods available is what matters.)
+    const nameEl = document.getElementById("childName");
+    const yearEl = document.getElementById("yearGroup");
+    const startEl = document.getElementById("startDate");
+    const createBtn = document.getElementById("createProfileBtn");
+    const nextMonBtn = document.getElementById("setNextMonBtn");
+
+    const listEl = document.getElementById("profilesList");
+    const activeName = document.getElementById("activeName");
+    const activeYear = document.getElementById("activeYear");
+    const activeTrack = document.getElementById("activeTrack");
+    const activeDate = document.getElementById("activeDate");
+
+    if (!nameEl || !yearEl || !createBtn || !listEl) return;
+
+    function renderActive() {
+      const p = getProfileById(getActiveProfileId());
+      if (!p) {
+        if (activeName) activeName.textContent = "—";
+        if (activeYear) activeYear.textContent = "—";
+        if (activeTrack) activeTrack.textContent = "—";
+        if (activeDate) activeDate.textContent = "—";
+        return;
+      }
+      if (activeName) activeName.textContent = p.name || "—";
+      if (activeYear) activeYear.textContent = p.year ? `Year ${p.year}` : "—";
+      if (activeTrack) activeTrack.textContent = p.track ? (p.track === "foundation" ? "Foundation" : "Builder") : "—";
+      if (activeDate) activeDate.textContent = p.startDate ? fmtDate(p.startDate) : "—";
+    }
+
+    function renderList() {
+      const list = loadProfiles();
+      if (!list.length) {
+        listEl.innerHTML = `<div class="emptyState">No profiles yet. Create one to get started.</div>`;
+        renderActive();
+        return;
+      }
+
+      const activeId = getActiveProfileId();
+      listEl.innerHTML = list.map(p => {
+        const isActive = p.id === activeId;
+        const trackLabel = p.track === "foundation" ? "Foundation" : "Builder";
+        const startLabel = p.startDate ? fmtDate(p.startDate) : "—";
+        return `
+          <div class="rowCard ${isActive ? "is-active" : ""}" data-id="${p.id}">
+            <div class="rowMain">
+              <div class="rowTitle">${p.name}</div>
+              <div class="rowMeta small muted">Year ${p.year} • ${trackLabel} • Start: ${startLabel}</div>
+            </div>
+            <div class="rowActions">
+              <button class="btn btn--soft btn--sm" type="button" data-act="activate">Set active</button>
+              <button class="btn btn--ghost btn--sm" type="button" data-act="delete">Delete</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      // bind actions (delegated)
+      listEl.querySelectorAll("[data-act]").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          const action = btn.getAttribute("data-act");
+          const card = btn.closest(".rowCard");
+          const id = card ? card.getAttribute("data-id") : null;
+          if (!id) return;
+
+          if (action === "activate") {
+            setActiveProfile(id);
+            renderList();
+            renderActive();
+            return;
+          }
+          if (action === "delete") {
+            if (!confirm("Delete this profile? This will remove its saved progress on this device.")) return;
+            deleteProfile(id);
+            // if none active, pick first
+            const remaining = loadProfiles();
+            if (remaining.length && !getActiveProfileId()) setActiveProfile(remaining[0].id);
+            renderList();
+            renderActive();
+          }
+        });
+      });
+
+      // ensure an active profile exists
+      if (!getActiveProfileId() && list.length) setActiveProfile(list[0].id);
+      renderActive();
+    }
+
+    // Buttons
+    if (nextMonBtn && startEl) {
+      nextMonBtn.addEventListener("click", () => {
+        startEl.value = nextMondayISO();
+      });
+    }
+
+    createBtn.addEventListener("click", () => {
+      const name = (nameEl.value || "").trim();
+      const year = (yearEl.value || "").trim();
+      const startDate = startEl && startEl.value ? startEl.value : null;
+
+      if (!name) {
+        alert("Please enter your child’s name.");
+        return;
+      }
+      if (!year) {
+        alert("Please select a year group.");
+        return;
+      }
+
+      try {
+        const prof = createProfile({ name, year, startDate });
+        setActiveProfile(prof.id);
+        // clear form
+        nameEl.value = "";
+        if (startEl) startEl.value = "";
+        alert("Profile created successfully.");
+        renderList();
+      } catch (e) {
+        alert(e && e.message ? e.message : "Could not create profile.");
+      }
+    });
+
+    // initial render
+    // pick first active if missing
+    const existing = loadProfiles();
+    if (existing.length && !getActiveProfileId()) setActiveProfile(existing[0].id);
+    renderList();
   }
 
   function init() {
