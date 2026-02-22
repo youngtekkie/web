@@ -1649,3 +1649,9 @@ body{ padding-top: 92px !important; } /* more breathing room below ribbon */
 .rtBadge.rt-fail{ background: rgba(255,130,130,.22); }
 .rtDetails{ margin-top: 8px; font-size: 14px; color: var(--muted, #6b6b6b); }
 .miniLink{ font-size: 13px; }
+
+
+/* Debug page – extra top offset so content never sits under the fixed header */
+.page-debug .debug-main{
+  padding-top: calc(var(--topbar-h, 96px) + 14px) !important;
+}
