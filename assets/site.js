@@ -1,6 +1,11 @@
 /* FILE: assets/site.js — inject shared nav + mobile drawer + footer (auto-year) */
 (function () {
   const KIDMODE_KEY = "yta_kidmode_v2";
+  // Responsive label for Kid/Parent toggle (keep header tidy on small screens)
+  function labelForParentOff(){
+    return (window.matchMedia && window.matchMedia("(max-width: 420px)").matches) ? "Parent" : "Parent mode";
+  }
+
 
   function currentFile() {
     const p = (location.pathname || "").split("/").pop();
@@ -149,10 +154,6 @@ ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certi
       if (btn.__ytBound) return;
       btn.__ytBound = true;
       btn.addEventListener("click", () => {
-
-  function labelForParentOff(){
-    return window.matchMedia && window.matchMedia("(max-width: 420px)").matches ? "Parent" : labelForParentOff();
-  }
         const isOpen = drawer ? drawer.classList.contains("is-open") : false;
         setOpen(!isOpen);
       });
