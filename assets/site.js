@@ -102,7 +102,6 @@ ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certi
     // Re-check after layout/fonts settle
     setTimeout(syncHeaderOffset, 120);
     requestAnimationFrame(syncHeaderOffset);
-    document.dispatchEvent(new CustomEvent("yta:chrome:ready"));
   }
 
   function injectFooter() {
@@ -122,7 +121,6 @@ ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certi
     `;
 
     bindChromeNav();
-    document.dispatchEvent(new CustomEvent("yta:chrome:ready"));
   }
 
   function syncHeaderOffset() {
