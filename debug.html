@@ -25,11 +25,11 @@
     .dbg-note{margin-top:14px;opacity:.85}
   </style>
 </head>
-<body data-subtitle="Debug">
+<body class="page-debug" data-subtitle="Debug">
   <div id="site-chrome"></div>
   <script src="./assets/site.js" defer></script>
 
-  <main class="debug-wrap">
+  <main class="debug-wrap debug-main">
     <div class="debug-head">
       <div>
         <h1>Self‑Test / Debug</h1>
@@ -172,6 +172,8 @@
 
         const ls = await testLocalStorage();
         cards.push({name:'Storage', ...ls});
+        cards.push({ ...testHeaderOffset() });
+
 
         const g = testAppGlobals();
         cards.push({name:'App init', ...g});
