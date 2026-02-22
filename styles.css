@@ -1559,3 +1559,11 @@ body{ padding-top: 92px !important; } /* more breathing room below ribbon */
   background-color: #c5e3ff;
   transform: translateY(-1px);
 }
+
+
+/* Tip jar link text swap for small screens */
+.tipJarText--short { display: none; }
+@media (max-width: 420px){
+  .tipJarText--long { display: none; }
+  .tipJarText--short { display: inline; }
+}
