@@ -1,6 +1,10 @@
 /* FILE: app.js — Track-based (Year 3–6) + multi-child profiles + start date + mobile nav + certificates */
 
 const YTA = (() => {
+
+  function labelForParentOff(){
+    return window.matchMedia && window.matchMedia("(max-width: 420px)").matches ? "Parent" : labelForParentOff();
+  }
   let __inited = false;
 
   // ---------- storage keys ----------
@@ -235,7 +239,7 @@ const YTA = (() => {
       // When Kid Mode is ON, Parent is locked (button should offer Parent unlock)
       const locked = getKidMode();
       btn.setAttribute("aria-pressed", locked ? "true" : "false");
-      btn.textContent = locked ? "Kid mode on" : "Parent mode";
+      btn.textContent = locked ? "Kid mode on" : labelForParentOff();
     }
 
     // prevent duplicate listeners if pages call this more than once
