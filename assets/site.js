@@ -225,7 +225,8 @@ ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certi
     try { injectChrome(); } catch (e) { /* no-op */ }
   });
 
-injectChrome(); injectFooter(); }, { once: true });
+injectChrome(); injectFooter();
+    try { window.dispatchEvent(new Event('yta:chrome:ready')); } catch(e) {} }, { once: true });
   } else {
     
   // Re-inject header when Kid Mode changes (so nav simplifies/returns immediately)
@@ -234,5 +235,6 @@ injectChrome(); injectFooter(); }, { once: true });
   });
 
 injectChrome(); injectFooter();
+    try { window.dispatchEvent(new Event('yta:chrome:ready')); } catch(e) {}
   }
 })();

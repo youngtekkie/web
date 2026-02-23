@@ -759,8 +759,12 @@
       init();
       initKidModeUI();
       initMobileNav();
-      // one delayed re-bind for mobile nav only
-      setTimeout(() => { try { initMobileNav(); } catch(e){} }, 200);
+      // If header/footer injects after our first init, bind again safely
+      const rebBind = () => { try { initKidModeUI(); } catch(e){} try { initMobileNav(); } catch(e){} };
+      window.addEventListener('yta:chrome:ready', rebBind, { passive: true });
+
+      // a few safe retries (idempotent bindings)
+      [50, 150, 400, 800].forEach((ms) => setTimeout(rebBind, ms));
     } catch (e) {
       console.error("YTA bootstrap failed", e);
     }
