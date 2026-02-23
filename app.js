@@ -652,7 +652,9 @@
       });
     }
 
-    createBtn.addEventListener("click", () => {
+    createBtn.addEventListener("click", (e) => {
+      if (e && typeof e.preventDefault === "function") e.preventDefault();
+
       const name = (nameEl.value || "").trim();
       const year = (yearEl.value || "").trim();
       const startDate = startEl && startEl.value ? startEl.value : null;
@@ -666,8 +668,25 @@
         return;
       }
 
+      // Duplicate prevention (same name + year)
+      const existing = loadProfiles().find(p => (p.name || "").trim().toLowerCase() === name.toLowerCase() && String(p.year) === String(year));
+      if (existing) {
+        const ok = confirm(`A profile for "${existing.name}" (Year ${existing.year}) already exists on this device. Do you want to create another anyway?`);
+        if (!ok) return;
+      }
+
       try {
         const prof = createProfile({ name, year, startDate });
+        setActiveProfile(prof.id);
+        // clear form
+        nameEl.value = "";
+        if (startEl) startEl.value = "";
+        alert("Profile created successfully.");
+        renderList();
+      } catch (err) {
+        alert(err && err.message ? err.message : "Could not create profile.");
+      }
+    });
         setActiveProfile(prof.id);
         // clear form
         nameEl.value = "";
