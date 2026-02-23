@@ -571,6 +571,11 @@
     const activeDate = document.getElementById("activeDate");
 
     if (!nameEl || !yearEl || !createBtn || !listEl) return;
+    // Avoid double-binding if init runs more than once (e.g., after header injection)
+    if (createBtn.dataset && createBtn.dataset.ytaBound === "1") return;
+    if (createBtn.dataset) createBtn.dataset.ytaBound = "1";
+    if (nextMonBtn && nextMonBtn.dataset) nextMonBtn.dataset.ytaBound = "1";
+
 
     function renderActive() {
       const p = getProfileById(getActiveProfileId());
@@ -668,6 +673,16 @@
         return;
       }
 
+      // Duplicate guard (same name + year)
+      const existing = loadProfiles().find(p =>
+        (String(p.name || "").trim().toLowerCase() === name.toLowerCase()) &&
+        (String(p.year) === year)
+      );
+      if (existing) {
+        const ok = confirm("A profile with this name and year already exists. Do you want to create another one anyway?");
+        if (!ok) return;
+      }
+
       // Duplicate prevention (same name + year)
       const existing = loadProfiles().find(p => (p.name || "").trim().toLowerCase() === name.toLowerCase() && String(p.year) === String(year));
       if (existing) {
@@ -719,6 +734,13 @@
     if (file === "dashboard.html") renderDashboard();
     if (file === "certificates.html") renderCertificates();
     if (file === "profiles.html") initProfilesPage();
+
+    // Element-based fallbacks (covers cache-busted URLs or missing .html in path)
+    if (document.getElementById("createProfileBtn")) initProfilesPage();
+    if (document.getElementById("dayList") && document.getElementById("trackLine")) {
+      // If we couldn't determine phase from filename, default to phase1 mapping
+      // (phase pages are separate files normally; this is a safety net only)
+    }
 
     // lock overlay if needed
     maybeShowParentLockOverlay();
